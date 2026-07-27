@@ -3,564 +3,403 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>instaBuild — Build Faster. Build Smarter.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>instaBuild — The Future of Construction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --purple: #533afd;
-      --purple-hover: #4434d4;
-      --purple-light: #b9b9f9;
-      --navy: #061b31;
-      --slate: #64748d;
-      --label: #273951;
-      --border: #e5edf5;
-      --brand-dark: #1c1e54;
-      --white: #ffffff;
-      --ruby: #ea2261;
-      --magenta: #f96bee;
-      --success: #15be53;
-      --success-text: #108c3d;
-      --shadow-blue: rgba(50,50,93,0.25);
-      --shadow-black: rgba(0,0,0,0.1);
-      --shadow-ambient: rgba(23,23,23,0.08);
+      --purple: #533afd; --hover: #4434d4; --plight: #b9b9f9;
+      --navy: #061b31; --slate: #64748d; --label: #273951; --border: #e5edf5;
+      --dark: #1c1e54; --white: #fff; --magenta: #f96bee;
+      --shadow: rgba(50,50,93,0.25); --shadow2: rgba(0,0,0,0.1);
     }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--slate);background:var(--white);font-weight:300;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Nav */
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:all .3s}
+    nav.scrolled{border-bottom-color:var(--border);box-shadow:0 1px 20px rgba(0,0,0,.05)}
+    .logo{font-size:22px;font-weight:600;color:var(--navy);letter-spacing:-.22px;display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo .lm{width:36px;height:36px;background:var(--purple);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:17px}
+    .nav-r{display:flex;align-items:center;gap:28px}
+    .nav-r a{text-decoration:none;color:var(--navy);font-size:13px;font-weight:500;transition:color .2s;position:relative}
+    .nav-r a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--purple);transition:width .2s;border-radius:2px}
+    .nav-r a:hover,.nav-r a:hover::after{color:var(--purple);width:100%}
+    .btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:6px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s;gap:6px}
+    .btn-p{background:var(--purple);color:var(--white)}.btn-p:hover{background:var(--hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(83,58,253,.35)}
+    .btn-gh{background:transparent;color:var(--purple);border:1.5px solid var(--plight)}.btn-gh:hover{background:rgba(83,58,253,.04)}
+    .btn-w{background:var(--white);color:var(--purple);font-weight:600}.btn-w:hover{background:#f4f0ff;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+    .btn-ow{background:transparent;color:white;border:1.5px solid rgba(255,255,255,.4)}.btn-ow:hover{background:rgba(255,255,255,.08)}
+    .ham{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
+    .ham span{width:24px;height:2px;background:var(--navy);border-radius:2px;transition:all .3s}
+    .ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+    .ham.open span:nth-child(2){opacity:0}
+    .ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
 
-    html { scroll-behavior: smooth; }
+    /* Hero */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0}
+    .hero-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(6,27,49,.85),rgba(28,30,84,.7),rgba(6,27,49,.88));z-index:1}
+    .hero-c{position:relative;z-index:2;max-width:720px;padding:120px 48px 80px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.9);font-size:13px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:28px;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px)}
+    .hero-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero h1{font-size:clamp(36px,7vw,66px);font-weight:300;color:var(--white);line-height:1.04;letter-spacing:-1.8px;margin-bottom:22px}
+    .hero h1 span{background:linear-gradient(135deg,#b9b9f9,#f96bee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{font-size:18px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.6;max-width:520px;margin-bottom:36px}
+    .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
 
-    body {
-      font-family: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      color: var(--slate);
-      background: var(--white);
-      font-weight: 300;
-      font-size: 16px;
-      line-height: 1.4;
-      -webkit-font-smoothing: antialiased;
-    }
+    /* Sections */
+    .sec{max-width:1120px;margin:0 auto;padding:100px 48px}
+    .sec-alt{background:#f8f9fc;padding:100px 0}
+    .sec-dark{background:var(--dark);padding:100px 0;color:white}
+    .sec-inner{max-width:1120px;margin:0 auto;padding:0 48px}
+    .sec-hdr{text-align:center;margin-bottom:64px}
+    .sec-tag{display:inline-block;font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
+    .sec-dark .sec-tag{color:rgba(255,255,255,.5)}
+    .sec-hdr h2{font-size:clamp(26px,4vw,38px);font-weight:300;color:var(--navy);letter-spacing:-.7px;line-height:1.15;margin-bottom:14px}
+    .sec-dark .sec-hdr h2,.sec-dark .sec-hdr p{color:var(--white)}
+    .sec-dark .sec-hdr p{color:rgba(255,255,255,.55)}
+    .sec-hdr p{font-size:17px;font-weight:300;color:var(--slate);max-width:560px;margin:0 auto}
 
-    /* ── Navigation ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--navy);
-      letter-spacing: -0.22px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .nav-logo .logo-mark {
-      width: 32px; height: 32px;
-      background: var(--purple);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      font-size: 16px;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: var(--navy);
-      font-size: 14px;
-      font-weight: 400;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: var(--purple); }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 16px;
-      font-weight: 400;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: all 0.15s;
-    }
-    .btn-primary {
-      background: var(--purple);
-      color: var(--white);
-    }
-    .btn-primary:hover { background: var(--purple-hover); }
-    .btn-ghost {
-      background: transparent;
-      color: var(--purple);
-      border: 1px solid var(--purple-light);
-    }
-    .btn-ghost:hover { background: rgba(83,58,253,0.05); }
+    /* Split */
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+    .split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:12px;box-shadow:var(--shadow) 0px 40px 55px -30px,var(--shadow2) 0px 20px 38px -18px}
+    .split-txt h3{font-size:28px;font-weight:300;color:var(--navy);letter-spacing:-.5px;margin-bottom:18px}
+    .split-txt p{font-size:15px;font-weight:300;color:var(--slate);line-height:1.7;margin-bottom:16px}
 
-    /* ── Hero ── */
-    .hero {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 100px 40px 80px;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      background: rgba(83,58,253,0.08);
-      color: var(--purple);
-      font-size: 12px;
-      font-weight: 400;
-      padding: 4px 12px;
-      border-radius: 4px;
-      margin-bottom: 24px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .hero h1 {
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 300;
-      color: var(--navy);
-      line-height: 1.03;
-      letter-spacing: -1.4px;
-      margin-bottom: 20px;
-    }
-    .hero h1 span { color: var(--purple); }
-    .hero p {
-      font-size: 18px;
-      font-weight: 300;
-      color: var(--slate);
-      line-height: 1.4;
-      max-width: 640px;
-      margin: 0 auto 36px;
-    }
-    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    /* Cards */
+    .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:32px 28px;transition:all .25s}
+    .card:hover{box-shadow:var(--shadow) 0px 32px 50px -32px,var(--shadow2) 0px 20px 38px -18px;transform:translateY(-3px)}
+    .card-icon{width:52px;height:52px;background:rgba(83,58,253,.07);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+    .card h3{font-size:18px;font-weight:500;color:var(--navy);margin-bottom:8px}
+    .card p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.55}
 
-    /* ── Stats Bar ── */
-    .stats-bar {
-      max-width: 1080px;
-      margin: 0 auto 80px;
-      padding: 0 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: var(--shadow-ambient) 0px 15px 35px;
-    }
-    .stat {
-      background: var(--white);
-      padding: 32px 24px;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 32px;
-      font-weight: 300;
-      color: var(--navy);
-      letter-spacing: -0.64px;
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-    .stat-label {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--slate);
-    }
+    /* Service cards */
+    .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+    .svc-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .svc-card:hover{transform:translateY(-5px);box-shadow:var(--shadow) 0px 36px 52px -30px,var(--shadow2) 0px 22px 40px -18px}
+    .svc-img{height:220px;background-size:cover;background-position:center;position:relative;transition:transform .4s}
+    .svc-card:hover .svc-img{transform:scale(1.04)}
+    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);color:var(--purple);font-size:10px;font-weight:600;padding:4px 12px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+    .svc-body{padding:24px}
+    .svc-body h3{font-size:19px;font-weight:400;color:var(--navy);letter-spacing:-.3px;margin-bottom:6px}
+    .svc-body p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.5}
+    .svc-features{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .svc-feat{font-size:11px;font-weight:500;color:var(--purple);background:rgba(83,58,253,.06);padding:3px 10px;border-radius:4px}
 
-    /* ── Sections ── */
-    .section {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 80px 40px;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-    .section-tag {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--purple);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
-    .section-header h2 {
-      font-size: clamp(26px, 3.5vw, 32px);
-      font-weight: 300;
-      color: var(--navy);
-      letter-spacing: -0.64px;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-    .section-header p {
-      font-size: 18px;
-      font-weight: 300;
-      color: var(--slate);
-      max-width: 560px;
-      margin: 0 auto;
-    }
+    /* Why grid */
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+    .why-item{display:flex;gap:16px}
+    .why-icon{flex-shrink:0;width:44px;height:44px;background:rgba(83,58,253,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--purple)}
+    .why-txt h3{font-size:17px;font-weight:500;color:var(--navy);margin-bottom:4px}
+    .why-txt p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.5}
 
-    /* ── Feature Grid ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-    }
-    .feature-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 32px;
-      box-shadow: var(--shadow-ambient) 0px 3px 6px;
-      transition: box-shadow 0.2s, transform 0.2s;
-    }
-    .feature-card:hover {
-      box-shadow: var(--shadow-blue) 0px 30px 45px -30px, var(--shadow-black) 0px 18px 36px -18px;
-      transform: translateY(-2px);
-    }
-    .feature-icon {
-      width: 40px; height: 40px;
-      background: rgba(83,58,253,0.08);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      color: var(--purple);
-      font-size: 20px;
-    }
-    .feature-card h3 {
-      font-size: 22px;
-      font-weight: 300;
-      color: var(--navy);
-      letter-spacing: -0.22px;
-      line-height: 1.1;
-      margin-bottom: 8px;
-    }
-    .feature-card p {
-      font-size: 16px;
-      font-weight: 300;
-      color: var(--slate);
-      line-height: 1.4;
-    }
+    /* Process */
+    .process-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;max-width:900px;margin:0 auto}
+    .ps{text-align:center;padding:24px 16px;position:relative;z-index:1}
+    .ps-num{width:44px;height:44px;background:var(--purple);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;margin:0 auto 14px}
+    .ps h3{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:4px}
+    .ps p{font-size:11px;font-weight:300;color:var(--slate);line-height:1.4}
+    .process-line{position:absolute;top:46px;left:calc(10% + 44px);width:calc(80% - 44px);height:2px;background:var(--plight);z-index:0}
 
-    /* ── Services ── */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-    .service-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: var(--shadow-blue) 0px 30px 45px -30px, var(--shadow-black) 0px 18px 36px -18px;
-    }
-    .service-card-img {
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-    }
-    .service-card-body {
-      padding: 24px;
-    }
-    .service-card-body h3 {
-      font-size: 22px;
-      font-weight: 300;
-      color: var(--navy);
-      letter-spacing: -0.22px;
-      margin-bottom: 6px;
-    }
-    .service-card-body p {
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--slate);
-    }
+    /* Form */
+    .form-wrap{max-width:600px;margin:0 auto}
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-size:13px;font-weight:500;color:var(--label);margin-bottom:6px}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-size:15px;font-family:inherit;font-weight:300;color:var(--navy);transition:border .2s;background:var(--white);resize:vertical}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(83,58,253,.1)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-status{display:none;padding:14px 18px;border-radius:6px;font-size:14px;font-weight:400;margin-bottom:20px;text-align:center}
+    .form-status.success{display:block;background:rgba(21,190,83,.12);color:#108c3d;border:1px solid rgba(21,190,83,.3)}
+    .form-status.error{display:block;background:rgba(234,34,97,.1);color:#c01a50;border:1px solid rgba(234,34,97,.3)}
 
-    /* ── Dark CTA Section ── */
-    .dark-section {
-      background: var(--brand-dark);
-      margin: 0;
-      padding: 100px 40px;
-      text-align: center;
-    }
-    .dark-section h2 {
-      font-size: clamp(26px, 3.5vw, 32px);
-      font-weight: 300;
-      color: var(--white);
-      letter-spacing: -0.64px;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-    .dark-section p {
-      font-size: 18px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.7);
-      max-width: 560px;
-      margin: 0 auto 32px;
-    }
+    /* CTA */
+    .cta-bg{position:relative;padding:120px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}
+    .cta-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(28,30,84,.94),rgba(6,27,49,.9));z-index:0}
+    .cta-c{position:relative;z-index:1;max-width:600px;margin:0 auto}
+    .cta-c h2{font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--white);letter-spacing:-.8px;line-height:1.15;margin-bottom:14px}
+    .cta-c p{font-size:17px;font-weight:300;color:rgba(255,255,255,.6);margin-bottom:32px}
+    .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
-    /* ── Footer ── */
-    footer {
-      background: var(--navy);
-      padding: 60px 40px 32px;
-      color: rgba(255,255,255,0.6);
-      font-size: 14px;
-      font-weight: 300;
-    }
-    .footer-grid {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 48px;
-    }
-    .footer-col h4 {
-      color: var(--white);
-      font-size: 14px;
-      font-weight: 400;
-      margin-bottom: 16px;
-    }
-    .footer-col a {
-      display: block;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      font-size: 13px;
-      margin-bottom: 8px;
-      transition: color 0.15s;
-    }
-    .footer-col a:hover { color: var(--white); }
-    .footer-col p { font-size: 13px; line-height: 1.6; }
-    .footer-bottom {
-      max-width: 1080px;
-      margin: 0 auto;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+    /* Footer */
+    footer{background:#030c16;padding:64px 48px 32px;color:rgba(255,255,255,.45);font-size:13px;font-weight:300}
+    .ft-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+    .ft h4{color:var(--white);font-size:13px;font-weight:500;margin-bottom:18px}
+    .ft a{display:block;color:rgba(255,255,255,.4);text-decoration:none;font-size:12px;margin-bottom:9px;transition:color .2s}
+    .ft a:hover{color:var(--white)}
+    .ft p{font-size:12px;line-height:1.7}
+    .ft-bot{max-width:1120px;margin:0 auto;border-top:1px solid rgba(255,255,255,.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      nav { padding: 12px 20px; }
-      .nav-links { display: none; }
-      .hero { padding: 60px 20px 40px; }
-      .hero h1 { letter-spacing: -0.96px; }
-      .stats-bar { grid-template-columns: 1fr; padding: 0 20px; }
-      .section { padding: 60px 20px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+    /* Gallery row */
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+    .gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:8px;transition:transform .3s;cursor:pointer}
+    .gallery-item:hover{transform:scale(1.04)}
+
+    /* Fade */
+    .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+
+    /* Stats bar */
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:8px;overflow:hidden;max-width:900px;margin:-30px auto 60px;position:relative;z-index:10;box-shadow:var(--shadow) 0px 30px 45px -30px,var(--shadow2) 0px 18px 36px -18px}
+    .stat{background:var(--white);padding:28px 20px;text-align:center}
+    .stat-val{font-size:30px;font-weight:300;color:var(--navy);letter-spacing:-.5px;line-height:1.1}
+    .stat-lbl{font-size:11px;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+
+    @media(max-width:900px){
+      nav{padding:14px 24px}.nav-r{display:none}.nav-r.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:24px;gap:16px;border-bottom:1px solid var(--border)}.ham{display:flex}
+      .hero-c{padding:100px 24px 60px}.split{grid-template-columns:1fr;gap:36px}
+      .sec,.sec-inner{padding:64px 24px}.process-steps{grid-template-columns:1fr}.process-line{display:none}
+      .stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}
+      .ft-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}
     }
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; text-align: center; }
+    @media(max-width:500px){
+      .ft-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}
+      .ft-bot{flex-direction:column;text-align:center}.hero h1{font-size:30px;letter-spacing:-.8px}
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <div class="nav-logo">
-      <div class="logo-mark">iB</div>
-      instaBuild
-    </div>
-    <div class="nav-links">
-      <a href="#services">Services</a>
-      <a href="#features">Features</a>
-      <a href="#about">About</a>
-      <a href="#contact" class="btn btn-primary">Get Started</a>
-    </div>
-  </nav>
+<nav id="nav"><a href="/" class="logo"><div class="lm">iB</div>instaBuild</a>
+  <div class="nav-r" id="nr">
+    <a href="#about">About</a><a href="#services">Solutions</a><a href="#why">Why Us</a><a href="#process">Process</a><a href="#contact">Contact</a>
+    <a href="#contact" class="btn btn-p start-project-btn">Get Started</a>
+  </div>
+  <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-badge">🚀 Now in Beta</div>
-    <h1>Build anything.<br><span>Instantly.</span></h1>
-    <p>
-      instaBuild is the next-generation construction platform that transforms how projects are planned, managed, and delivered. From blueprint to build — faster than ever before.
-    </p>
-    <div class="hero-buttons">
-      <a href="#contact" class="btn btn-primary">Start Building</a>
-      <a href="#services" class="btn btn-ghost">Explore Services →</a>
-    </div>
-  </section>
+<section class="hero"><div class="hero-bg"></div><div class="hero-ol"></div>
+  <div class="hero-c">
+    <div class="hero-badge"><span class="hero-dot"></span>POP-UP Communities — Delivered in 30 Days</div>
+    <h1>We build the future.<br><span>In record time.</span></h1>
+    <p>instaBuild is a global leader in modular and offsite construction — delivering multi-family housing, commercial buildings, student & senior communities, and custom POP-UP projects faster, smarter, and more sustainably than anyone else.</p>
+    <div class="hero-btns"><a href="#contact" class="btn btn-w start-project-btn">Start Your Project</a><a href="#services" class="btn btn-ow">Explore Solutions ↓</a></div>
+  </div>
+</section>
 
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-value">500+</div>
-      <div class="stat-label">Projects Completed</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">40%</div>
-      <div class="stat-label">Faster Project Delivery</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">98%</div>
-      <div class="stat-label">Client Satisfaction</div>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-val">30</div><div class="stat-lbl">Days to POP-UP</div></div>
+  <div class="stat"><div class="stat-val">500+</div><div class="stat-lbl">Projects Delivered</div></div>
+  <div class="stat"><div class="stat-val">90</div><div class="stat-lbl">Days Custom Build</div></div>
+  <div class="stat"><div class="stat-val">98%</div><div class="stat-lbl">Client Satisfaction</div></div>
+</div>
+
+<!-- About -->
+<section class="sec" id="about">
+  <div class="sec-hdr fade-in"><div class="sec-tag">About Us</div><h2>Reinventing construction from the ground up</h2><p>We combine cutting-edge modular technology with world-class design to build structures that are faster, greener, and more cost-effective.</p></div>
+  <div class="split">
+    <div class="split-img fade-in" style="background-image:url('images/maxresdefault.jpg')"></div>
+    <div class="split-txt fade-in">
+      <h3>A global construction technology company</h3>
+      <p>Headquartered in Europe with operations across the EU and United States, instaBuild has pioneered a new approach to construction. Our panelized and modular building systems allow us to deliver projects in a fraction of the time required by traditional methods — without sacrificing quality, design, or sustainability.</p>
+      <p>From POP-UP communities deployed in under 30 days to multi-story residential complexes, we're proving that the future of construction is offsite, modular, and intelligent.</p>
     </div>
   </div>
+</section>
 
-  <!-- Features -->
-  <section class="section" id="features">
-    <div class="section-header">
-      <div class="section-tag">Why instaBuild</div>
-      <h2>Designed for speed, built for scale</h2>
-      <p>We combine cutting-edge technology with construction expertise to deliver projects smarter.</p>
+<!-- Mission + Vision -->
+<div class="sec-alt"><div class="sec-inner">
+  <div class="split">
+    <div class="fade-in">
+      <div class="sec-tag">Our Mission</div>
+      <h3 style="font-size:24px;font-weight:300;color:var(--navy);letter-spacing:-.4px;margin-bottom:12px">To build smarter, greener, and faster while making a lasting impact on communities.</h3>
+      <p style="font-size:14px;color:var(--slate);line-height:1.7">We exist to eliminate the friction between vision and reality. By combining advanced modular technology with transparent processes, we make construction accessible, predictable, and extraordinary.</p>
     </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>Instant Estimates</h3>
-        <p>Upload your blueprints and receive detailed cost and timeline estimates within minutes, not weeks.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🏗️</div>
-        <h3>Smart Project Management</h3>
-        <p>Real-time dashboards, automated scheduling, and resource allocation keep every project on track.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🤖</div>
-        <h3>AI-Powered Planning</h3>
-        <p>Our AI engine optimizes designs for cost, sustainability, and structural integrity before ground breaks.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔗</div>
-        <h3>Seamless Integration</h3>
-        <p>Connect with your existing tools — AutoCAD, Revit, Procore — and sync data effortlessly.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛡️</div>
-        <h3>Compliance & Safety</h3>
-        <p>Built-in regulatory checks keep every project compliant with local building codes and safety standards.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Real-Time Analytics</h3>
-        <p>Track progress, budgets, and milestones with live dashboards accessible from anywhere.</p>
-      </div>
+    <div class="fade-in">
+      <div class="sec-tag">Our Vision</div>
+      <h3 style="font-size:24px;font-weight:300;color:var(--navy);letter-spacing:-.4px;margin-bottom:12px">A world where every community has access to high-quality, sustainable housing — delivered in weeks, not years.</h3>
+      <p style="font-size:14px;color:var(--slate);line-height:1.7">We envision cities transformed by modular innovation — where buildings are assembled with precision, waste is eliminated, and every structure contributes positively to its environment.</p>
     </div>
-  </section>
-
-  <!-- Services -->
-  <section class="section" id="services">
-    <div class="section-header">
-      <div class="section-tag">What We Do</div>
-      <h2>End-to-end construction solutions</h2>
-      <p>From residential to commercial, instaBuild covers every phase of the construction lifecycle.</p>
-    </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-card-img" style="background: linear-gradient(135deg, #f0edff, #e8e3ff);">🏠</div>
-        <div class="service-card-body">
-          <h3>Residential Construction</h3>
-          <p>Custom homes, multi-family units, and renovations — delivered on time and on budget.</p>
-        </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img" style="background: linear-gradient(135deg, #e8f4f0, #d4efe4);">🏢</div>
-        <div class="service-card-body">
-          <h3>Commercial Projects</h3>
-          <p>Office buildings, retail spaces, and industrial facilities with enterprise-grade precision.</p>
-        </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img" style="background: linear-gradient(135deg, #fff0f4, #ffe3ea);">🏗️</div>
-        <div class="service-card-body">
-          <h3>Infrastructure</h3>
-          <p>Bridges, roads, and public works — engineered for longevity and built to last.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="section" id="about">
-    <div class="section-header">
-      <div class="section-tag">About Us</div>
-      <h2>Reinventing construction, one project at a time</h2>
-      <p>instaBuild was founded by a team of engineers and builders who saw a better way.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🌍</div>
-        <h3>Our Mission</h3>
-        <p>To make construction faster, more transparent, and more accessible for everyone — from homeowners to developers.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">👥</div>
-        <h3>Our Team</h3>
-        <p>A diverse team of 150+ architects, engineers, developers, and project managers working across 12 countries.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🏆</div>
-        <h3>Our Track Record</h3>
-        <p>500+ successful projects, $2B+ in managed construction value, and a 98% client satisfaction rate.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dark CTA -->
-  <div class="dark-section" id="contact">
-    <h2>Ready to build faster?</h2>
-    <p>Join hundreds of companies already transforming their construction workflow with instaBuild.</p>
-    <a href="#" class="btn btn-primary" style="font-size: 16px; padding: 10px 24px;">Get Started Today</a>
   </div>
+</div></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h4>instaBuild</h4>
-        <p>Next-generation construction technology. We help builders, developers, and architects deliver projects faster, smarter, and more efficiently.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Services</h4>
-        <a href="#services">Residential</a>
-        <a href="#services">Commercial</a>
-        <a href="#services">Infrastructure</a>
-        <a href="#services">Consulting</a>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="#about">About</a>
-        <a href="#">Careers</a>
-        <a href="#">Blog</a>
-        <a href="#">Press</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Cookie Policy</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 instaBuild, Inc. All rights reserved.</span>
-      <span>contact@instabuild.com</span>
-    </div>
-  </footer>
+<!-- Core Values -->
+<section class="sec">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Core Values</div><h2>What drives us</h2></div>
+  <div class="grid3">
+    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Speed & Precision</h3><p>We deliver projects 3x faster than traditional construction through offsite manufacturing and modular assembly.</p></div>
+    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability First</h3><p>Our panelized systems reduce material waste by up to 60% and meet the highest energy efficiency standards.</p></div>
+    <div class="card fade-in"><div class="card-icon">🎯</div><h3>Radical Transparency</h3><p>Fixed pricing, real-time progress tracking, and open communication — no surprises, ever.</p></div>
+    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Master Craftsmanship</h3><p>Technology enhances our work — it never replaces the skilled hands that bring every detail to life.</p></div>
+    <div class="card fade-in"><div class="card-icon">🤝</div><h3>True Partnership</h3><p>We collaborate closely with developers, architects, and communities to bring shared visions to reality.</p></div>
+    <div class="card fade-in"><div class="card-icon">🚀</div><h3>Relentless Innovation</h3><p>From our Innovation Center to our construction systems — we push boundaries every single day.</p></div>
+  </div>
+</section>
 
+<!-- Services -->
+<section class="sec-alt" id="services"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Solutions</div><h2>What we build</h2><p>Scalable, modular solutions for every need — from pop-up communities to luxury custom homes.</p></div>
+  <div class="svc-grid">
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Fully functional communities deployed in 30 days. Available in 28m², 52m², and 104m² configurations — perfect for workforce housing, resorts, and rapid-deployment projects.</p><div class="svc-features"><span class="svc-feat">30-Day Delivery</span><span class="svc-feat">3 Sizes</span><span class="svc-feat">Turnkey</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Multi-Family</span></div><div class="svc-body"><h3>Multi-Family Housing</h3><p>Apartment complexes, condominiums, and townhome communities engineered for comfort, efficiency, and lasting value. From 12 to 200+ units.</p><div class="svc-features"><span class="svc-feat">Scalable</span><span class="svc-feat">Panelized</span><span class="svc-feat">Energy Efficient</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial Buildings</h3><p>Office spaces, retail centers, hospitality venues, and mixed-use developments — built with enterprise-grade precision and future-ready infrastructure.</p><div class="svc-features"><span class="svc-feat">Fast Track</span><span class="svc-feat">Customizable</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Senior & Student</span></div><div class="svc-body"><h3>Student & Senior Housing</h3><p>Purpose-built communities with safety, accessibility, and vibrant living at their core. Designed for dignity, connection, and low-maintenance comfort.</p><div class="svc-features"><span class="svc-feat">Accessible</span><span class="svc-feat">Community-Focused</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Modular</span></div><div class="svc-body"><h3>Modular Components</h3><p>Factory-built kitchens, bathrooms (BathPods), and interior systems that plug into any project — reducing on-site labor by up to 70%.</p><div class="svc-features"><span class="svc-feat">Pre-Fabricated</span><span class="svc-feat">Plug & Play</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Custom</span></div><div class="svc-body"><h3>Custom Projects</h3><p>Bespoke luxury residences, architectural landmarks, and one-of-a-kind builds. When your vision demands total creative freedom, we deliver.</p><div class="svc-features"><span class="svc-feat">Fully Custom</span><span class="svc-feat">Signature Finish</span></div></div></div>
+  </div>
+</div></section>
+
+<!-- Gallery -->
+<section class="sec"><div class="sec-hdr fade-in"><div class="sec-tag">Our Work</div><h2>Projects we're proud of</h2></div>
+  <div class="gallery">
+    <div class="gallery-item fade-in" style="background-image:url('images/senior-solutions (1).webp')"></div>
+    <div class="gallery-item fade-in" style="background-image:url('images/traditional-design.webp')"></div>
+    <div class="gallery-item fade-in" style="background-image:url('images/InnovationCenter.webp')"></div>
+    <div class="gallery-item fade-in" style="background-image:url('images/images.jfif')"></div>
+  </div>
+</section>
+
+<!-- Why Us -->
+<section class="sec-alt" id="why"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Why Choose instaBuild</div><h2>The instaBuild advantage</h2></div>
+  <div class="why-grid">
+    <div class="why-item fade-in"><div class="why-icon">🏭</div><div class="why-txt"><h3>Offsite Manufacturing</h3><p>We build in controlled factory environments — eliminating weather delays, reducing waste, and ensuring perfect quality control on every component.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">⚡</div><div class="why-txt"><h3>30–90 Day Delivery</h3><p>POP-UP communities in 30 days. Custom multi-story projects in 90. Traditional construction takes 12–24 months. We move faster.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">💰</div><div class="why-txt"><h3>Fixed-Price Guarantee</h3><p>We lock your budget upfront. No surprise change orders. No ballooning costs. The price we quote is the price you pay.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🛡️</div><div class="why-txt"><h3>Built-In Compliance</h3><p>Every project meets EU and US building codes automatically. Permits, zoning, and safety verified before manufacturing begins.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🌱</div><div class="why-txt"><h3>60% Less Waste</h3><p>Our panelized and modular systems dramatically reduce construction waste compared to traditional on-site methods.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🌐</div><div class="why-txt"><h3>Global Reach</h3><p>Operations across Europe and North America. Two headquarters — Kosovo (EU) and Delaware (US) — serving clients worldwide.</p></div></div>
+  </div>
+</div></section>
+
+<!-- Process -->
+<section class="sec" id="process">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Process</div><h2>From concept to completion</h2></div>
+  <div style="position:relative;max-width:900px;margin:0 auto">
+    <div class="process-line"></div>
+    <div class="process-steps">
+      <div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>We learn your vision, requirements, and budget. Initial designs in days.</p></div>
+      <div class="ps fade-in"><div class="ps-num">2</div><h3>Design</h3><p>Our architects refine plans with full structural and sustainability modeling.</p></div>
+      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacturing</h3><p>Components are precision-built in our factory — weather-proof and quality-controlled.</p></div>
+      <div class="ps fade-in"><div class="ps-num">4</div><h3>Assembly</h3><p>Rapid on-site assembly. Modules arrive complete — we connect, finish, and inspect.</p></div>
+      <div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Final walkthrough, quality sign-off, and complete digital handover package.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Sustainability + Innovation -->
+<div class="sec-alt"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Sustainability & Innovation</div><h2>Building greener, building smarter</h2></div>
+  <div class="split" style="margin-bottom:64px">
+    <div class="split-img fade-in" style="background-image:url('images/InnovationCenter.webp')"></div>
+    <div class="split-txt fade-in">
+      <div class="sec-tag">Innovation Center</div>
+      <h3>Where the future of construction is built</h3>
+      <p>Our dedicated Innovation Center is the engine behind instaBuild's technology advantage. Here, our engineers and designers develop new modular systems, test sustainable materials, and refine manufacturing processes — ensuring every project benefits from the latest advances in construction science.</p>
+      <p>From AI-driven design optimization to IoT-enabled quality control on the factory floor — innovation isn't a department. It's our foundation.</p>
+    </div>
+  </div>
+  <div class="split">
+    <div class="split-txt fade-in">
+      <div class="sec-tag">Sustainability</div>
+      <h3>Net-positive by design</h3>
+      <p>Sustainability is engineered into every square meter we build. Our offsite manufacturing process reduces material waste by up to 60%. Our panelized systems exceed LEED Gold energy standards. And our modular approach means buildings can be reconfigured, expanded, or relocated — instead of demolished.</p>
+      <p>We use responsibly sourced materials, integrate renewable energy systems, and design for passive heating and cooling. The result? Structures that give back more than they take.</p>
+    </div>
+    <div class="split-img fade-in" style="background-image:url('images/images (1).jfif')"></div>
+  </div>
+</div></div>
+
+<!-- Contact -->
+<section class="sec" id="contact">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Get Started</div><h2>Ready to build?</h2><p>Tell us about your project. We'll get back to you within 24 hours.</p></div>
+  <div class="form-wrap fade-in">
+    <div class="form-status" id="formStatus"></div>
+    <form id="contactForm">
+      <div class="form-row">
+        <div class="form-group"><label for="name">Full Name *</label><input type="text" id="name" name="name" required placeholder="John Smith"></div>
+        <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" required placeholder="john@example.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000"></div>
+        <div class="form-group">
+          <label for="project_type">Project Type</label>
+          <select id="project_type" name="project_type">
+            <option value="">Select...</option>
+            <option value="popup">POP-UP Community</option>
+            <option value="multifamily">Multi-Family Housing</option>
+            <option value="commercial">Commercial Building</option>
+            <option value="senior-student">Senior / Student Housing</option>
+            <option value="custom">Custom Project</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label for="message">Tell us about your project *</label><textarea id="message" name="message" rows="5" required placeholder="Describe your project — size, location, timeline, budget..."></textarea></div>
+      <button type="submit" class="btn btn-p" style="width:100%;padding:14px;font-size:16px;justify-content:center">Send Inquiry</button>
+    </form>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in">
+  <h2>Your project deserves<br>the InstaBuilt advantage</h2>
+  <p>POP-UP in 30 days. Custom builds in 90. Sustainable, precise, and turnkey — anywhere in Europe or North America.</p>
+  <div class="cta-btns"><a href="#contact" class="btn btn-w start-project-btn" style="padding:12px 28px;font-size:16px">Start Your Project</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div>
+</div></div>
+
+<footer><div class="ft-grid">
+  <div class="ft"><h4>instaBuild</h4><p>Global leader in modular and offsite construction. POP-UP communities, multi-family housing, commercial buildings, and custom projects — delivered faster, smarter, and more sustainably.</p></div>
+  <div class="ft"><h4>Solutions</h4><a href="#services">POP-UP Communities</a><a href="#services">Multi-Family Housing</a><a href="#services">Commercial Buildings</a><a href="#services">Senior & Student Housing</a><a href="#services">Custom Projects</a></div>
+  <div class="ft"><h4>Company</h4><a href="#about">About Us</a><a href="#">Innovation Center</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Events</a></div>
+  <div class="ft"><h4>Contact</h4><a href="#">contact@instabuild.com</a><a href="#">+1 (555) 123-4567</a><p style="margin-top:8px">Europe: Prishtina, Kosovo<br>US: Dover, DE 19901</p></div>
+</div>
+<div class="ft-bot"><span>&copy; 2026 instaBuild. All rights reserved.</span><span>Building the future, faster.</span></div></footer>
+
+<script>
+// Nav scroll
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20));
+// Mobile menu
+const h=document.getElementById('ham'),n=document.getElementById('nr');
+h.addEventListener('click',()=>{h.classList.toggle('open');n.classList.toggle('open')});
+document.querySelectorAll('.nav-r a').forEach(a=>a.addEventListener('click',()=>{h.classList.remove('open');n.classList.remove('open')}));
+// Fade animations
+const o=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(e=>o.observe(e));
+setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('visible')}),100);
+
+// Start Project buttons — smooth scroll + auto-focus
+document.querySelectorAll('.start-project-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.getElementById('contact');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const nameInput = document.getElementById('name');
+        if (nameInput) nameInput.focus();
+      }, 600);
+    }
+  });
+});
+
+// Contact form
+document.getElementById('contactForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const status=document.getElementById('formStatus'),btn=this.querySelector('button[type=submit]');
+  status.className='form-status';status.textContent='';
+  btn.disabled=true;btn.textContent='Sending...';
+
+  const formData=new FormData(this);
+  try{
+    const res=await fetch('/contact',{method:'POST',body:formData});
+    const data=await res.json();
+    if(data.success){
+      status.className='form-status success';
+      status.textContent='✓ '+data.message;
+      this.reset();
+    }else{
+      status.className='form-status error';
+      status.textContent='✗ '+data.error;
+    }
+  }catch(err){
+    status.className='form-status error';
+    status.textContent='✗ Network error. Please try again.';
+  }
+  btn.disabled=false;btn.textContent='Send Inquiry';
+});
+</script>
 </body>
 </html>
