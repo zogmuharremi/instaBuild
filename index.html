@@ -92,7 +92,7 @@
     .b-opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
     .b-opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:6px;cursor:pointer;text-align:center;transition:.2s}.b-opt:hover{border-color:rgba(255,255,255,.15)}.b-opt.active{border-color:var(--g);background:rgba(65,171,93,.08)}
     .b-opt .sw{width:100%;height:20px;border-radius:3px;margin-bottom:3px}.b-opt .lb{font-size:9px;color:rgba(255,255,255,.5)}.b-opt.active .lb{color:var(--g)}
-    .builder-viewer{position:relative;min-height:520px}.builder-viewer canvas{display:block;width:100%;height:100%;cursor:grab}
+    .builder-viewer{position:relative;min-height:520px;height:520px}.builder-viewer canvas{display:block;width:100%;height:520px;cursor:grab}
     .builder-price{padding:20px 16px;display:flex;flex-direction:column;gap:12px}
     .builder-price h3{font-size:14px;font-weight:600;color:var(--w)}
     .price-box{background:rgba(65,171,93,.06);border:1px solid rgba(65,171,93,.15);border-radius:8px;padding:14px;text-align:center}.price-box .pv{font-size:28px;font-weight:700;color:var(--g)}.price-box .pl{font-size:9px;color:var(--s);margin-top:2px}
@@ -118,9 +118,12 @@
     @media(max-width:900px){
       nav{display:none}nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--w);border-bottom:1px solid var(--b);padding:20px 32px;gap:14px;box-shadow:0 16px 40px rgba(0,0,0,.08)}.menu-toggle{display:block}
       .grid2{grid-template-columns:1fr}.process-steps{grid-template-columns:1fr}.ps-line{display:none}.hero-c{padding:110px 28px 70px}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}
-      .container{padding:0 24px}section{padding:64px 0}
+      .container{padding:0 24px}section{padding:64px 0}.hero{min-height:auto}.hero-c{padding:140px 24px 80px}
+      .builder-viewer,.builder-viewer canvas{height:380px}.builder-panel{max-height:300px}
+      .map-container{height:380px}
+      #translate-widget{top:8px;right:8px}#translate-widget select{font-size:11px;padding:6px 8px}
     }
-    @media(max-width:500px){.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.hero h1{font-size:32px}}
+    @media(max-width:500px){.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.hero h1{font-size:32px}.hero p{font-size:15px}.btn-lg{padding:11px 22px;font-size:14px}.grid3{grid-template-columns:1fr}.svc-grid{grid-template-columns:1fr}.hero-stats{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -209,7 +212,7 @@
       </div></div>
       <button id="resetCfg" style="width:100%;background:transparent;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:4px">↺ Reset</button>
     </div>
-    <div class="builder-viewer" id="vframe"><canvas id="vcanvas"></canvas></div>
+    <div class="builder-viewer" id="vframe"><canvas id="vcanvas" width="560" height="520" style="display:block;width:100%;height:520px;cursor:grab"></canvas></div>
     <div class="builder-price">
       <h3>💰 Estimate</h3>
       <div class="price-box"><div class="pv" id="priceTotal">$124,500</div><div class="pl">ESTIMATED TOTAL</div></div>
@@ -332,7 +335,7 @@ const rY=3.2,rpG=new THREE.BoxGeometry(6.0,.1,2.2);const rf=new THREE.Mesh(rpG,r
 ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,-2.2),null,'r');ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,2.2),null,'r');
 }build();
 window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dynType;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
-function resize(){const w=frame.clientWidth,h=frame.clientHeight||520;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}window.addEventListener('resize',resize);resize();
+function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,520);camera.aspect=w/520;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,300);
 function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
 </script>
 </body>
