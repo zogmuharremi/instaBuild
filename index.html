@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>instaBuild — Design & Price Your Home</title>
+  <title>instaBuild — The Future of Modular Construction</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
@@ -12,187 +12,164 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
     body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--s);background:var(--w);font-weight:350;font-size:16px;line-height:1.6;overflow-x:hidden}
-    .menu-btn{position:fixed;top:18px;left:20px;z-index:2000;width:42px;height:42px;background:rgba(10,22,40,.92);border:1px solid rgba(255,255,255,.08);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:5px;backdrop-filter:blur(12px)}
-    .menu-btn span{width:17px;height:1.4px;background:var(--w);border-radius:1px;transition:.3s}
-    .menu-btn.open span:nth-child(1){transform:rotate(45deg)translate(3px,3px)}.menu-btn.open span:nth-child(2){opacity:0}.menu-btn.open span:nth-child(3){transform:rotate(-45deg)translate(3px,-3px)}
-    .menu-panel{position:fixed;top:74px;left:20px;z-index:1999;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:6px 0;min-width:200px;display:none;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px)}
-    .menu-panel.open{display:flex}.menu-panel a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;font-weight:450;padding:10px 22px;display:flex;align-items:center;gap:10px;transition:.2s}.menu-panel a:hover{color:var(--w);background:rgba(65,171,93,.06)}.menu-panel a .mi{font-size:14px;width:20px;text-align:center;color:var(--g)}
+    .menu-btn{position:fixed;top:18px;left:20px;z-index:2000;width:42px;height:42px;background:rgba(10,22,40,.92);border:1px solid rgba(255,255,255,.08);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:5px;backdrop-filter:blur(12px)}.menu-btn span{width:17px;height:1.4px;background:var(--w);border-radius:1px;transition:.3s}.menu-btn.open span:nth-child(1){transform:rotate(45deg)translate(3px,3px)}.menu-btn.open span:nth-child(2){opacity:0}.menu-btn.open span:nth-child(3){transform:rotate(-45deg)translate(3px,-3px)}
+    .menu-panel{position:fixed;top:74px;left:20px;z-index:1999;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:6px 0;min-width:200px;display:none;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px)}.menu-panel.open{display:flex}.menu-panel a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;font-weight:450;padding:10px 22px;display:flex;align-items:center;gap:10px;transition:.2s}.menu-panel a:hover{color:var(--w);background:rgba(65,171,93,.06)}.menu-panel a .mi{font-size:14px;width:20px;text-align:center;color:var(--g)}
     .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;border-radius:7px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:.2s;font-family:inherit}
     .btn-p{background:var(--g);color:#0a1628;font-weight:600}.btn-p:hover{background:var(--gh);transform:translateY(-2px);box-shadow:0 6px 20px rgba(65,171,93,.35)}
     .btn-w{background:var(--w);color:var(--n);font-weight:550}.btn-w:hover{background:var(--glb);transform:translateY(-2px)}
     .btn-ow{background:transparent;color:var(--w);border:1.5px solid rgba(255,255,255,.28)}.btn-ow:hover{background:rgba(255,255,255,.05)}
     .btn-lg{padding:13px 28px;font-size:15px;border-radius:8px}
-    .hero{position:relative;min-height:100vh;display:flex;align-items:center}
-    .hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0;filter:brightness(.48)}
-    .hero-ol{position:absolute;inset:0;background:radial-gradient(ellipse at 35% 50%,rgba(10,22,40,.15) 0%,rgba(10,22,40,.95) 70%);z-index:1}
-    .hero-c{position:relative;z-index:2;max-width:700px;padding:140px 48px 100px}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(65,171,93,.1);color:var(--g);font-size:12px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:32px;border:1px solid rgba(65,171,93,.15)}
-    .hero-dot{width:7px;height:7px;background:var(--g);border-radius:50%;animation:pulse2 2.5s infinite}@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.35}}
-    .hero h1{font-size:clamp(40px,8vw,72px);font-weight:200;color:var(--w);line-height:1.04;letter-spacing:-2px;margin-bottom:26px}.hero h1 span{color:var(--g);font-weight:400}
-    .hero p{font-size:17px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.7;max-width:520px;margin-bottom:40px}
-    .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center}.hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0;filter:brightness(.48)}.hero-ol{position:absolute;inset:0;background:radial-gradient(ellipse at 35% 50%,rgba(10,22,40,.15) 0%,rgba(10,22,40,.95) 70%);z-index:1}
+    .hero-c{position:relative;z-index:2;max-width:700px;padding:140px 48px 100px}.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(65,171,93,.1);color:var(--g);font-size:12px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:32px;border:1px solid rgba(65,171,93,.15)}.hero-dot{width:7px;height:7px;background:var(--g);border-radius:50%;animation:pulse2 2.5s infinite}@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.35}}
+    .hero h1{font-size:clamp(38px,7.5vw,68px);font-weight:200;color:var(--w);line-height:1.04;letter-spacing:-1.8px;margin-bottom:26px}.hero h1 span{color:var(--g);font-weight:400}
+    .hero p{font-size:17px;font-weight:300;color:rgba(255,255,255,.5);line-height:1.7;max-width:520px;margin-bottom:40px}.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
     .sec{max-width:1140px;margin:0 auto;padding:100px 48px}.sec-alt{background:var(--glb);padding:100px 0}.sec-inner{max-width:1140px;margin:0 auto;padding:0 48px}
-    .sec-hdr{text-align:center;margin-bottom:48px}.sec-tag{display:inline-block;font-size:9.5px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:16px}
-    .sec-hdr h2{font-size:clamp(26px,4vw,38px);font-weight:200;color:var(--n);letter-spacing:-.8px;margin-bottom:12px}
-    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:10px;overflow:hidden;max-width:900px;margin:-35px auto 60px;z-index:10;box-shadow:0 20px 48px rgba(10,22,40,.08)}
-    .stat{background:var(--w);padding:30px 20px;text-align:center}.stat-val{font-size:34px;font-weight:200;color:var(--n)}.stat-lbl{font-size:10px;font-weight:550;color:var(--s);text-transform:uppercase}
+    .sec-hdr{text-align:center;margin-bottom:64px}.sec-tag{display:inline-block;font-size:9.5px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:16px}
+    .sec-hdr h2{font-size:clamp(26px,4vw,38px);font-weight:200;color:var(--n);letter-spacing:-.8px;margin-bottom:14px}.sec-hdr p{font-size:16px;font-weight:300;color:var(--s);max-width:560px;margin:0 auto}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:10px;overflow:hidden;max-width:900px;margin:-35px auto 60px;z-index:10;box-shadow:0 20px 48px rgba(10,22,40,.08)}.stat{background:var(--w);padding:30px 20px;text-align:center}.stat-val{font-size:34px;font-weight:200;color:var(--n)}.stat-lbl{font-size:10px;font-weight:550;color:var(--s);text-transform:uppercase}
     .split{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:14px;box-shadow:0 24px 56px rgba(10,22,40,.12)}
-    .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
-    .svc-card{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:.3s}.svc-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(10,22,40,.1)}
-    .svc-img{height:220px;background-size:cover;background-position:center;position:relative}.svc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,22,40,.35))}
-    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(10,22,40,.85);color:var(--g);font-size:9px;font-weight:600;padding:3px 11px;border-radius:4px;text-transform:uppercase;z-index:1}
-    .svc-body{padding:24px}.svc-body h3{font-size:18px;font-weight:450;color:var(--n)}.svc-body p{font-size:13px;color:var(--s);line-height:1.55;margin-top:4px}
-
-    /* ── CONFIGURATOR ── */
-    .cfg-section{background:linear-gradient(180deg,#0a1628,#0f1f36);padding:30px 0 70px}
-    .cfg-layout{max-width:1340px;margin:0 auto;display:grid;grid-template-columns:320px 1fr 260px;gap:0;padding:0 48px}
-    .cfg-panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:14px 0 0 14px;padding:22px 18px;overflow-y:auto;max-height:640px}
-    .cfg-panel h2{font-size:16px;font-weight:300;color:var(--w);margin-bottom:18px;display:flex;align-items:center;gap:7px}.cfg-panel h2 span{color:var(--g)}
-    .cfg-group{margin-bottom:18px}.cfg-group-title{font-size:9.5px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.04)}
-    .cfg-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    .cfg-opt{background:rgba(255,255,255,.025);border:1.5px solid rgba(255,255,255,.05);border-radius:7px;padding:7px;cursor:pointer;transition:.2s;text-align:center}.cfg-opt:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.05)}
-    .cfg-opt.active{border-color:var(--g);background:rgba(65,171,93,.08)}
-    .cfg-opt .swatch{width:100%;height:26px;border-radius:4px;margin-bottom:4px;border:1px solid rgba(255,255,255,.06)}
-    .cfg-opt .opt-label{font-size:9.5px;font-weight:500;color:rgba(255,255,255,.55)}.cfg-opt.active .opt-label{color:var(--g)}
-    .cfg-opt .opt-price{font-size:8.5px;color:rgba(255,255,255,.3);margin-top:1px}.cfg-opt.active .opt-price{color:var(--g)}
-    .cfg-viewer{background:#0d1a2d;position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
-    .cfg-viewer canvas{display:block;width:100%;height:640px;cursor:grab}.cfg-viewer canvas:active{cursor:grabbing}
-    .viewer-info{position:absolute;top:18px;left:18px;background:rgba(10,22,40,.9);border:1px solid rgba(65,171,93,.15);border-radius:10px;padding:13px 16px;color:var(--w);max-width:250px;z-index:10;opacity:0;transform:translateY(8px);transition:.3s;pointer-events:none}.viewer-info.visible{opacity:1;transform:translateY(0)}.viewer-info h3{font-size:13px;font-weight:500;color:var(--g)}.viewer-info p{font-size:11px;color:rgba(255,255,255,.45);line-height:1.45;margin-top:3px}
-    .viewer-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.18);font-size:10.5px;z-index:10;pointer-events:none}
-    .price-panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:0 14px 14px 0;padding:22px 18px;display:flex;flex-direction:column;gap:14px}
-    .price-panel h2{font-size:16px;font-weight:300;color:var(--w);display:flex;align-items:center;gap:7px}.price-panel h2 span{color:var(--g)}
-    .price-total{background:rgba(65,171,93,.1);border:1px solid rgba(65,171,93,.2);border-radius:10px;padding:16px;text-align:center}.price-total .ta{font-size:34px;font-weight:300;color:var(--g);letter-spacing:-1px}.price-total .tl{font-size:9.5px;font-weight:500;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-top:3px}.price-total .ts{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px}
-    .price-line{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:rgba(255,255,255,.45);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03)}.price-line .pv{color:rgba(255,255,255,.65);font-weight:500}
-    .price-note{font-size:9.5px;color:rgba(255,255,255,.25);text-align:center;line-height:1.5}
-    .reset-btn{width:100%;background:transparent;border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.35);padding:9px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s}.reset-btn:hover{background:rgba(255,255,255,.04);color:var(--w)}
+    .split-txt h3{font-size:28px;font-weight:200;color:var(--n);letter-spacing:-.6px;margin-bottom:18px}.split-txt p{font-size:14.5px;font-weight:300;color:var(--s);line-height:1.72;margin-bottom:16px}
+    .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+    .card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:34px 28px;transition:.3s;position:relative;overflow:hidden}.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--gh));opacity:0;transition:.3s}.card:hover{box-shadow:0 16px 40px rgba(10,22,40,.1);transform:translateY(-4px);border-color:transparent}.card:hover::before{opacity:1}
+    .card-icon{width:50px;height:50px;background:var(--gg);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}.card h3{font-size:17px;font-weight:500;color:var(--n);margin-bottom:6px}.card p{font-size:13px;font-weight:300;color:var(--s);line-height:1.55}
+    .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}.svc-card{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:.3s}.svc-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(10,22,40,.1)}.svc-img{height:220px;background-size:cover;background-position:center;position:relative}.svc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,22,40,.35))}.svc-tag{position:absolute;top:14px;left:14px;background:rgba(10,22,40,.85);color:var(--g);font-size:9px;font-weight:600;padding:3px 11px;border-radius:4px;text-transform:uppercase;z-index:1}.svc-body{padding:24px}.svc-body h3{font-size:18px;font-weight:450;color:var(--n)}.svc-body p{font-size:13px;color:var(--s);line-height:1.55;margin-top:4px}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}.why-item{display:flex;gap:16px;padding:6px 0}.why-icon{flex-shrink:0;width:46px;height:46px;background:var(--gg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--g)}.why-txt h3{font-size:16px;font-weight:500;color:var(--n)}.why-txt p{font-size:13px;color:var(--s);line-height:1.5;margin-top:3px}
+    .process-steps{display:grid;grid-template-columns:repeat(5,1fr);position:relative;max-width:900px;margin:0 auto}.ps{text-align:center;padding:26px 16px;position:relative;z-index:1}.ps-num{width:46px;height:46px;background:linear-gradient(135deg,var(--g),var(--gh));color:var(--w);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:600;margin:0 auto 14px;box-shadow:0 4px 14px rgba(65,171,93,.3)}.ps h3{font-size:14px;font-weight:500;color:var(--n)}.ps p{font-size:11px;color:var(--s);line-height:1.4;margin-top:3px}.process-line{position:absolute;top:49px;left:calc(10% + 46px);width:calc(80% - 46px);height:1.5px;background:linear-gradient(90deg,var(--gl),var(--g),var(--gl));z-index:0}
     .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}.gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:10px;transition:.4s}.gallery-item:hover{transform:scale(1.04);box-shadow:0 20px 48px rgba(10,22,40,.12)}
-    .fade-in{opacity:0;transform:translateY(35px);transition:.7s}.fade-in.visible{opacity:1;transform:translateY(0)}
-    .map-section{background:var(--n);padding:80px 0}.map-section .sec-tag{color:var(--gl)}.map-section .sec-hdr h2{color:var(--w)}
-    .form-wrap{max-width:560px;margin:0 auto}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:12px;font-weight:500;color:#1e3a52;margin-bottom:5px}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 15px;border:1.5px solid var(--b);border-radius:6px;font-size:14px;font-family:inherit;color:var(--n);transition:.2s;outline:none}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(65,171,93,.04)}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-status{display:none;padding:13px 18px;border-radius:6px;font-size:13px;margin-bottom:20px;text-align:center}.form-status.success{display:block;background:rgba(65,171,93,.06);color:var(--gh);border:1px solid rgba(65,171,93,.15)}.form-status.error{display:block;background:rgba(239,68,68,.04);color:#b91c1c;border:1px solid rgba(239,68,68,.1)}
-    .cta-bg{position:relative;padding:120px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}
-    .cta-ol{position:absolute;inset:0;background:linear-gradient(165deg,rgba(10,22,40,.95),rgba(10,22,40,.8));z-index:0}
-    .cta-c{position:relative;z-index:1;max-width:600px;margin:0 auto}.cta-c h2{font-size:clamp(26px,4vw,38px);font-weight:200;color:var(--w);letter-spacing:-.8px;margin-bottom:14px}.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .map-section{background:var(--n);padding:90px 0}.map-section .sec-tag{color:var(--gl)}.map-section .sec-hdr h2{color:var(--w)}.map-section .sec-hdr p{color:rgba(255,255,255,.4)}.map-wrap{max-width:1140px;margin:0 auto;padding:0 48px}.map-container{width:100%;height:500px;border-radius:16px;overflow:hidden;box-shadow:0 28px 72px rgba(0,0,0,.5);position:relative;background:#132030}
+    .form-wrap{max-width:560px;margin:0 auto}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:12px;font-weight:500;color:#1e3a52;margin-bottom:5px}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 15px;border:1.5px solid var(--b);border-radius:6px;font-size:14px;font-family:inherit;color:var(--n);transition:.2s;outline:none}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(65,171,93,.04)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-status{display:none;padding:13px 18px;border-radius:6px;font-size:13px;margin-bottom:20px;text-align:center}.form-status.success{display:block;background:rgba(65,171,93,.06);color:var(--gh);border:1px solid rgba(65,171,93,.15)}.form-status.error{display:block;background:rgba(239,68,68,.04);color:#b91c1c;border:1px solid rgba(239,68,68,.1)}
+    .cta-bg{position:relative;padding:120px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}.cta-ol{position:absolute;inset:0;background:linear-gradient(165deg,rgba(10,22,40,.95),rgba(10,22,40,.8));z-index:0}.cta-c{position:relative;z-index:1;max-width:600px;margin:0 auto}.cta-c h2{font-size:clamp(26px,4vw,38px);font-weight:200;color:var(--w);letter-spacing:-.8px;margin-bottom:14px}.cta-c p{font-size:16px;color:rgba(255,255,255,.45);margin-bottom:32px}.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
     footer{background:var(--gd);padding:70px 48px 36px;color:rgba(255,255,255,.35);font-size:12px}.ft-grid{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:52px}.ft h4{color:var(--w);font-size:13px;font-weight:500;margin-bottom:18px}.ft a{display:block;color:rgba(255,255,255,.28);font-size:11.5px;margin-bottom:8px;text-decoration:none}.ft a:hover{color:var(--g)}.ft-bot{max-width:1140px;margin:0 auto;border-top:1px solid rgba(255,255,255,.04);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
 
-    /* ── AI CHAT ── */
-    .ai-btn{position:fixed;bottom:28px;right:28px;z-index:2000;width:56px;height:56px;background:linear-gradient(135deg,var(--g),var(--gh));border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px rgba(65,171,93,.4);transition:.3s;font-size:24px}
-    .ai-btn:hover{transform:scale(1.08);box-shadow:0 8px 32px rgba(65,171,93,.5)}
-    .ai-btn.pulse-box{animation:aiPulse 2s infinite}@keyframes aiPulse{0%,100%{box-shadow:0 6px 24px rgba(65,171,93,.4)}50%{box-shadow:0 6px 24px rgba(65,171,93,.6),0 0 0 12px rgba(65,171,93,.1)}}
-    .ai-chat{position:fixed;bottom:96px;right:28px;z-index:1999;width:380px;max-height:520px;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.08);border-radius:16px;display:none;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.55);overflow:hidden;backdrop-filter:blur(20px)}
-    .ai-chat.open{display:flex}
-    .ai-chat-header{background:rgba(65,171,93,.1);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)}
-    .ai-chat-header h3{font-size:15px;font-weight:500;color:var(--w);display:flex;align-items:center;gap:8px}.ai-chat-header h3 span{color:var(--g)}
-    .ai-chat-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:4px 8px}.ai-chat-close:hover{color:var(--w)}
-    .ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:340px}
-    .ai-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:12.5px;line-height:1.55;animation:fadeIn .3s}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .ai-msg.user{align-self:flex-end;background:var(--g);color:#0a1628;border-radius:12px 12px 4px 12px;font-weight:450}
-    .ai-msg.bot{align-self:flex-start;background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);border-radius:12px 12px 12px 4px}
-    .ai-msg.bot .ai-typing{display:flex;gap:4px;padding:4px 0}.ai-msg.bot .ai-typing span{width:6px;height:6px;background:var(--g);border-radius:50%;animation:typeBounce 1.4s infinite}.ai-msg.bot .ai-typing span:nth-child(2){animation-delay:.2s}.ai-msg.bot .ai-typing span:nth-child(3){animation-delay:.4s}@keyframes typeBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-    .ai-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px}
-    .ai-sugg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.55);padding:6px 12px;border-radius:14px;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s}.ai-sugg:hover{background:rgba(65,171,93,.1);border-color:rgba(65,171,93,.2);color:var(--g)}
-    .ai-input-wrap{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.05)}.ai-input-wrap input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;color:var(--w);font-size:13px;font-family:inherit;outline:none}.ai-input-wrap input:focus{border-color:rgba(65,171,93,.3)}.ai-input-wrap input::placeholder{color:rgba(255,255,255,.2)}.ai-input-wrap button{background:var(--g);border:none;border-radius:8px;padding:10px 16px;color:#0a1628;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit}
+    /* Configurator */
+    .cfg-section{background:linear-gradient(180deg,#0a1628,#0f1f36);padding:30px 0 70px}.cfg-layout{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:300px 1fr 250px;gap:0;padding:0 48px}
+    .cfg-panel{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.035);border-radius:14px 0 0 14px;padding:20px 16px;overflow-y:auto;max-height:580px}
+    .cfg-panel h2{font-size:15px;font-weight:300;color:var(--w);margin-bottom:16px;display:flex;align-items:center;gap:6px}.cfg-panel h2 span{color:var(--g)}
+    .cfg-group{margin-bottom:16px}.cfg-gt{font-size:9px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .cfg-opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}.cfg-opt{background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.04);border-radius:6px;padding:6px;cursor:pointer;transition:.2s;text-align:center}.cfg-opt:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}.cfg-opt.active{border-color:var(--g);background:rgba(65,171,93,.07)}.cfg-opt .swatch{width:100%;height:22px;border-radius:3px;margin-bottom:3px}.cfg-opt .ol{font-size:9px;font-weight:500;color:rgba(255,255,255,.5)}.cfg-opt.active .ol{color:var(--g)}.cfg-opt .op{font-size:8px;color:rgba(255,255,255,.25)}.cfg-opt.active .op{color:var(--g)}
+    .cfg-viewer{background:#0d1a2d;position:relative;overflow:hidden}.cfg-viewer canvas{display:block;width:100%;height:580px;cursor:grab}.cfg-viewer canvas:active{cursor:grabbing}
+    .viewer-info{position:absolute;top:16px;left:16px;background:rgba(10,22,40,.9);border:1px solid rgba(65,171,93,.12);border-radius:8px;padding:11px 14px;color:var(--w);max-width:230px;z-index:10;opacity:0;transform:translateY(6px);transition:.3s;pointer-events:none}.viewer-info.visible{opacity:1;transform:translateY(0)}.viewer-info h3{font-size:12px;font-weight:500;color:var(--g)}.viewer-info p{font-size:10.5px;color:rgba(255,255,255,.4);line-height:1.4}.viewer-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;z-index:10;pointer-events:none}
+    .price-panel{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.035);border-radius:0 14px 14px 0;padding:20px 16px;display:flex;flex-direction:column;gap:12px}
+    .price-panel h2{font-size:15px;font-weight:300;color:var(--w);display:flex;align-items:center;gap:6px}.price-panel h2 span{color:var(--g)}
+    .ptotal{background:rgba(65,171,93,.08);border:1px solid rgba(65,171,93,.18);border-radius:8px;padding:14px;text-align:center}.ptotal .ta{font-size:30px;font-weight:300;color:var(--g);letter-spacing:-1px}.ptotal .tl{font-size:9px;font-weight:500;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:3px}
+    .pline{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);padding:2px 0;border-bottom:1px solid rgba(255,255,255,.02)}.pline .pv{color:rgba(255,255,255,.6)}
+    .pn{font-size:9px;color:rgba(255,255,255,.22);text-align:center;line-height:1.5}.reset-btn{width:100%;background:transparent;border:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.3);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s}.reset-btn:hover{background:rgba(255,255,255,.03);color:var(--w)}
 
-    @media(max-width:1100px){.cfg-layout{grid-template-columns:280px 1fr 240px}}
-    @media(max-width:950px){.cfg-layout{grid-template-columns:1fr;padding:0 24px}.cfg-panel{border-radius:14px 14px 0 0;max-height:none}.cfg-viewer{min-height:400px}.price-panel{border-radius:0 0 14px 14px}.ai-chat{width:90vw;right:5vw;bottom:90px}}
-    @media(max-width:768px){.hero-c{padding:110px 24px 70px}.sec{padding:64px 24px}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.ft-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}}
-    @media(max-width:480px){.ft-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}}
+    /* AI */
+    .ai-btn{position:fixed;bottom:28px;right:28px;z-index:2000;width:54px;height:54px;background:linear-gradient(135deg,var(--g),var(--gh));border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px rgba(65,171,93,.35);transition:.3s;font-size:22px}.ai-btn:hover{transform:scale(1.07)}.ai-btn.pulse-box{animation:aiPulse 2.5s infinite}@keyframes aiPulse{0%,100%{box-shadow:0 6px 24px rgba(65,171,93,.35)}50%{box-shadow:0 6px 28px rgba(65,171,93,.55),0 0 0 10px rgba(65,171,93,.08)}}
+    .ai-chat{position:fixed;bottom:96px;right:28px;z-index:1999;width:360px;max-height:480px;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.06);border-radius:14px;display:none;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.5);overflow:hidden}.ai-chat.open{display:flex}.ai-ch{background:rgba(65,171,93,.08);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.04)}.ai-ch h3{font-size:14px;font-weight:500;color:var(--w)}.ai-ch button{background:none;border:none;color:rgba(255,255,255,.35);font-size:16px;cursor:pointer}.ai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;max-height:300px}.ai-msg{max-width:82%;padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.5;animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.ai-msg.user{align-self:flex-end;background:var(--g);color:#0a1628;font-weight:450}.ai-msg.bot{align-self:flex-start;background:rgba(255,255,255,.05);color:rgba(255,255,255,.75)}.ai-typing{display:flex;gap:4px;padding:4px 0}.ai-typing span{width:5px;height:5px;background:var(--g);border-radius:50%;animation:tb 1.4s infinite}.ai-typing span:nth-child(2){animation-delay:.2s}.ai-typing span:nth-child(3){animation-delay:.4s}@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+    .ai-sug{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 10px}.ai-sug button{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.48);padding:5px 11px;border-radius:12px;font-size:10.5px;cursor:pointer;font-family:inherit;transition:.2s}.ai-sug button:hover{background:rgba(65,171,93,.08);border-color:rgba(65,171,93,.15);color:var(--g)}
+    .ai-in{display:flex;gap:7px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.04)}.ai-in input{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:9px 12px;color:var(--w);font-size:12px;font-family:inherit;outline:none}.ai-in input:focus{border-color:rgba(65,171,93,.25)}.ai-in button{background:var(--g);border:none;border-radius:7px;padding:9px 15px;color:#0a1628;font-weight:600;font-size:12px;cursor:pointer;font-family:inherit}
+    .fade-in{opacity:0;transform:translateY(35px);transition:.7s}.fade-in.visible{opacity:1;transform:translateY(0)}
+    @media(max-width:1100px){.cfg-layout{grid-template-columns:250px 1fr 220px}}
+    @media(max-width:900px){.cfg-layout{grid-template-columns:1fr}.cfg-panel{border-radius:14px 14px 0 0;max-height:none}.cfg-viewer{min-height:380px}.price-panel{border-radius:0 0 14px 14px}.hero-c{padding:110px 24px 70px}.sec{padding:64px 24px}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.ft-grid{grid-template-columns:1fr 1fr}.process-steps{grid-template-columns:1fr}.process-line{display:none}.form-row{grid-template-columns:1fr}}
+    @media(max-width:480px){.ft-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr}.ai-chat{width:90vw;right:5vw}}
   </style>
 </head>
 <body>
 
 <button class="menu-btn" id="menuBtn"><span></span><span></span><span></span></button>
 <div class="menu-panel" id="menuPanel">
-  <a href="#about"><span class="mi">◈</span> About</a><a href="#services"><span class="mi">◉</span> Solutions</a><a href="#configurator"><span class="mi">⬡</span> Design & Price</a><a href="#map"><span class="mi">◎</span> Global</a><a href="#contact"><span class="mi">◻</span> Contact</a>
+  <a href="#about"><span class="mi">◈</span> About</a><a href="#values"><span class="mi">◆</span> Core Values</a><a href="#services"><span class="mi">◉</span> Solutions</a><a href="#configurator"><span class="mi">⬡</span> Design & Price</a><a href="#why"><span class="mi">★</span> Why Us</a><a href="#process"><span class="mi">◫</span> Process</a><a href="#map"><span class="mi">◎</span> Global Map</a><a href="#contact"><span class="mi">◻</span> Contact</a>
 </div>
 
-<!-- AI Chat Button -->
-<button class="ai-btn pulse-box" id="aiBtn" title="Ask instaBuild AI">💬</button>
+<button class="ai-btn pulse-box" id="aiBtn">💬</button>
 <div class="ai-chat" id="aiChat">
-  <div class="ai-chat-header"><h3><span>✦</span> instaBuild Assistant</h3><button class="ai-chat-close" id="aiClose">✕</button></div>
-  <div class="ai-messages" id="aiMsgs">
-    <div class="ai-msg bot">👋 Hi! I'm the instaBuild AI assistant. Ask me anything about our modular homes, pricing, build times, or services!</div>
-  </div>
-  <div class="ai-suggestions" id="aiSuggs">
-    <button class="ai-sugg">How fast can you build?</button>
-    <button class="ai-sugg">What's the pricing?</button>
-    <button class="ai-sugg">Where do you operate?</button>
-    <button class="ai-sugg">What is a POP-UP?</button>
-  </div>
-  <div class="ai-input-wrap"><input type="text" id="aiInput" placeholder="Ask about instaBuild…" /><button id="aiSend">Send</button></div>
+  <div class="ai-ch"><h3>✦ instaBuild Assistant</h3><button id="aiClose">✕</button></div>
+  <div class="ai-msgs" id="aiMsgs"><div class="ai-msg bot">👋 Hi! Ask me anything about instaBuild — pricing, build times, locations, or how our modular technology works.</div></div>
+  <div class="ai-sug"><button>How fast?</button><button>Pricing?</button><button>Where?</button><button>POP-UP?</button><button>Process?</button></div>
+  <div class="ai-in"><input type="text" id="aiInput" placeholder="Ask anything…" /><button id="aiSend">Send</button></div>
 </div>
 
 <section class="hero"><div class="hero-bg"></div><div class="hero-ol"></div>
   <div class="hero-c">
-    <div class="hero-badge"><span class="hero-dot"></span>Design it. Price it. We build it in 90 days.</div>
-    <h1>Your home,<br><span>your way.</span></h1>
-    <p>Choose walls, windows, floors, roof, and more. Watch the price update instantly. Our AI assistant is ready to answer any question — just click the chat bubble.</p>
-    <div class="hero-btns"><a href="#configurator" class="btn btn-w btn-lg">Start Designing ↓</a><a href="#contact" class="btn btn-ow btn-lg">Talk to Sales</a></div>
+    <div class="hero-badge"><span class="hero-dot"></span>Design it. Price it. We build it — in 90 days.</div>
+    <h1>We build the<br><span>future of housing.</span></h1>
+    <p>instaBuild is a global leader in modular and offsite construction. We deliver multi-family housing, commercial buildings, student and senior communities, and custom POP-UP projects — faster, smarter, and more sustainably than traditional construction.</p>
+    <div class="hero-btns"><a href="#configurator" class="btn btn-w btn-lg">Design Your Home</a><a href="#contact" class="btn btn-ow btn-lg">Get a Quote</a></div>
   </div>
 </section>
 
 <div class="stats-bar"><div class="stat"><div class="stat-val">30</div><div class="stat-lbl">Days POP-UP</div></div><div class="stat"><div class="stat-val">500+</div><div class="stat-lbl">Projects</div></div><div class="stat"><div class="stat-val">90</div><div class="stat-lbl">Days Custom</div></div><div class="stat"><div class="stat-val">98%</div><div class="stat-lbl">Satisfaction</div></div></div>
 
-<section class="sec" id="about"><div class="sec-hdr fade-in"><div class="sec-tag">About</div><h2>Construction, reimagined</h2></div>
-  <div class="split"><div class="split-img fade-in" style="background-image:url('images/maxresdefault.jpg')"></div>
-    <div class="fade-in"><h3 style="font-size:28px;font-weight:200;color:var(--n);margin-bottom:20px">We build smarter, greener, faster</h3><p style="font-size:14px;color:var(--s);line-height:1.75">Headquartered in Europe with operations across the EU and US, instaBuild pioneered modular panelized systems that slash delivery times — every component precision-engineered indoors, delivered ready to assemble.</p></div></div>
+<section class="sec" id="about">
+  <div class="sec-hdr fade-in"><div class="sec-tag">About Us</div><h2>Construction, reimagined</h2><p>We didn't set out to build a company. We set out to fix an industry — one that's been stuck in the past for too long. Modular technology is how we deliver on that promise.</p></div>
+  <div class="split">
+    <div class="split-img fade-in" style="background-image:url('images/maxresdefault.jpg')"></div>
+    <div class="split-txt fade-in">
+      <h3>A technology company that builds homes</h3>
+      <p>Headquartered in Europe with operations spanning the EU and United States, instaBuild has pioneered a completely new approach to construction. Our panelized and modular building systems are precision-engineered in climate-controlled factories — not exposed to weather, delays, or the inconsistencies of traditional on-site building.</p>
+      <p><strong>Our Mission:</strong> To build smarter, greener, and faster — making a lasting, positive impact on every community we touch. <strong>Our Vision:</strong> A world where high-quality sustainable housing is available to everyone, delivered in weeks instead of years.</p>
+    </div>
+  </div>
 </section>
 
-<section class="sec-alt" id="services"><div class="sec-inner"><div class="sec-hdr fade-in"><div class="sec-tag">Solutions</div><h2>What we build</h2></div>
-  <div class="svc-grid">
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Full neighborhoods in 30 days. 28–104m².</p></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Multi-Family</span></div><div class="svc-body"><h3>Multi-Family</h3><p>Apartments, condos. 12–200+ units. Panelized.</p></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial</h3><p>Office, retail, hospitality — enterprise-grade modular.</p></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Community</span></div><div class="svc-body"><h3>Community Living</h3><p>Student & senior housing — accessible and vibrant.</p></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Components</span></div><div class="svc-body"><h3>Modular Systems</h3><p>Factory-built kitchens, BathPods — plug and play.</p></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Custom</span></div><div class="svc-body"><h3>Custom Projects</h3><p>Bespoke residences. Your imagination, our execution.</p></div></div>
+<section class="sec-alt" id="values"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Principles</div><h2>What drives everything we do</h2><p>Six core values that guide every decision, every project, and every relationship we build.</p></div>
+  <div class="grid3">
+    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Velocity Without Sacrifice</h3><p>We deliver projects 3× faster than traditional construction through offsite manufacturing and modular assembly — without ever compromising on quality, safety, or design integrity.</p></div>
+    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability Engineered In</h3><p>Our panelized systems reduce material waste by up to 60%. Every building is designed to exceed LEED Gold energy standards and minimize environmental impact across its entire lifecycle.</p></div>
+    <div class="card fade-in"><div class="card-icon">🎯</div><h3>Absolute Transparency</h3><p>Fixed pricing locked upfront. Real-time project dashboards accessible 24/7. Open books and honest communication — no surprises, no hidden costs, no exceptions.</p></div>
+    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Obsessive Craftsmanship</h3><p>Technology amplifies human skill — it never replaces it. Our builders are master craftspeople who happen to work with the most advanced tools and systems in the industry.</p></div>
+    <div class="card fade-in"><div class="card-icon">🤝</div><h3>True Partnership</h3><p>We don't just work for you — we work with you. Developers, architects, community leaders — one unified team pursuing a shared vision from day one through completion.</p></div>
+    <div class="card fade-in"><div class="card-icon">🚀</div><h3>Relentless Innovation</h3><p>Research and development isn't a department at instaBuild — it's the heartbeat of our company. From our Innovation Center to our factory floor, we push boundaries every day.</p></div>
   </div>
 </div></section>
 
-<!-- ── CONFIGURATOR ── -->
+<section class="sec" id="services">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Solutions</div><h2>What we build — and how</h2><p>Six modular construction solutions designed to serve every need, from rapid-deployment communities to luxury custom residences. Delivered anywhere in Europe or North America.</p></div>
+  <div class="svc-grid">
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Fully functional neighborhoods deployed in just 30 days. Available in 28m², 52m², and 104m² configurations — ideal for workforce housing, resorts, student accommodation, and emergency-response projects.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Multi-Family</span></div><div class="svc-body"><h3>Multi-Family Housing</h3><p>Apartment complexes, condominiums, and townhome communities engineered for comfort, efficiency, and lasting value. From intimate 12-unit buildings to expansive 200+ unit developments.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial Buildings</h3><p>Office towers, retail centers, hospitality venues, and mixed-use developments — built with enterprise-grade precision and infrastructure that's ready for tomorrow's demands.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Community</span></div><div class="svc-body"><h3>Student & Senior Housing</h3><p>Purpose-built living communities with safety, accessibility, and vibrant community life at their core. Designed for dignity, comfort, and real human connection.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Components</span></div><div class="svc-body"><h3>Modular Components</h3><p>Factory-fabricated kitchens, BathPods, and interior systems that plug into any project — reducing on-site labor by up to 70% while delivering flawless quality.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Custom</span></div><div class="svc-body"><h3>Custom Projects</h3><p>Bespoke luxury residences and one-of-a-kind architectural landmarks. When your vision demands complete creative freedom, we bring it to life — down to the finest detail.</p></div></div>
+  </div>
+</section>
+
+<!-- 3D Configurator -->
 <div class="cfg-section" id="configurator">
-  <div class="sec-hdr fade-in" style="margin-bottom:28px"><div class="sec-tag">Design & Price</div><h2 style="color:var(--w)">Configure your home</h2></div>
+  <div class="sec-hdr fade-in" style="margin-bottom:28px"><div class="sec-tag">Design & Price Your Home</div><h2 style="color:var(--w)">Configure. Visualize. Get an instant price.</h2><p style="color:rgba(255,255,255,.4);font-size:15px">Choose walls, roof, windows, and more. Your home updates in real-time. Click any part of the model to learn about it.</p></div>
   <div class="cfg-layout">
-    <div class="cfg-panel">
-      <h2><span>🏠</span> Options</h2>
-      <div class="cfg-group"><div class="cfg-group-title">Exterior</div><div class="cfg-opts" id="wallOpts">
-        <div class="cfg-opt active" data-wall="white" data-price="0"><div class="swatch" style="background:#f0f2f6"></div><div class="opt-label">Arctic White</div></div>
-        <div class="cfg-opt" data-wall="cream" data-price="1500"><div class="swatch" style="background:#e8dfd2"></div><div class="opt-label">Cream</div><div class="opt-price">+$1,500</div></div>
-        <div class="cfg-opt" data-wall="gray" data-price="2000"><div class="swatch" style="background:#8894a2"></div><div class="opt-label">Slate Gray</div><div class="opt-price">+$2,000</div></div>
-        <div class="cfg-opt" data-wall="timber" data-price="4000"><div class="swatch" style="background:#b89068"></div><div class="opt-label">Timber</div><div class="opt-price">+$4,000</div></div>
-        <div class="cfg-opt" data-wall="charcoal" data-price="2500"><div class="swatch" style="background:#3a404a"></div><div class="opt-label">Charcoal</div><div class="opt-price">+$2,500</div></div>
-        <div class="cfg-opt" data-wall="navy" data-price="2800"><div class="swatch" style="background:#2a3a52"></div><div class="opt-label">Navy</div><div class="opt-price">+$2,800</div></div>
+    <div class="cfg-panel"><h2><span>🏠</span> Options</h2>
+      <div class="cfg-group"><div class="cfg-gt">Exterior Walls</div><div class="cfg-opts" id="wallOpts">
+        <div class="cfg-opt active" data-wall="white" data-price="0"><div class="swatch" style="background:#f0f2f6"></div><div class="ol">White</div></div>
+        <div class="cfg-opt" data-wall="cream" data-price="1500"><div class="swatch" style="background:#e8dfd2"></div><div class="ol">Cream</div><div class="op">+$1,500</div></div>
+        <div class="cfg-opt" data-wall="gray" data-price="2000"><div class="swatch" style="background:#8894a2"></div><div class="ol">Gray</div><div class="op">+$2,000</div></div>
+        <div class="cfg-opt" data-wall="timber" data-price="4000"><div class="swatch" style="background:#b89068"></div><div class="ol">Timber</div><div class="op">+$4,000</div></div>
+        <div class="cfg-opt" data-wall="charcoal" data-price="2500"><div class="swatch" style="background:#3a404a"></div><div class="ol">Charcoal</div><div class="op">+$2,500</div></div>
+        <div class="cfg-opt" data-wall="navy" data-price="2800"><div class="swatch" style="background:#2a3a52"></div><div class="ol">Navy</div><div class="op">+$2,800</div></div>
       </div></div>
-      <div class="cfg-group"><div class="cfg-group-title">Roof</div><div class="cfg-opts" id="roofOpts">
-        <div class="cfg-opt active" data-roof="dark" data-price="0"><div class="swatch" style="background:#3b4452"></div><div class="opt-label">Slate</div></div>
-        <div class="cfg-opt" data-roof="terracotta" data-price="2800"><div class="swatch" style="background:#a0523b"></div><div class="opt-label">Terracotta</div><div class="opt-price">+$2,800</div></div>
-        <div class="cfg-opt" data-roof="metal" data-price="3500"><div class="swatch" style="background:#8899aa"></div><div class="opt-label">Metal</div><div class="opt-price">+$3,500</div></div>
-        <div class="cfg-opt" data-roof="green" data-price="3000"><div class="swatch" style="background:#4a6a3e"></div><div class="opt-label">Green</div><div class="opt-price">+$3,000</div></div>
+      <div class="cfg-group"><div class="cfg-gt">Roof Material</div><div class="cfg-opts" id="roofOpts">
+        <div class="cfg-opt active" data-roof="dark" data-price="0"><div class="swatch" style="background:#3b4452"></div><div class="ol">Slate</div></div>
+        <div class="cfg-opt" data-roof="terracotta" data-price="2800"><div class="swatch" style="background:#a0523b"></div><div class="ol">Terracotta</div><div class="op">+$2,800</div></div>
+        <div class="cfg-opt" data-roof="metal" data-price="3500"><div class="swatch" style="background:#8899aa"></div><div class="ol">Metal</div><div class="op">+$3,500</div></div>
+        <div class="cfg-opt" data-roof="green" data-price="3000"><div class="swatch" style="background:#4a6a3e"></div><div class="ol">Green</div><div class="op">+$3,000</div></div>
       </div></div>
-      <div class="cfg-group"><div class="cfg-group-title">Windows & Doors</div><div class="cfg-opts" id="winOpts">
-        <div class="cfg-opt active" data-window="white" data-price="0"><div class="swatch" style="background:linear-gradient(135deg,#c8ddf0,#e8f4ff)"></div><div class="opt-label">Clear/White</div></div>
-        <div class="cfg-opt" data-window="black" data-price="1800"><div class="swatch" style="background:#3a4048"></div><div class="opt-label">Black Frame</div><div class="opt-price">+$1,800</div></div>
-        <div class="cfg-opt" data-window="bronze" data-price="1600"><div class="swatch" style="background:linear-gradient(135deg,#b8a080,#8b6914)"></div><div class="opt-label">Bronze</div><div class="opt-price">+$1,600</div></div>
-        <div class="cfg-opt" data-window="wood" data-price="2200"><div class="swatch" style="background:#8b7355"></div><div class="opt-label">Wood Frame</div><div class="opt-price">+$2,200</div></div>
+      <div class="cfg-group"><div class="cfg-gt">Windows</div><div class="cfg-opts" id="winOpts">
+        <div class="cfg-opt active" data-window="white" data-price="0"><div class="swatch" style="background:linear-gradient(135deg,#c8ddf0,#e8f4ff)"></div><div class="ol">Clear</div></div>
+        <div class="cfg-opt" data-window="black" data-price="1800"><div class="swatch" style="background:#3a4048"></div><div class="ol">Black</div><div class="op">+$1,800</div></div>
+        <div class="cfg-opt" data-window="bronze" data-price="1600"><div class="swatch" style="background:linear-gradient(135deg,#b8a080,#8b6914)"></div><div class="ol">Bronze</div><div class="op">+$1,600</div></div>
+        <div class="cfg-opt" data-window="wood" data-price="2200"><div class="swatch" style="background:#8b7355"></div><div class="ol">Wood</div><div class="op">+$2,200</div></div>
       </div></div>
-      <div class="cfg-group"><div class="cfg-group-title">Stories</div><div class="cfg-opts" id="storyOpts">
-        <div class="cfg-opt active" data-stories="1" data-price="0" style="grid-column:span 2"><div style="display:flex;align-items:center;gap:8px;padding:4px 0"><div class="swatch" style="width:40px;height:32px;background:linear-gradient(180deg,#0a1628 0%,#41ab5d 100%);flex-shrink:0"></div><div style="text-align:left"><div class="opt-label">Single Story</div><div class="opt-price">Standard · 90 day build</div></div></div></div>
-        <div class="cfg-opt" data-stories="2" data-price="28000" style="grid-column:span 2"><div style="display:flex;align-items:center;gap:8px;padding:4px 0"><div class="swatch" style="width:40px;height:32px;background:linear-gradient(180deg,#0a1628 0%,#238b45 50%,#41ab5d 100%);flex-shrink:0"></div><div style="text-align:left"><div class="opt-label">Two Story</div><div class="opt-price">+$28,000 · 120 day build</div></div></div></div>
+      <div class="cfg-group"><div class="cfg-gt">Stories</div><div class="cfg-opts" id="storyOpts" style="grid-template-columns:1fr">
+        <div class="cfg-opt active" data-stories="1" data-price="0"><div class="ol">Single Story</div><div class="op">90 day build</div></div>
+        <div class="cfg-opt" data-stories="2" data-price="28000"><div class="ol">Two Story</div><div class="op">+$28,000 · 120 days</div></div>
       </div></div>
-      <button class="reset-btn" id="resetCfg">↺ Reset All</button>
+      <button class="reset-btn" id="resetCfg">↺ Reset All Options</button>
     </div>
-    <div class="cfg-viewer" id="vframe"><canvas id="vcanvas"></canvas><div class="viewer-info" id="vinfo"><h3 id="vtitle"></h3><p id="vdesc"></p></div><div class="viewer-hint">🖱 Drag to rotate · Scroll to zoom · Click parts</div></div>
+    <div class="cfg-viewer" id="vframe"><canvas id="vcanvas"></canvas><div class="viewer-info" id="vinfo"><h3 id="vtitle"></h3><p id="vdesc"></p></div><div class="viewer-hint">🖱 Drag to rotate · Scroll to zoom · Click parts to inspect</div></div>
     <div class="price-panel">
       <h2><span>💰</span> Estimate</h2>
-      <div class="price-total"><div class="ta" id="priceTotal">$124,500</div><div class="tl">Total Estimated Cost</div><div class="ts">Manufacturing + assembly included</div></div>
-      <div class="price-line"><span>Base Module</span><span class="pv">$98,000</span></div>
-      <div class="price-line"><span>Foundation</span><span class="pv">$14,500</span></div>
-      <div class="price-line"><span>Interior Finish</span><span class="pv" id="priceInt">$12,000</span></div>
-      <div class="price-line"><span>Upgrades</span><span class="pv" id="priceUpgrades" style="color:var(--g)">$0</span></div>
-      <div class="price-line"><span>Delivery</span><span class="pv">Included</span></div>
-      <div class="price-note" style="margin-top:6px">Build time: <strong id="buildDays" style="color:var(--g)">90</strong> days</div>
-      <button class="reset-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="border-color:rgba(65,171,93,.25);color:var(--g);margin-top:4px">Get Exact Quote →</button>
+      <div class="ptotal"><div class="ta" id="priceTotal">$124,500</div><div class="tl">Estimated Total Cost</div></div>
+      <div class="pline"><span>Base Module</span><span class="pv">$98,000</span></div>
+      <div class="pline"><span>Foundation</span><span class="pv">$14,500</span></div>
+      <div class="pline"><span>Interior</span><span class="pv" id="priceInt">$12,000</span></div>
+      <div class="pline"><span>Upgrades</span><span class="pv" id="priceUpgrades" style="color:var(--g)">$0</span></div>
+      <div class="pline"><span>Delivery</span><span class="pv">Included</span></div>
+      <div class="pn">Build time: <strong id="buildDays" style="color:var(--g)">90</strong> days</div>
+      <button class="reset-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="border-color:rgba(65,171,93,.2);color:var(--g)">Get Exact Quote →</button>
     </div>
   </div>
 </div>
@@ -201,147 +178,99 @@
   <div class="gallery"><div class="gallery-item fade-in" style="background-image:url('images/senior-solutions (1).webp')"></div><div class="gallery-item fade-in" style="background-image:url('images/traditional-design.webp')"></div><div class="gallery-item fade-in" style="background-image:url('images/InnovationCenter.webp')"></div><div class="gallery-item fade-in" style="background-image:url('images/images.jfif')"></div></div>
 </section>
 
-<div class="map-section" id="map"><div style="max-width:1140px;margin:0 auto;padding:0 48px"><div class="sec-hdr fade-in"><div class="sec-tag">Global</div><h2>Where we operate</h2></div><div class="fade-in" id="mapContainer" style="width:100%;height:480px;border-radius:14px;overflow:hidden;box-shadow:0 28px 72px rgba(0,0,0,.5);position:relative;background:#132030"></div></div></div>
+<section class="sec-alt" id="why"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Why Choose instaBuild</div><h2>The instaBuild advantage</h2><p>We're not just another construction company. We're a technology company that happens to build the world's most advanced homes.</p></div>
+  <div class="why-grid">
+    <div class="why-item fade-in"><div class="why-icon">🏭</div><div class="why-txt"><h3>Offsite Manufacturing</h3><p>Every component is built in a climate-controlled factory — zero weather delays, zero material exposure, and absolute quality control on every piece.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">⚡</div><div class="why-txt"><h3>30–90 Day Delivery</h3><p>POP-UP communities in 30 days. Custom modular homes in 90 days. Traditional construction takes 12–24 months for the same scope.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">💰</div><div class="why-txt"><h3>Fixed-Price Guarantee</h3><p>Your budget is locked the moment you sign. No surprise change orders. No ballooning costs. The price we quote is the price you pay.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🛡️</div><div class="why-txt"><h3>Built-In Compliance</h3><p>Every project automatically meets EU and US building codes. Permits, zoning, and safety standards are verified before manufacturing begins.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🌱</div><div class="why-txt"><h3>60% Less Construction Waste</h3><p>Our panelized systems dramatically reduce material waste compared to traditional on-site methods — better for your budget and the planet.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🌐</div><div class="why-txt"><h3>Global Operations</h3><p>Dual headquarters in Prishtina, Kosovo (EU operations) and Dover, Delaware (US operations) — serving clients across two continents.</p></div></div>
+  </div>
+</div></section>
 
-<section class="sec" id="contact"><div class="sec-hdr fade-in"><div class="sec-tag">Contact</div><h2>Start your project</h2></div>
-  <div class="form-wrap fade-in"><div class="form-status" id="formStatus"></div>
-    <form id="contactForm"><div class="form-row"><div class="form-group"><label>Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
-    <div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-group"><label>Type</label><select name="project_type"><option>Select…</option><option>POP-UP</option><option>Multi-Family</option><option>Commercial</option><option>Custom Home</option></select></div></div>
-    <div class="form-group"><label>Details</label><textarea name="message" rows="4" required placeholder="Describe your project…"></textarea></div><button type="submit" class="btn btn-p" style="width:100%;padding:15px;font-size:15px">Send Inquiry</button></form>
+<section class="sec" id="process">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Construction Process</div><h2>From vision to keys — in 5 steps</h2><p>A battle-tested process that transforms months of complexity into days of clarity. Every project follows this same proven path.</p></div>
+  <div style="position:relative;max-width:900px;margin:0 auto"><div class="process-line"></div>
+    <div class="process-steps">
+      <div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>We learn your vision, requirements, and budget. Initial designs and detailed estimates produced in days, not weeks.</p></div>
+      <div class="ps fade-in"><div class="ps-num">2</div><h3>Design</h3><p>Our architects and engineers create full structural plans with energy modeling, material specifications, and compliance verification.</p></div>
+      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacture</h3><p>Every component is precision-built in our climate-controlled factories — quality-assured at every stage, untouched by weather.</p></div>
+      <div class="ps fade-in"><div class="ps-num">4</div><h3>Assemble</h3><p>Complete modules arrive on site. Our teams connect, finish, and inspect — turning a delivery into a home in record time.</p></div>
+      <div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Final walkthrough, quality sign-off, and a complete digital handover package. You're home. On time, on budget, every time.</p></div>
+    </div>
   </div>
 </section>
 
-<div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in"><h2>The future of construction<br>is already here.</h2><div class="cta-btns"><a href="#configurator" class="btn btn-w btn-lg">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div></div></div>
+<section class="sec-alt"><div class="sec-inner">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Sustainability & Innovation</div><h2>Building greener, building smarter</h2></div>
+  <div class="split" style="margin-bottom:60px">
+    <div class="split-img fade-in" style="background-image:url('images/InnovationCenter.webp')"></div>
+    <div class="split-txt fade-in"><div class="sec-tag">Innovation Center</div><h3>Where the future of construction takes shape</h3><p>Our dedicated Innovation Center is the research and development engine behind instaBuild's technology advantage. Here, our engineers and designers develop new modular systems, test next-generation sustainable materials, and continuously refine manufacturing processes — ensuring every project benefits from the very latest advances in construction science and engineering.</p></div>
+  </div>
+  <div class="split">
+    <div class="split-txt fade-in"><div class="sec-tag">Sustainability</div><h3>Net-positive by design, not by accident</h3><p>Sustainability is engineered into every square meter we build. Our offsite manufacturing process reduces material waste by up to 60%. Our panelized systems exceed LEED Gold energy performance standards. And because our buildings are modular, they can be reconfigured, expanded, or relocated instead of demolished — extending their useful life indefinitely. We use responsibly sourced materials, integrate renewable energy systems, and design for passive heating and cooling from day one.</p></div>
+    <div class="split-img fade-in" style="background-image:url('images/images (1).jfif')"></div>
+  </div>
+</div></section>
 
-<footer><div class="ft-grid"><div class="ft"><h4>instaBuild</h4><p>Redefining construction through modular technology.</p></div><div class="ft"><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a></div><div class="ft"><h4>Company</h4><a href="#about">About</a><a href="#configurator">Configurator</a><a href="#map">Global</a></div><div class="ft"><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="margin-top:10px">Prishtina, Kosovo<br>Dover, DE · US</p></div></div><div class="ft-bot"><span>© 2026 instaBuild</span><span>Building the future, faster.</span></div></footer>
+<div class="map-section" id="map"><div class="map-wrap">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Global Reach</div><h2>Where we operate worldwide</h2><p>Click any country marker to check service availability, active projects, and expansion plans.</p></div>
+  <div class="map-container fade-in" id="mapContainer"></div>
+</div></div>
+
+<section class="sec" id="contact">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Get Started</div><h2>Your project begins here</h2><p>Tell us what you need. Our team will respond within 24 hours with a detailed proposal tailored to your project.</p></div>
+  <div class="form-wrap fade-in"><div class="form-status" id="formStatus"></div>
+    <form id="contactForm"><div class="form-row"><div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-group"><label>Email Address</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
+    <div class="form-row"><div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-group"><label>Project Type</label><select name="project_type"><option>Select…</option><option>POP-UP Community</option><option>Multi-Family Housing</option><option>Commercial Building</option><option>Senior / Student Housing</option><option>Custom Home</option><option>Other</option></select></div></div>
+    <div class="form-group"><label>Tell us about your project</label><textarea name="message" rows="4" required placeholder="Describe your project — size, location, timeline, budget…"></textarea></div>
+    <button type="submit" class="btn btn-p" style="width:100%;padding:15px;font-size:15px">Send Inquiry</button></form>
+  </div>
+</section>
+
+<div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in"><h2>The future of construction<br>is already here.</h2><p>POP-UP communities in 30 days. Custom homes in 90. Sustainable, precise, and completely turnkey.</p><div class="cta-btns"><a href="#configurator" class="btn btn-w btn-lg">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div></div></div>
+
+<footer><div class="ft-grid"><div class="ft"><h4>instaBuild</h4><p>Global leader in modular and offsite construction. POP-UP communities, multi-family housing, commercial buildings, and custom projects — delivered faster, smarter, and more sustainably than anyone else.</p></div><div class="ft"><h4>Solutions</h4><a href="#services">POP-UP Communities</a><a href="#services">Multi-Family Housing</a><a href="#services">Commercial Buildings</a><a href="#services">Student & Senior Housing</a><a href="#services">Custom Projects</a></div><div class="ft"><h4>Company</h4><a href="#about">About Us</a><a href="#configurator">3D Configurator</a><a href="#map">Global Map</a><a href="#contact">Contact</a></div><div class="ft"><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><a href="#">+1 (555) 123-4567</a><p style="margin-top:10px">Europe: Prishtina, Kosovo<br>US: Dover, DE 19901</p></div></div><div class="ft-bot"><span>© 2026 instaBuild. All rights reserved.</span><span>Building the future, faster.</span></div></footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// Menu
 const mb=document.getElementById('menuBtn'),mp=document.getElementById('menuPanel');mb.addEventListener('click',()=>{mb.classList.toggle('open');mp.classList.toggle('open')});mp.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mb.classList.remove('open');mp.classList.remove('open')}));document.addEventListener('click',e=>{if(!mb.contains(e.target)&&!mp.contains(e.target)){mb.classList.remove('open');mp.classList.remove('open')}});
+// Fade
 const o=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.06});document.querySelectorAll('.fade-in').forEach(e=>o.observe(e));setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('visible')}),120);
+// Form
 document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.className='form-status';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'success':'error');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status error';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry'});
+// AI
+const aiB=document.getElementById('aiBtn'),aiC=document.getElementById('aiChat'),aiM=document.getElementById('aiMsgs'),aiI=document.getElementById('aiInput'),aiS=document.getElementById('aiSend');aiB.addEventListener('click',()=>{aiC.classList.toggle('open');aiB.classList.remove('pulse-box');if(aiC.classList.contains('open'))aiI.focus()});document.getElementById('aiClose').addEventListener('click',()=>{aiC.classList.remove('open');aiB.classList.add('pulse-box')});
+const kb={pricing:'Our single-story modular homes start at $124,500 including foundation, interior finish, and delivery. Two-story models start at $152,500 (+$28,000 for the second story). Use our 3D configurator above to get an exact real-time estimate.',speed:'POP-UP communities are deployed in just 30 days. Custom modular homes are built in 90 days (single story) or 120 days (two story). Traditional construction takes 12–24 months for the same scope — we are 3–4× faster.',popup:'POP-UP Communities are fully functional modular neighborhoods deployed in only 30 days. Available in 28m², 52m², and 104m² — perfect for workforce housing, student accommodation, resorts, and rapid-deployment needs.',where:'instaBuild operates across Europe and North America. Headquarters: Prishtina, Kosovo (EU operations) and Dover, Delaware (US operations). Active projects in Kosovo, USA, Austria, and Switzerland. Expanding to Germany, UK, Netherlands, France, Italy, Canada, UAE, and Belgium.',sustainability:'Our offsite manufacturing reduces material waste by up to 60%. Panelized systems exceed LEED Gold energy standards. Every building is designed for passive heating and cooling with responsibly sourced materials and integrated renewable energy options.',process:'Our 5-step process: 1) Discovery — learn your vision, 2) Design — full structural and energy modeling, 3) Manufacturing — precision-built in climate-controlled factories, 4) Assembly — rapid on-site, modules arrive complete, 5) Handover — walkthrough, sign-off, keys in hand.',modular:'Modular construction means your home is built in sections inside a factory — protected from weather, with perfect quality control. Each module is precision-engineered, transported to your site, and assembled. This eliminates weather delays, reduces waste by 60%, and ensures consistent quality.',contact:'Reach us at contact@instabuild.com or call +1 (555) 123-4567. Our offices are in Prishtina, Kosovo and Dover, Delaware. Fill out the contact form on this page and our team will respond within 24 hours.',default:'Great question! I recommend trying our 3D configurator above to design your home and get an instant price estimate. You can also fill out the contact form — our team responds within 24 hours. Is there anything specific you\'d like to know about our modular homes?'};
+function reply(q){q=q.toLowerCase();if(q.includes('price')||q.includes('cost')||q.includes('much'))return kb.pricing;if(q.includes('fast')||q.includes('speed')||q.includes('long')||q.includes('time')||q.includes('day'))return kb.speed;if(q.includes('pop'))return kb.popup;if(q.includes('where')||q.includes('location')||q.includes('country')||q.includes('operate'))return kb.where;if(q.includes('sustain')||q.includes('green')||q.includes('waste')||q.includes('eco'))return kb.sustainability;if(q.includes('process')||q.includes('step')||q.includes('how'))return kb.process;if(q.includes('modular')||q.includes('module')||q.includes('factory'))return kb.modular;if(q.includes('contact')||q.includes('email')||q.includes('phone')||q.includes('reach'))return kb.contact;return kb.default}
+function aM(t,i){const d=document.createElement('div');d.className='ai-msg '+(i?'user':'bot');d.textContent=t;aiM.appendChild(d);aiM.scrollTop=aiM.scrollHeight;return d}
+function bR(t){const d=document.createElement('div');d.className='ai-msg bot';d.innerHTML='<div class="ai-typing"><span></span><span></span><span></span></div>';aiM.appendChild(d);aiM.scrollTop=aiM.scrollHeight;setTimeout(()=>{d.textContent=t;aiM.scrollTop=aiM.scrollHeight},700+Math.random()*500)}
+function sM(t){if(!t.trim())return;aM(t,true);aiI.value='';bR(reply(t))}aiS.addEventListener('click',()=>sM(aiI.value));aiI.addEventListener('keydown',e=>{if(e.key==='Enter')sM(aiI.value)});document.querySelector('.ai-sug').addEventListener('click',e=>{if(e.target.tagName==='BUTTON')sM(e.target.textContent)});
+// Map
+(function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([30,0],2.6);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ & Innovation Center.'},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects.'},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP.'},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos partnership.'},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich 2026.'},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London active.'},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam pilot.'},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon 2027.'},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan assessment.'},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto & Vancouver.'},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai.'},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green Deal.'}];const cv=new Set(ac.map(c=>c.n));const wc=[{n:'Spain',t:40,o:-3},{n:'Portugal',t:39.5,o:-8},{n:'Norway',t:62,o:10},{n:'Sweden',t:62,o:15},{n:'Finland',t:64,o:26},{n:'Denmark',t:56,o:10},{n:'Poland',t:52,o:20},{n:'Romania',t:46,o:25},{n:'Greece',t:39,o:22},{n:'Turkey',t:39,o:35},{n:'Ireland',t:53,o:-8},{n:'Hungary',t:47,o:20},{n:'Czechia',t:49.8,o:15.5},{n:'Mexico',t:23,o:-102},{n:'Brazil',t:-10,o:-55},{n:'Argentina',t:-34,o:-64},{n:'India',t:20,o:78},{n:'China',t:35,o:105},{n:'Japan',t:36,o:138},{n:'Australia',t:-25,o:133},{n:'S.Africa',t:-29,o:24},{n:'Egypt',t:27,o:30},{n:'Nigeria',t:9,o:8},{n:'Kenya',t:-1,o:37},{n:'Saudi',t:24,o:45},{n:'Singapore',t:1.3,o:103.8},{n:'Thailand',t:15,o:101},{n:'Vietnam',t:14,o:108}];const cls={active:'#41ab5d',expanding:'#f59e0b',unavailable:'#ef4444'};const lbs={active:'✓ Available',expanding:'↗ Coming',unavailable:'✗ Future'};function rM(m){const ct=document.getElementById('mapContainer');ct._m&&ct._m.forEach(mk=>map.removeLayer(mk));const ms=[];ac.forEach(p=>{const ic=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:${cls[p.s]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 4px ${cls[p.s]}33"></div>`,iconSize:[14,14],iconAnchor:[7,7]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;padding:4px"><h3 style="font-size:16px;font-weight:600">${p.n}</h3><span style="display:inline-block;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:3px;text-transform:uppercase;margin-bottom:8px;${p.s==='active'?'background:#edf8e9;color:#238b45':'background:#fef3c7;color:#92400e'}">${lbs[p.s]}</span><p style="font-size:12px;color:#64748d">${p.d}</p></div>`,{maxWidth:260});ms.push(mk)});if(m==='all'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:8px;height:8px;background:${cls.unavailable};border-radius:50%;border:2px solid #fff;opacity:.45"></div>`,iconSize:[8,8],iconAnchor:[4,4]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px"><h3 style="font-size:15px;font-weight:600">${p.n}</h3><span style="display:inline-block;font-size:9px;font-weight:600;padding:3px 10px;border-radius:3px;background:#fce4e4;color:#b91c1c;text-transform:uppercase;margin-bottom:8px">${lbs.unavailable}</span><p style="font-size:11px">Not yet available. <a href="#contact" style="color:#41ab5d">Register interest →</a></p></div>`,{maxWidth:240});ms.push(mk)})}ct._m=ms}rM('all');new ResizeObserver(()=>map.invalidateSize()).observe(c);new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)map.invalidateSize()})}).observe(c)})();
 </script>
 <script type="module">
-import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+import*as THREE from'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
 const frame=document.getElementById('vframe'),canvas=document.getElementById('vcanvas'),vinfo=document.getElementById('vinfo'),vtitle=document.getElementById('vtitle'),vdesc=document.getElementById('vdesc');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#dce8f0');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#dce8f0');scene.fog=new THREE.Fog('#dce8f0',14,40);
 const camera=new THREE.PerspectiveCamera(36,1.8,.5,50);camera.position.set(5,3.5,7);
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,0);controls.enableDamping=true;controls.dampingFactor=.06;controls.minDistance=2.5;controls.maxDistance=12;controls.maxPolarAngle=1.35;controls.update();
-// Lighting — bright, natural
-scene.add(new THREE.AmbientLight('#e8f0f8',1.2));
-const sun=new THREE.DirectionalLight('#fffef8',3.5);sun.position.set(15,10,8);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.near=.3;sun.shadow.camera.far=35;sun.shadow.camera.left=-8;sun.shadow.camera.right=8;sun.shadow.camera.top=8;sun.shadow.camera.bottom=-4;sun.shadow.bias=-.0002;scene.add(sun);
-scene.add(new THREE.DirectionalLight('#c0d8f0',.4).translateX(-4).translateZ(-5));
-// Sky gradient background
-scene.fog=new THREE.Fog('#dce8f0',12,38);
-
-// Ground — simple nice ground
+scene.add(new THREE.AmbientLight('#e8f0f8',1.2));const sun=new THREE.DirectionalLight('#fffef8',3.5);sun.position.set(15,10,8);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.near=.3;sun.shadow.camera.far=35;sun.shadow.camera.left=-8;sun.shadow.camera.right=8;sun.shadow.camera.top=8;sun.shadow.camera.bottom=-4;scene.add(sun);scene.add(new THREE.DirectionalLight('#c0d8f0',.4).translateX(-4).translateZ(-5));
 const gGeo=new THREE.PlaneGeometry(30,30);const ground=new THREE.Mesh(gGeo,new THREE.MeshStandardMaterial({color:'#8aaa7c',roughness:.85}));ground.rotation.x=-Math.PI/2;ground.position.y=-.02;ground.receiveShadow=true;scene.add(ground);
-
-// Materials
-const matSteel=new THREE.MeshStandardMaterial({color:'#556270',roughness:.3,metalness:.9});
-const matFoundation=new THREE.MeshStandardMaterial({color:'#bcc4cc',roughness:.65,metalness:.02});
-const matFloor=new THREE.MeshStandardMaterial({color:'#d4c0a8',roughness:.4,metalness:.04});
-const matAccent=new THREE.MeshStandardMaterial({color:'#41ab5d',roughness:.2,metalness:.4,emissive:'#41ab5d',emissiveIntensity:.08});
-const matDoor=new THREE.MeshStandardMaterial({color:'#2a3545',roughness:.2,metalness:.6});
-const matTrim=new THREE.MeshStandardMaterial({color:'#e8ecf0',roughness:.35,metalness:.05});
-
-const matCache={};
-function wallMat(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'white';if(!matCache['w_'+v]){const c={white:'#f0f2f6',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.4,metalness:.04})}return matCache['w_'+v]}
-function wallAMat(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'white';if(!matCache['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042'};matCache['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.4,metalness:.04})}return matCache['wa_'+v]}
-function winMat(){const v=document.querySelector('#winOpts .active')?.dataset.window||'white';if(!matCache['win_'+v]){const o={white:{color:'#d4e8f8',opacity:.78},black:{color:'#8098b8',opacity:.6},bronze:{color:'#c8b090',opacity:.6},wood:{color:'#c0b898',opacity:.62}};matCache['win_'+v]=new THREE.MeshStandardMaterial({color:o[v].color,roughness:.04,metalness:.04,transparent:true,opacity:o[v].opacity})}return matCache['win_'+v]}
-function roofMat(){const v=document.querySelector('#roofOpts .active')?.dataset.roof||'dark';if(!matCache['roof_'+v]){const c={dark:'#3b4452',terracotta:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};matCache['roof_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.28:.38,metalness:v==='metal'?.45:.2})}return matCache['roof_'+v]}
-
-const dyn=[];function add(geo,pos,rot,type,name,desc){const m=new THREE.Mesh(geo,type==='wall'?wallMat():type==='wallA'?wallAMat():type==='win'?winMat():type==='roof'?roofMat():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=true;m.receiveShadow=true;m.userData={name,desc,dynType:type,isPart:true};dyn.push(m);scene.add(m);return m}
-function refresh(){dyn.forEach(m=>{const t=m.userData.dynType;if(t==='wall')m.material=wallMat();else if(t==='wallA')m.material=wallAMat();else if(t==='win')m.material=winMat();else if(t==='roof')m.material=roofMat()})}
-
-function build(stories){
-  dyn.forEach(m=>scene.remove(m));dyn.length=0;
-  const H=stories*3.0;
-  // Foundation
-  add(new THREE.BoxGeometry(5.8,.2,4.4),new THREE.Vector3(0,.1,0),null,null,'Foundation','Precision-cast slab. 3 days.');
-  // Steel frame
-  for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),matSteel);c.position.set(x,H/2+.1,z);c.castShadow=c.receiveShadow=true;c.userData={name:'Steel Column',desc:'H-beam. Bolted connection.',isPart:true};scene.add(c)}
-  for(let fl=0;fl<stories;fl++){const y=.2+fl*3;add(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,-2.1),null,'wall','Beam','I-beam.');add(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,2.1),null,'wall','Beam','I-beam.');for(let x=-2.8;x<=2.8;x+=5.6)add(new THREE.BoxGeometry(.1,.06,4.2),new THREE.Vector3(x,y,0),null,'wall','Beam','Cross.')}
-  // Walls per floor
-  for(let fl=0;fl<stories;fl++){const bY=fl*3+.2,mid=bY+1.45;
-    add(new THREE.BoxGeometry(5.6,2.8,.08),new THREE.Vector3(0,mid,-2.13),null,'wall','Rear Wall','R-30 sandwich panel.');
-    add(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(-1.15,mid-.7,2.13),null,'wallA','Front Lower L','QuickLock™ thermal.');
-    add(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(1.15,mid-.7,2.13),null,'wallA','Front Lower R','QuickLock™ thermal.');
-    add(new THREE.BoxGeometry(5.6,1.3,.08),new THREE.Vector3(0,mid+.75,2.13),null,'wallA','Front Upper','Smart home ready.');
-    add(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(-2.83,mid,0),null,'wall','Side Wall','Pre-cut windows.');
-    add(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(2.83,mid,0),null,'wall','Side Wall','Pre-cut windows.');
-    // Windows
-    for(let x=-1;x<=1;x+=2)for(let wy=-.6;wy<=.6;wy+=1.2)add(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(x,mid+wy,-2.09),null,'win','Window','Triple-glazed. U=0.7.');
-    add(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(-1.5,mid,2.09),null,'win','Window','Triple-glazed.');
-    add(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(1.5,mid,2.09),null,'win','Window','Triple-glazed.');
-  }
-  // Door
-  const dm=new THREE.Mesh(new THREE.BoxGeometry(1.05,2.1,.06),matDoor);dm.position.set(0,1.15,2.13);dm.castShadow=dm.receiveShadow=true;dm.userData={name:'Entry Door',desc:'Pre-hung steel. Smart-lock ready.',isPart:true};scene.add(dm);
-  // Door trim
-  add(new THREE.BoxGeometry(1.2,.06,.08),new THREE.Vector3(0,2.2,2.1),null,'wall','Door Header','Aluminum trim.');
-  // Floor
-  add(new THREE.BoxGeometry(5.5,.06,4.0),new THREE.Vector3(0,stories*3+.1,0),null,null,'Floor Cassette','Subfloor + acoustic + finish.');
-  // Roof
-  const rY=stories*3+.2;const rpG=new THREE.BoxGeometry(6.0,.1,2.2);
-  const rf=new THREE.Mesh(rpG,roofMat());rf.position.set(0,rY+.3,-1.1);rf.rotation.x=-.4;rf.castShadow=rf.receiveShadow=true;rf.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',dynType:'roof',isPart:true};dyn.push(rf);scene.add(rf);
-  const rr=new THREE.Mesh(rpG,roofMat());rr.position.set(0,rY+.3,1.1);rr.rotation.x=.4;rr.castShadow=rr.receiveShadow=true;rr.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',dynType:'roof',isPart:true};dyn.push(rr);scene.add(rr);
-  // Eaves
-  add(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,-2.2),null,'roof','Eave','Aluminum.');
-  add(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,2.2),null,'roof','Eave','Aluminum.');
-  // Connectors
-  for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,.16,8),matAccent);c.position.set(x,.2,z);c.userData={name:'QuickLock™',desc:'3-min connection.',isPart:true};scene.add(c)}
-}
+const matSteel=new THREE.MeshStandardMaterial({color:'#556270',roughness:.3,metalness:.9});const matFoundation=new THREE.MeshStandardMaterial({color:'#bcc4cc',roughness:.65,metalness:.02});const matDoor=new THREE.MeshStandardMaterial({color:'#2a3545',roughness:.2,metalness:.6});const matAccent=new THREE.MeshStandardMaterial({color:'#41ab5d',roughness:.2,metalness:.4,emissive:'#41ab5d',emissiveIntensity:.08});
+const mc={};function wM(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'white';if(!mc['w_'+v]){const c={white:'#f0f2f6',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52'};mc['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.4,metalness:.04})}return mc['w_'+v]}function wAM(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'white';if(!mc['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042'};mc['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.4,metalness:.04})}return mc['wa_'+v]}function wiM(){const v=document.querySelector('#winOpts .active')?.dataset.window||'white';if(!mc['win_'+v]){const o={white:{color:'#d4e8f8',opacity:.78},black:{color:'#8098b8',opacity:.6},bronze:{color:'#c8b090',opacity:.6},wood:{color:'#c0b898',opacity:.62}};mc['win_'+v]=new THREE.MeshStandardMaterial({color:o[v].color,roughness:.04,metalness:.04,transparent:true,opacity:o[v].opacity})}return mc['win_'+v]}function rM2(){const v=document.querySelector('#roofOpts .active')?.dataset.roof||'dark';if(!mc['roof_'+v]){const c={dark:'#3b4452',terracotta:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};mc['roof_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.28:.38,metalness:v==='metal'?.45:.2})}return mc['roof_'+v]}
+const dyn=[];function ad(geo,pos,rot,type,name,desc){const m=new THREE.Mesh(geo,type==='wall'?wM():type==='wallA'?wAM():type==='win'?wiM():type==='roof'?rM2():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={name,desc,dynType:type,isPart:true};dyn.push(m);scene.add(m);return m}function ref(){dyn.forEach(m=>{const t=m.userData.dynType;if(t==='wall')m.material=wM();else if(t==='wallA')m.material=wAM();else if(t==='win')m.material=wiM();else if(t==='roof')m.material=rM2()})}
+function build(s){dyn.forEach(m=>scene.remove(m));dyn.length=0;const H=s*3.0;ad(new THREE.BoxGeometry(5.8,.2,4.4),new THREE.Vector3(0,.1,0),null,null,'Foundation','Precision-cast slab. 3 days factory.');for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),matSteel);c.position.set(x,H/2+.1,z);c.castShadow=c.receiveShadow=true;c.userData={name:'Steel Column',desc:'Hot-rolled H-beam. Bolted connections.',isPart:true};scene.add(c)}for(let fl=0;fl<s;fl++){const y=.2+fl*3;ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,-2.1),null,'wall','Beam','Galvanized I-beam.');ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,2.1),null,'wall','Beam','Galvanized I-beam.');for(let x=-2.8;x<=2.8;x+=5.6)ad(new THREE.BoxGeometry(.1,.06,4.2),new THREE.Vector3(x,y,0),null,'wall','Beam','Cross beam.')}for(let fl=0;fl<s;fl++){const bY=fl*3+.2,mid=bY+1.45;ad(new THREE.BoxGeometry(5.6,2.8,.08),new THREE.Vector3(0,mid,-2.13),null,'wall','Rear Wall','R-30 insulated sandwich panel.');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(-1.15,mid-.7,2.13),null,'wallA','Front Panel','QuickLock™ thermal.');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(1.15,mid-.7,2.13),null,'wallA','Front Panel','QuickLock™ thermal.');ad(new THREE.BoxGeometry(5.6,1.3,.08),new THREE.Vector3(0,mid+.75,2.13),null,'wallA','Front Upper','Smart home ready.');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(-2.83,mid,0),null,'wall','Side Wall','Pre-cut window openings.');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(2.83,mid,0),null,'wall','Side Wall','Pre-cut window openings.');for(let x=-1;x<=1;x+=2)for(let wy=-.6;wy<=.6;wy+=1.2)ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(x,mid+wy,-2.09),null,'win','Triple-Glazed Window','Argon-filled. U-value 0.7.');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(-1.5,mid,2.09),null,'win','Triple-Glazed Window','Argon-filled. U-value 0.7.');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(1.5,mid,2.09),null,'win','Triple-Glazed Window','Argon-filled. U-value 0.7.')}const dm=new THREE.Mesh(new THREE.BoxGeometry(1.05,2.1,.06),matDoor);dm.position.set(0,1.15,2.13);dm.castShadow=dm.receiveShadow=true;dm.userData={name:'Entry Door',desc:'Pre-hung steel. Smart-lock ready.',isPart:true};scene.add(dm);ad(new THREE.BoxGeometry(1.2,.06,.08),new THREE.Vector3(0,2.2,2.1),null,'wall','Door Header','Aluminum trim.');ad(new THREE.BoxGeometry(5.5,.06,4.0),new THREE.Vector3(0,s*3+.1,0),null,null,'Floor Cassette','Subfloor + acoustic + finish.');const rY=s*3+.2,rpG=new THREE.BoxGeometry(6.0,.1,2.2);const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rY+.3,-1.1);rf.rotation.x=-.4;rf.castShadow=rf.receiveShadow=true;rf.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready rails.',dynType:'roof',isPart:true};dyn.push(rf);scene.add(rf);const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rY+.3,1.1);rr.rotation.x=.4;rr.castShadow=rr.receiveShadow=true;rr.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready rails.',dynType:'roof',isPart:true};dyn.push(rr);scene.add(rr);ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,-2.2),null,'roof','Eave Trim','Aluminum.');ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,2.2),null,'roof','Eave Trim','Aluminum.');for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,.16,8),matAccent);c.position.set(x,.2,z);c.userData={name:'QuickLock™ Connector',desc:'Self-aligning. 3-minute join.',isPart:true};scene.add(c)}}
 build(1);
-
-['wallOpts','winOpts','roofOpts','storyOpts'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{const opt=e.target.closest('.cfg-opt');if(!opt)return;e.currentTarget.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('active'));opt.classList.add('active');if(id==='storyOpts'){dyn.forEach(m=>scene.remove(m));dyn.length=0;build(parseInt(opt.dataset.stories))}else refresh();upPrice()})});
-document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','winOpts','roofOpts','storyOpts'].forEach(id=>{document.getElementById(id).querySelectorAll('.cfg-opt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;build(1);upPrice()});
-function upPrice(){let up=0;document.querySelectorAll('.cfg-opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));const s=parseInt(document.querySelector('#storyOpts .active')?.dataset.stories||1);const base=s===1?98000:126000;const int=s===1?12000:22000;document.getElementById('priceTotal').textContent='$'+(base+14500+int+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+up.toLocaleString();document.getElementById('priceInt').textContent='$'+int.toLocaleString();document.getElementById('buildDays').textContent=s===1?'90':'120'}upPrice();
-
-// Raycaster — lightweight
-const rc=new THREE.Raycaster(),ms=new THREE.Vector2();let ol=[];
-// Click-only interaction — no hover raycasting
-canvas.addEventListener('click',e=>{try{const r=canvas.getBoundingClientRect();ms.x=((e.clientX-r.left)/r.width)*2-1;ms.y=-((e.clientY-r.top)/r.height)*2+1;rc.setFromCamera(ms,camera);const h=rc.intersectObjects(scene.children.filter(c=>c.userData?.isPart),false);if(h.length>0&&h[0].object.userData.name){vtitle.textContent=h[0].object.userData.name;vdesc.textContent=h[0].object.userData.desc||'';vinfo.classList.add('visible');setTimeout(()=>vinfo.classList.remove('visible'),5000)}}catch(e){}});
-function resize(){const w=frame.clientWidth,h=Math.min(w*.68,640);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();canvas.style.height=h+'px'}window.addEventListener('resize',resize);resize();
+['wallOpts','winOpts','roofOpts','storyOpts'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{const opt=e.target.closest('.cfg-opt');if(!opt)return;e.currentTarget.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('active'));opt.classList.add('active');if(id==='storyOpts'){dyn.forEach(m=>scene.remove(m));dyn.length=0;build(parseInt(opt.dataset.stories))}else ref();up()})});document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','winOpts','roofOpts','storyOpts'].forEach(id=>{document.getElementById(id).querySelectorAll('.cfg-opt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;build(1);up()});
+function up(){let up=0;document.querySelectorAll('.cfg-opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));const s=parseInt(document.querySelector('#storyOpts .active')?.dataset.stories||1);const base=s===1?98000:126000;const int=s===1?12000:22000;document.getElementById('priceTotal').textContent='$'+(base+14500+int+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+up.toLocaleString();document.getElementById('priceInt').textContent='$'+int.toLocaleString();document.getElementById('buildDays').textContent=s===1?'90':'120'}up();
+const rc=new THREE.Raycaster(),ms=new THREE.Vector2();canvas.addEventListener('click',e=>{try{const r=canvas.getBoundingClientRect();ms.x=((e.clientX-r.left)/r.width)*2-1;ms.y=-((e.clientY-r.top)/r.height)*2+1;rc.setFromCamera(ms,camera);const h=rc.intersectObjects(scene.children.filter(c=>c.userData?.isPart),false);if(h.length&&h[0].object.userData.name){vtitle.textContent=h[0].object.userData.name;vdesc.textContent=h[0].object.userData.desc||'';vinfo.classList.add('visible');setTimeout(()=>vinfo.classList.remove('visible'),5000)}}catch(e){}});
+function resize(){const w=frame.clientWidth,h=Math.min(w*.68,580);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();canvas.style.height=h+'px'}window.addEventListener('resize',resize);resize();
 function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
-</script>
-
-<!-- AI Assistant -->
-<script>
-const aiBtn=document.getElementById('aiBtn'),aiChat=document.getElementById('aiChat'),aiMsgs=document.getElementById('aiMsgs'),aiSuggs=document.getElementById('aiSuggs'),aiInput=document.getElementById('aiInput'),aiSend=document.getElementById('aiSend'),aiClose=document.getElementById('aiClose');
-aiBtn.addEventListener('click',()=>{aiChat.classList.toggle('open');aiBtn.classList.remove('pulse-box');if(aiChat.classList.contains('open'))aiInput.focus()});
-aiClose.addEventListener('click',()=>{aiChat.classList.remove('open');aiBtn.classList.add('pulse-box')});
-
-const knowledge={
-  pricing:'Our single-story modular homes start at $124,500 including foundation, interior finish, and delivery. Two-story models start at $152,500. Use our configurator above to get an exact estimate based on your custom selections!',
-  speed:'We deliver POP-UP communities in just 30 days. Custom modular homes are built in 90 days (single story) or 120 days (two story). Traditional construction takes 12-24 months — we\'re 3-4× faster.',
-  popup:'POP-UP Communities are fully functional modular neighborhoods deployed in just 30 days. Available in three sizes: 28m², 52m², and 104m². Perfect for workforce housing, resorts, student accommodation, and rapid-deployment projects.',
-  where:'instaBuild operates across Europe and North America, with headquarters in Prishtina, Kosovo and Dover, Delaware (US). We\'re actively building in Kosovo, USA, Austria, and Switzerland, with expansion underway in Germany, UK, Netherlands, France, Italy, Canada, UAE, and Belgium.',
-  sustainability:'Our offsite manufacturing reduces material waste by up to 60%. Panelized systems exceed LEED Gold energy standards. Every building is designed for passive heating and cooling with responsibly sourced materials.',
-  process:'Our 5-step process: 1) Discovery — we learn your vision (days), 2) Design — full structural modeling, 3) Manufacturing — precision-built in our climate-controlled factory, 4) Assembly — rapid on-site, modules arrive complete, 5) Handover — walkthrough, sign-off, you\'re home.',
-  modular:'Modular construction means your home is built in sections inside a factory — not exposed to weather. Each module (walls, floors, roof) is precision-engineered, then transported and assembled on site. This eliminates weather delays, reduces waste by 60%, and ensures perfect quality.',
-  contact:'You can reach us at contact@instabuild.com or call +1 (555) 123-4567. Our offices are in Prishtina, Kosovo and Dover, Delaware (US). Fill out the contact form on this page and we\'ll respond within 24 hours.',
-  default:'Great question! I\'d recommend checking out our 3D configurator above to design your home and get an instant price. You can also fill out the contact form and our team will get back to you within 24 hours. Is there anything specific about our modular homes or process you\'d like to know?'
-};
-
-function getResponse(q){q=q.toLowerCase();if(q.includes('price')||q.includes('cost')||q.includes('much'))return knowledge.pricing;if(q.includes('fast')||q.includes('speed')||q.includes('long')||q.includes('time')||q.includes('day'))return knowledge.speed;if(q.includes('pop')||q.includes('popup'))return knowledge.popup;if(q.includes('where')||q.includes('location')||q.includes('country')||q.includes('operate'))return knowledge.where;if(q.includes('sustain')||q.includes('green')||q.includes('waste')||q.includes('eco'))return knowledge.sustainability;if(q.includes('process')||q.includes('step')||q.includes('how'))return knowledge.process;if(q.includes('modular')||q.includes('module')||q.includes('factory'))return knowledge.modular;if(q.includes('contact')||q.includes('email')||q.includes('phone')||q.includes('reach'))return knowledge.contact;return knowledge.default}
-
-function addMsg(text,isUser){const d=document.createElement('div');d.className='ai-msg '+(isUser?'user':'bot');d.textContent=text;aiMsgs.appendChild(d);aiMsgs.scrollTop=aiMsgs.scrollHeight;return d}
-function botReply(text){const d=document.createElement('div');d.className='ai-msg bot';d.innerHTML='<div class="ai-typing"><span></span><span></span><span></span></div>';aiMsgs.appendChild(d);aiMsgs.scrollTop=aiMsgs.scrollHeight;setTimeout(()=>{d.textContent=text;aiMsgs.scrollTop=aiMsgs.scrollHeight},800+Math.random()*600)}
-
-function sendMsg(text){if(!text.trim())return;addMsg(text,true);aiInput.value='';botReply(getResponse(text))}
-aiSend.addEventListener('click',()=>sendMsg(aiInput.value));aiInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg(aiInput.value)});
-aiSuggs.addEventListener('click',e=>{if(e.target.classList.contains('ai-sugg'))sendMsg(e.target.textContent)});
-</script>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-(function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([30,0],2.6);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
-const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ & Innovation Center.'},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects.'},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP.'},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos partnership.'},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich 2026.'},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London active.'},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam pilot.'},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon.'},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan.'},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto & Vancouver.'},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai.'},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green Deal.'}];
-const cv=new Set(ac.map(c=>c.n));const wc=[{n:'Spain',t:40,o:-3},{n:'Portugal',t:39.5,o:-8},{n:'Norway',t:62,o:10},{n:'Sweden',t:62,o:15},{n:'Finland',t:64,o:26},{n:'Denmark',t:56,o:10},{n:'Poland',t:52,o:20},{n:'Romania',t:46,o:25},{n:'Greece',t:39,o:22},{n:'Turkey',t:39,o:35},{n:'Ireland',t:53,o:-8},{n:'Hungary',t:47,o:20},{n:'Czechia',t:49.8,o:15.5},{n:'Mexico',t:23,o:-102},{n:'Brazil',t:-10,o:-55},{n:'Argentina',t:-34,o:-64},{n:'India',t:20,o:78},{n:'China',t:35,o:105},{n:'Japan',t:36,o:138},{n:'Australia',t:-25,o:133},{n:'S.Africa',t:-29,o:24},{n:'Egypt',t:27,o:30},{n:'Nigeria',t:9,o:8},{n:'Kenya',t:-1,o:37},{n:'Saudi',t:24,o:45},{n:'Singapore',t:1.3,o:103.8},{n:'Thailand',t:15,o:101},{n:'Vietnam',t:14,o:108}];
-const cls={active:'#41ab5d',expanding:'#f59e0b',unavailable:'#ef4444'};const lbs={active:'✓ Available',expanding:'↗ Coming',unavailable:'✗ Future'};
-let mode='coverage';function rM(m){const ct=document.getElementById('mapContainer');ct._m&&ct._m.forEach(mk=>map.removeLayer(mk));const ms=[];ac.forEach(p=>{const ic=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:${cls[p.s]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 4px ${cls[p.s]}33"></div>`,iconSize:[14,14],iconAnchor:[7,7]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;padding:4px"><h3 style="font-size:16px;font-weight:600;color:#0a1628">${p.n}</h3><span style="display:inline-block;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:3px;text-transform:uppercase;margin-bottom:8px;${p.s==='active'?'background:#edf8e9;color:#238b45':'background:#fef3c7;color:#92400e'}">${lbs[p.s]}</span><p style="font-size:12px;color:#64748d">${p.d}</p></div>`,{maxWidth:260});ms.push(mk)});if(m==='coverage'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:8px;height:8px;background:${cls.unavailable};border-radius:50%;border:2px solid #fff;opacity:.45"></div>`,iconSize:[8,8],iconAnchor:[4,4]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px"><h3 style="font-size:15px;font-weight:600">${p.n}</h3><span style="display:inline-block;font-size:9px;font-weight:600;padding:3px 10px;border-radius:3px;background:#fce4e4;color:#b91c1c;text-transform:uppercase;margin-bottom:8px">${lbs.unavailable}</span><p style="font-size:11px">Not yet available.</p></div>`,{maxWidth:240});ms.push(mk)})}ct._m=ms}rM('coverage');
-new ResizeObserver(()=>map.invalidateSize()).observe(c);new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)map.invalidateSize()})}).observe(c)})();
 </script>
 </body>
 </html>
