@@ -4,308 +4,335 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>instaBuild — Modular Construction, Redefined</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    :root{--g:#2ecc71;--gd:#27ae60;--gl:#a9dfbf;--n:#0d1117;--n2:#161b22;--n3:#21262d;--s:#8b949e;--w:#fff;--b:#30363d;--bg:#0d1117;--card:#161b22;--r:12px}
+    :root{--g:#41ab5d;--gh:#238b45;--gl:#c7e9c0;--gg:rgba(65,171,93,.06);--gd:#003d1f;--glb:#edf8e9;--n:#0a1628;--n2:#0f1f36;--s:#5b6e84;--w:#fff;--b:#dce4df}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}body{font-family:'Inter',system-ui,sans-serif;color:#c9d1d9;background:var(--bg);font-weight:400;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-    a{color:var(--g);text-decoration:none;transition:color .2s}a:hover{color:var(--gd)}
-    .container{max-width:1200px;margin:0 auto;padding:0 32px}
-    header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,17,23,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:14px 0}
-    header .container{display:flex;align-items:center;justify-content:space-between}
-    .logo{font-size:18px;font-weight:700;color:var(--w);display:flex;align-items:center;gap:8px;letter-spacing:-.3px}.logo span{color:var(--g)}
-    nav{display:flex;gap:28px;align-items:center}nav a{color:var(--s);font-size:13.5px;font-weight:500;transition:color .2s}nav a:hover{color:var(--w)}
-    .btn{display:inline-flex;align-items:center;padding:9px 20px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;gap:6px}
-    .btn-primary{background:var(--g);color:#0d1117}.btn-primary:hover{background:var(--gd);transform:translateY(-1px);box-shadow:0 4px 16px rgba(46,204,113,.3)}
-    .btn-outline{background:transparent;color:var(--w);border:1.5px solid var(--b)}.btn-outline:hover{border-color:var(--s);background:rgba(255,255,255,.03)}
-    .btn-ghost{background:transparent;color:var(--s);border:1px solid var(--b)}.btn-ghost:hover{color:var(--w);border-color:var(--s)}
-    .mobile-toggle{display:none;background:none;border:none;color:var(--w);font-size:22px;cursor:pointer}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--s);background:var(--w);font-weight:400;font-size:16px;line-height:1.6;overflow-x:hidden}
 
-    .hero{padding:160px 0 100px;position:relative;overflow:hidden}
-    .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(46,204,113,.08) 0%,transparent 70%);pointer-events:none}
-    .hero .container{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-    .hero-content h1{font-size:clamp(36px,5.5vw,60px);font-weight:700;color:var(--w);line-height:1.08;letter-spacing:-1.5px;margin-bottom:20px}.hero-content h1 span{color:var(--g)}
-    .hero-content p{font-size:17px;color:var(--s);line-height:1.7;max-width:500px;margin-bottom:32px}
-    .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-    .hero-visual{display:flex;align-items:center;justify-content:center}
-    .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:var(--r);overflow:hidden;max-width:900px;margin:-30px auto 0;position:relative;z-index:10}
-    .hero-stat{background:var(--card);padding:28px 16px;text-align:center;transition:background .3s}.hero-stat:hover{background:var(--n3)}
-    .hero-stat .val{font-size:32px;font-weight:700;color:var(--w);letter-spacing:-.5px}.hero-stat .lbl{font-size:10px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+    /* ── TRANSLATE ── */
+    #translate-widget{position:fixed;top:16px;right:16px;z-index:9999}
+    #translate-widget select{padding:8px 12px;border-radius:8px;border:1.5px solid var(--b);background:var(--w);font-family:inherit;font-size:13px;color:var(--n);cursor:pointer;outline:none;box-shadow:0 2px 12px rgba(10,22,40,.08)}
+    #translate-widget select:focus{border-color:var(--g)}
 
-    section{padding:100px 0}
-    section.alt{background:var(--n2)}
-    .section-label{font-size:10px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
-    .section-title{font-size:clamp(24px,3.5vw,36px);font-weight:700;color:var(--w);letter-spacing:-.6px;margin-bottom:16px}
-    .section-subtitle{font-size:15px;color:var(--s);max-width:520px;line-height:1.7}
+    /* ── NAV ── */
+    header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);padding:14px 0;transition:all .3s}
+    header.scrolled{box-shadow:0 2px 24px rgba(10,22,40,.06)}
+    header .container{max-width:1200px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:20px;font-weight:700;color:var(--n);display:flex;align-items:center;gap:8px;text-decoration:none;letter-spacing:-.3px}.logo span{color:var(--g)}
+    .logo .lm{width:32px;height:32px;background:linear-gradient(135deg,var(--g),var(--gh));border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--w);font-weight:700;font-size:14px}
+    nav{display:flex;gap:28px;align-items:center}nav a{color:var(--s);font-size:13.5px;font-weight:500;text-decoration:none;transition:color .2s}nav a:hover{color:var(--g)}
+    .btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;gap:6px;text-decoration:none}
+    .btn-p{background:var(--g);color:var(--w)}.btn-p:hover{background:var(--gh);transform:translateY(-1px);box-shadow:0 4px 16px rgba(65,171,93,.3)}
+    .btn-w{background:var(--w);color:var(--n);border:1.5px solid var(--b)}.btn-w:hover{background:var(--glb)}
+    .btn-ow{background:transparent;color:var(--w);border:1.5px solid rgba(255,255,255,.3)}.btn-ow:hover{background:rgba(255,255,255,.06)}
+    .btn-lg{padding:13px 28px;font-size:15px}
+    .menu-toggle{display:none;background:none;border:none;color:var(--n);font-size:24px;cursor:pointer}
 
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}.grid2 img{width:100%;border-radius:var(--r);box-shadow:0 20px 50px rgba(0,0,0,.3)}
-    .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-    .card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:32px;transition:all .3s}.card:hover{border-color:var(--g);box-shadow:0 8px 30px rgba(46,204,113,.08)}
-    .card-icon{font-size:28px;margin-bottom:14px}.card h3{font-size:17px;font-weight:600;color:var(--w);margin-bottom:8px}.card p{font-size:13.5px;color:var(--s);line-height:1.6}
+    /* ── HERO ── */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0;filter:brightness(.5)}
+    .hero-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,22,40,.88),rgba(10,22,40,.68) 45%,rgba(10,22,40,.9));z-index:1}
+    .hero-c{position:relative;z-index:2;max-width:700px;padding:140px 48px 100px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(65,171,93,.12);color:var(--g);font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:28px;border:1px solid rgba(65,171,93,.18)}
+    .hero-dot{width:7px;height:7px;background:var(--g);border-radius:50%;animation:pulse 2.5s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero h1{font-size:clamp(38px,7vw,66px);font-weight:300;color:var(--w);line-height:1.06;letter-spacing:-1.5px;margin-bottom:22px}.hero h1 span{color:var(--g)}
+    .hero p{font-size:18px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.65;max-width:520px;margin-bottom:36px}
+    .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
 
-    .service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
-    .service-card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:all .3s}.service-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-    .service-img{height:200px;background-size:cover;background-position:center;position:relative}.service-tag{position:absolute;top:12px;left:12px;background:rgba(13,17,23,.9);color:var(--g);font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;text-transform:uppercase}
-    .service-body{padding:24px}.service-body h3{font-size:17px;font-weight:600;color:var(--w);margin-bottom:6px}.service-body p{font-size:13px;color:var(--s);line-height:1.55}
+    /* ── SECTIONS ── */
+    section{padding:100px 0}section.alt{background:var(--glb)}
+    .container{max-width:1160px;margin:0 auto;padding:0 40px}
+    .sec-hdr{text-align:center;margin-bottom:60px}
+    .sec-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+    .sec-hdr h2{font-size:clamp(26px,4vw,38px);font-weight:300;color:var(--n);letter-spacing:-.7px;line-height:1.16;margin-bottom:14px}
+    .sec-hdr p{font-size:17px;font-weight:300;color:var(--s);max-width:560px;margin:0 auto}
 
-    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
-    .why-item{display:flex;gap:16px;padding:8px 0}.why-icon{font-size:24px;flex-shrink:0;width:44px;height:44px;background:rgba(46,204,113,.06);border-radius:10px;display:flex;align-items:center;justify-content:center}.why-item h3{font-size:15px;font-weight:600;color:var(--w)}.why-item p{font-size:13px;color:var(--s);line-height:1.5;margin-top:3px}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:12px;overflow:hidden;max-width:920px;margin:-35px auto 60px;position:relative;z-index:10;box-shadow:0 16px 40px rgba(10,22,40,.08)}
+    .stat{background:var(--w);padding:32px 20px;text-align:center;transition:background .3s}.stat:hover{background:var(--glb)}.stat-val{font-size:34px;font-weight:300;color:var(--n);letter-spacing:-.6px}.stat-lbl{font-size:10px;font-weight:700;color:var(--s);text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
 
-    .process-steps{display:grid;grid-template-columns:repeat(5,1fr);position:relative;max-width:900px;margin:0 auto}.ps{text-align:center;padding:24px 16px;position:relative;z-index:1}.ps-num{width:48px;height:48px;background:var(--g);color:#0d1117;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 14px}.ps h3{font-size:14px;font-weight:600;color:var(--w)}.ps p{font-size:11.5px;color:var(--s);margin-top:4px;line-height:1.45}.ps-line{position:absolute;top:48px;left:calc(10% + 48px);width:calc(80% - 48px);height:2px;background:linear-gradient(90deg,var(--g),rgba(46,204,113,.2),var(--g));z-index:0}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}.grid2-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;box-shadow:0 20px 48px rgba(10,22,40,.1)}
+    .grid2 h3{font-size:28px;font-weight:300;color:var(--n);letter-spacing:-.5px;margin-bottom:16px}.grid2 p{font-size:15px;color:var(--s);line-height:1.72;margin-bottom:16px}
 
-    .map-section{background:var(--n2);padding:80px 0}.map-container{width:100%;height:520px;border-radius:var(--r);overflow:hidden;border:1px solid var(--b);position:relative;background:#161b22}.map-toggle{position:absolute;top:16px;right:16px;z-index:1000;display:flex;gap:6px}.map-toggle button{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:7px 14px;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}.map-toggle button:hover{color:var(--w);border-color:var(--s)}.map-toggle button.active{background:var(--g);border-color:var(--g);color:#0d1117}
+    .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+    .card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:34px 28px;transition:all .3s;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--gh));opacity:0;transition:opacity .3s}
+    .card:hover{box-shadow:0 16px 40px rgba(10,22,40,.1);transform:translateY(-3px);border-color:transparent}.card:hover::before{opacity:1}
+    .card-icon{font-size:26px;margin-bottom:14px}.card h3{font-size:17px;font-weight:600;color:var(--n);margin-bottom:6px}.card p{font-size:13.5px;color:var(--s);line-height:1.55}
 
-    .contact-form{max-width:520px;margin:0 auto}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-    .form-field{margin-bottom:14px}.form-field label{display:block;font-size:12px;font-weight:600;color:var(--s);margin-bottom:5px}
-    .form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 14px;background:var(--n3);border:1px solid var(--b);border-radius:7px;color:var(--w);font-size:14px;font-family:inherit;outline:none;transition:border .2s}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--g)}
-    .form-status{display:none;padding:12px 16px;border-radius:7px;font-size:13px;margin-bottom:16px;text-align:center}.form-status.s{display:block;background:rgba(46,204,113,.08);color:var(--g);border:1px solid rgba(46,204,113,.2)}.form-status.e{display:block;background:rgba(248,81,73,.06);color:#f85149;border:1px solid rgba(248,81,73,.15)}
+    .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+    .svc-card{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .3s}.svc-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(10,22,40,.1)}
+    .svc-img{height:210px;background-size:cover;background-position:center;position:relative}.svc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,22,40,.35))}
+    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(10,22,40,.85);color:var(--g);font-size:9px;font-weight:700;padding:4px 12px;border-radius:4px;text-transform:uppercase;z-index:1}
+    .svc-body{padding:24px}.svc-body h3{font-size:18px;font-weight:600;color:var(--n);margin-bottom:6px}.svc-body p{font-size:13px;color:var(--s);line-height:1.55}
 
-    .cta{text-align:center;padding:120px 0;position:relative;overflow:hidden}.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(46,204,113,.06) 0%,transparent 70%);pointer-events:none}.cta h2{font-size:clamp(26px,3.5vw,38px);font-weight:700;color:var(--w);letter-spacing:-.6px;margin-bottom:12px}.cta p{font-size:16px;color:var(--s);margin-bottom:28px}.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:24px}
+    .why-item{display:flex;gap:16px;padding:8px 0}.why-icon{font-size:22px;flex-shrink:0;width:46px;height:46px;background:var(--gg);border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .why-item h3{font-size:16px;font-weight:600;color:var(--n);margin-bottom:4px}.why-item p{font-size:13px;color:var(--s);line-height:1.5}
 
-    footer{background:var(--n2);border-top:1px solid var(--b);padding:60px 0 28px;font-size:13px;color:var(--s)}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
-    footer h4{color:var(--w);font-size:13px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:.5px}
-    footer a{display:block;color:var(--s);font-size:12.5px;margin-bottom:8px}footer a:hover{color:var(--w)}
-    .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--b);flex-wrap:wrap;gap:12px}
+    .process-steps{display:grid;grid-template-columns:repeat(5,1fr);position:relative;max-width:900px;margin:0 auto}.ps{text-align:center;padding:26px 16px;position:relative;z-index:1}
+    .ps-num{width:48px;height:48px;background:linear-gradient(135deg,var(--g),var(--gh));color:var(--w);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 14px;box-shadow:0 4px 14px rgba(65,171,93,.3)}
+    .ps h3{font-size:14px;font-weight:600;color:var(--n);margin-bottom:4px}.ps p{font-size:11.5px;color:var(--s);line-height:1.4}
+    .ps-line{position:absolute;top:50px;left:calc(10%+48px);width:calc(80%-48px);height:1.5px;background:linear-gradient(90deg,var(--gl),var(--g),var(--gl));z-index:0}
 
-    .fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}.fade-in.visible{opacity:1;transform:translateY(0)}
+    /* MAP */
+    .map-section{background:var(--n);padding:90px 0}.map-section .sec-tag{color:var(--gl)}.map-section .sec-hdr h2{color:var(--w)}.map-section .sec-hdr p{color:rgba(255,255,255,.45)}
+    .map-container{width:100%;height:520px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);position:relative;background:var(--n2)}
+    .map-toggle{position:absolute;top:16px;right:16px;z-index:1000;display:flex;gap:6px}
+    .map-toggle button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:7px 14px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+    .map-toggle button:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.map-toggle button.active{background:var(--g);border-color:var(--g);color:var(--w)}
 
+    /* 3D BUILDER */
+    .builder-wrap{display:grid;grid-template-columns:280px 1fr 240px;gap:0;background:var(--n2);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .builder-panel{padding:20px 16px;overflow-y:auto;max-height:520px;background:rgba(255,255,255,.02)}
+    .builder-panel h3{font-size:14px;font-weight:600;color:var(--w);margin-bottom:16px}
+    .b-group{margin-bottom:15px}.b-label{font-size:9px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px}
+    .b-opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+    .b-opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:6px;cursor:pointer;text-align:center;transition:.2s}.b-opt:hover{border-color:rgba(255,255,255,.15)}.b-opt.active{border-color:var(--g);background:rgba(65,171,93,.08)}
+    .b-opt .sw{width:100%;height:20px;border-radius:3px;margin-bottom:3px}.b-opt .lb{font-size:9px;color:rgba(255,255,255,.5)}.b-opt.active .lb{color:var(--g)}
+    .builder-viewer{position:relative;min-height:520px}.builder-viewer canvas{display:block;width:100%;height:100%;cursor:grab}
+    .builder-price{padding:20px 16px;display:flex;flex-direction:column;gap:12px}
+    .builder-price h3{font-size:14px;font-weight:600;color:var(--w)}
+    .price-box{background:rgba(65,171,93,.06);border:1px solid rgba(65,171,93,.15);border-radius:8px;padding:14px;text-align:center}.price-box .pv{font-size:28px;font-weight:700;color:var(--g)}.price-box .pl{font-size:9px;color:var(--s);margin-top:2px}
+    .price-row{display:flex;justify-content:space-between;font-size:11px;color:var(--s);padding:2px 0}.price-row span:last-child{color:rgba(255,255,255,.7)}
+
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}.gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:10px;transition:transform .4s;cursor:pointer}.gallery-item:hover{transform:scale(1.04)}
+
+    .form-wrap{max-width:560px;margin:0 auto}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .form-field{margin-bottom:14px}.form-field label{display:block;font-size:12px;font-weight:600;color:var(--n);margin-bottom:5px}
+    .form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--b);border-radius:7px;font-size:14px;font-family:inherit;color:var(--n);outline:none;transition:border .2s;background:var(--w)}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(65,171,93,.06)}
+    .form-status{display:none;padding:12px 16px;border-radius:7px;font-size:13px;margin-bottom:16px;text-align:center}.form-status.s{display:block;background:rgba(65,171,93,.06);color:var(--gh);border:1px solid rgba(65,171,93,.18)}.form-status.e{display:block;background:rgba(248,81,73,.04);color:#b91c1c;border:1px solid rgba(248,81,73,.12)}
+
+    .cta{position:relative;padding:130px 0;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}.cta::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,22,40,.95),rgba(10,22,40,.82));z-index:0}.cta .container{position:relative;z-index:1}
+    .cta h2{font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--w);letter-spacing:-.7px;margin-bottom:14px}.cta p{font-size:17px;color:rgba(255,255,255,.5);margin-bottom:30px}.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+    footer{background:var(--gd);padding:64px 0 32px;color:rgba(255,255,255,.45);font-size:13px}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+    footer h4{color:var(--w);font-size:13px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:.5px}footer a{display:block;color:rgba(255,255,255,.35);font-size:12px;margin-bottom:8px;text-decoration:none}footer a:hover{color:var(--g)}footer p{font-size:12px;line-height:1.7}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+    .fade-in{opacity:0;transform:translateY(32px);transition:opacity .75s,transform .75s}.fade-in.visible{opacity:1;transform:translateY(0)}
+
+    @media(max-width:1000px){.builder-wrap{grid-template-columns:1fr}.builder-panel{max-height:none;border-bottom:1px solid rgba(255,255,255,.06)}.builder-price{border-top:1px solid rgba(255,255,255,.06)}}
     @media(max-width:900px){
-      nav{display:none}nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--n2);border-bottom:1px solid var(--b);padding:20px 32px;gap:14px}.mobile-toggle{display:block}
-      .hero .container{grid-template-columns:1fr}.hero-stats{grid-template-columns:repeat(2,1fr)}
-      .grid2{grid-template-columns:1fr}.process-steps{grid-template-columns:1fr}.ps-line{display:none}.footer-grid{grid-template-columns:1fr 1fr}
-      .container{padding:0 20px}section{padding:64px 0}.form-row{grid-template-columns:1fr}
+      nav{display:none}nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--w);border-bottom:1px solid var(--b);padding:20px 32px;gap:14px;box-shadow:0 16px 40px rgba(0,0,0,.08)}.menu-toggle{display:block}
+      .grid2{grid-template-columns:1fr}.process-steps{grid-template-columns:1fr}.ps-line{display:none}.hero-c{padding:110px 28px 70px}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}
+      .container{padding:0 24px}section{padding:64px 0}
     }
-    @media(max-width:500px){.hero-stats{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.hero-content h1{font-size:30px}}
+    @media(max-width:500px){.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}.hero h1{font-size:32px}}
   </style>
 </head>
 <body>
 
-<header><div class="container">
-  <a href="#" class="logo">insta<span>Build</span></a>
-  <button class="mobile-toggle" id="menuToggle">☰</button>
+<!-- Google Translate -->
+<div id="translate-widget"><div id="google_translate_element"></div></div>
+
+<header id="header"><div class="container">
+  <a href="#" class="logo"><div class="lm">iB</div>insta<span>Build</span></a>
+  <button class="menu-toggle" id="menuToggle">☰</button>
   <nav id="nav">
     <a href="#about">About</a><a href="#services">Solutions</a><a href="#builder">3D Builder</a><a href="#map">Global</a><a href="#process">Process</a><a href="#contact">Contact</a>
-    <a href="#contact" class="btn btn-primary">Get Started</a>
+    <a href="#contact" class="btn btn-p">Get Started</a>
   </nav>
 </div></header>
 
-<section class="hero"><div class="container">
-  <div class="hero-content">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.15);color:var(--g);font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;margin-bottom:24px"><span style="width:7px;height:7px;background:var(--g);border-radius:50%;animation:pulse 2s infinite"></span>Now delivering in 30 days</div>
-    <h1>Modular homes.<br><span>Built in weeks,</span><br>not years.</h1>
-    <p>instaBuild is the world's most advanced modular construction company. We design, manufacture, and assemble premium homes and communities — faster, greener, and more precisely than traditional methods ever could.</p>
-    <div class="hero-btns"><a href="#builder" class="btn btn-primary">Design Your Home</a><a href="#contact" class="btn btn-outline">Get a Quote →</a></div>
+<section class="hero"><div class="hero-bg"></div><div class="hero-ol"></div>
+  <div class="container" style="position:relative;z-index:2">
+    <div class="hero-c">
+      <div class="hero-badge"><span class="hero-dot"></span>POP-UP Communities — Delivered in 30 Days</div>
+      <h1>We build the<br><span>future of housing.</span></h1>
+      <p>instaBuild is a global leader in modular and offsite construction — delivering multi-family housing, commercial buildings, student &amp; senior communities, and custom POP-UP projects faster, smarter, and more sustainably than traditional construction.</p>
+      <div class="hero-btns"><a href="#builder" class="btn btn-w btn-lg">Design Your Home</a><a href="#contact" class="btn btn-ow btn-lg">Get a Quote →</a></div>
+    </div>
   </div>
-  <div class="hero-visual">
-    <div style="width:100%;aspect-ratio:4/3;background:url('images/signature-home-1.webp') center/cover no-repeat;border-radius:var(--r);box-shadow:0 24px 60px rgba(0,0,0,.4)"></div>
-  </div>
-</div></section>
+</section>
 
-<div class="container"><div class="hero-stats"><div class="hero-stat"><div class="val">30</div><div class="lbl">Days POP-UP</div></div><div class="hero-stat"><div class="val">500+</div><div class="lbl">Projects</div></div><div class="hero-stat"><div class="val">90</div><div class="lbl">Days Custom</div></div><div class="hero-stat"><div class="val">98%</div><div class="lbl">Satisfaction</div></div></div></div>
+<div class="container"><div class="stats-bar"><div class="stat"><div class="stat-val">30</div><div class="stat-lbl">Days POP-UP</div></div><div class="stat"><div class="stat-val">500+</div><div class="stat-lbl">Projects</div></div><div class="stat"><div class="stat-val">90</div><div class="stat-lbl">Days Custom</div></div><div class="stat"><div class="stat-val">98%</div><div class="stat-lbl">Satisfaction</div></div></div></div>
 
 <section id="about"><div class="container">
-  <div style="text-align:center;margin-bottom:56px"><div class="section-label">About Us</div><h2 class="section-title" style="text-align:center">Construction, finally disrupted</h2><p class="section-subtitle" style="margin:0 auto">We didn't start a company. We started a movement — to prove that homes can be built faster, smarter, and more beautifully than anyone thought possible.</p></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">About Us</div><h2>Construction, finally disrupted</h2><p>We didn't start a company. We started a movement — to prove homes can be built faster, smarter, and more beautifully than anyone imagined.</p></div>
   <div class="grid2 fade-in">
-    <img src="images/maxresdefault.jpg" alt="instaBuild project" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r)">
-    <div><h3 style="font-size:26px;font-weight:700;color:var(--w);margin-bottom:16px">Born from frustration. Built for speed.</h3><p style="color:var(--s);line-height:1.75;margin-bottom:16px">After decades watching traditional construction fail — blown budgets, endless delays, unpredictable quality — our founders decided there had to be a better way. They built instaBuild to prove it.</p><p style="color:var(--s);line-height:1.75"><strong style="color:var(--w)">Mission:</strong> Build smarter, greener, faster. <strong style="color:var(--w)">Vision:</strong> High-quality sustainable housing for everyone — in weeks, not years.</p></div>
+    <img class="grid2-img" src="images/maxresdefault.jpg" alt="Project">
+    <div><h3>Born from frustration. Built for speed.</h3><p>After decades watching traditional construction fail — blown budgets, endless delays, unpredictable quality — our founders built instaBuild to prove there's a better way. Every component is precision-engineered in climate-controlled factories.</p><p><strong style="color:var(--n)">Mission:</strong> Build smarter, greener, faster. <strong style="color:var(--n)">Vision:</strong> High-quality sustainable housing for everyone — in weeks, not years.</p></div>
   </div>
 </div></section>
 
 <section class="alt"><div class="container">
-  <div style="text-align:center;margin-bottom:56px"><div class="section-label">Our Principles</div><h2 class="section-title" style="text-align:center">What we believe in</h2></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Our Principles</div><h2>What we believe in</h2></div>
   <div class="grid3">
-    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Speed Without Compromise</h3><p>3× faster than traditional construction through offsite manufacturing. Never at the expense of quality.</p></div>
-    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability by Design</h3><p>60% less waste. Every building exceeds LEED Gold. We give back more than we take from the planet.</p></div>
+    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Speed Without Compromise</h3><p>3× faster through offsite manufacturing. Never at the expense of quality, safety, or design integrity.</p></div>
+    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability by Design</h3><p>60% less waste. Every building exceeds LEED Gold. We give back more than we take from the environment.</p></div>
     <div class="card fade-in"><div class="card-icon">🔍</div><h3>Radical Transparency</h3><p>Fixed pricing. Real-time dashboards. Open books. No surprises, no hidden costs — ever.</p></div>
-    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Craftsmanship Obsession</h3><p>Technology amplifies skill — never replaces it. Our builders are artisans with the best tools.</p></div>
-    <div class="card fade-in"><div class="card-icon">🤝</div><h3>True Partnership</h3><p>We work with you — developers, architects, communities. One team, one vision, from day one.</p></div>
+    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Craftsmanship Obsession</h3><p>Technology amplifies skill — never replaces it. Our builders are artisans with the world's best tools.</p></div>
+    <div class="card fade-in"><div class="card-icon">🤝</div><h3>True Partnership</h3><p>We work with you — developers, architects, communities. One team, one vision from day one.</p></div>
     <div class="card fade-in"><div class="card-icon">🔬</div><h3>Relentless R&D</h3><p>Innovation isn't a department — it's our pulse. From our Innovation Center to your front door.</p></div>
   </div>
 </div></section>
 
 <section id="services"><div class="container">
-  <div style="text-align:center;margin-bottom:56px"><div class="section-label">Solutions</div><h2 class="section-title" style="text-align:center">What we build</h2><p class="section-subtitle" style="margin:0 auto">From rapid-deployment communities to luxury custom residences — six modular solutions for every need.</p></div>
-  <div class="service-grid">
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="service-tag">POP-UP</span></div><div class="service-body"><h3>POP-UP Communities</h3><p>Full neighborhoods in 30 days. 28–104m². Workforce housing, resorts, crisis response.</p></div></div>
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="service-tag">Residential</span></div><div class="service-body"><h3>Multi-Family Housing</h3><p>Apartments, condos, townhomes. 12–200+ units. Precision engineering at any scale.</p></div></div>
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="service-tag">Commercial</span></div><div class="service-body"><h3>Commercial Buildings</h3><p>Office, retail, hospitality — enterprise-grade modular that outperforms traditional builds.</p></div></div>
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/senior-solutions.webp')"><span class="service-tag">Community</span></div><div class="service-body"><h3>Student & Senior Living</h3><p>Accessible, safe, vibrant communities purpose-built for dignity and human connection.</p></div></div>
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="service-tag">Components</span></div><div class="service-body"><h3>Modular Systems</h3><p>Kitchens, BathPods, interior modules — factory-built perfection. Plug and play.</p></div></div>
-    <div class="service-card fade-in"><div class="service-img" style="background-image:url('images/signature-home.png')"><span class="service-tag">Bespoke</span></div><div class="service-body"><h3>Custom Residences</h3><p>One-of-a-kind luxury homes. Total creative freedom. Delivered in 90 days.</p></div></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Solutions</div><h2>What we build</h2></div>
+  <div class="svc-grid">
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Full neighborhoods in 30 days. 28–104m². Workforce housing, resorts, crisis response.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Residential</span></div><div class="svc-body"><h3>Multi-Family Housing</h3><p>Apartments, condos, townhomes. 12–200+ units. Precision engineering at any scale.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial Buildings</h3><p>Office, retail, hospitality — enterprise-grade modular that outperforms traditional builds.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Community</span></div><div class="svc-body"><h3>Student & Senior Living</h3><p>Accessible, safe, vibrant communities purpose-built for dignity and human connection.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Components</span></div><div class="svc-body"><h3>Modular Systems</h3><p>Factory-built kitchens, BathPods, interior modules — pre-fabricated and plug-and-play.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Bespoke</span></div><div class="svc-body"><h3>Custom Residences</h3><p>One-of-a-kind luxury homes. Total creative freedom. Delivered in 90 days.</p></div></div>
   </div>
 </div></section>
 
 <section class="alt" id="builder"><div class="container">
-  <div style="text-align:center;margin-bottom:40px"><div class="section-label">3D Home Builder</div><h2 class="section-title" style="text-align:center">Design your modular home</h2><p class="section-subtitle" style="margin:0 auto;margin-bottom:0">Select options on the left. Your home updates instantly. Price recalculates in real-time.</p></div>
-  <div style="display:grid;grid-template-columns:280px 1fr 240px;gap:0;background:var(--n2);border-radius:var(--r);overflow:hidden;border:1px solid var(--b)">
-    <div style="padding:20px 16px;border-right:1px solid var(--b);overflow-y:auto;max-height:520px">
-      <h3 style="font-size:14px;font-weight:600;color:var(--w);margin-bottom:16px">⚙️ Options</h3>
-      <div style="margin-bottom:16px"><div style="font-size:9px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Exterior</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px" id="wallOpts">
-        <div class="cfg-opt active" data-wall="white" data-price="0" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#f0f2f6;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">White</div></div>
-        <div class="cfg-opt" data-wall="cream" data-price="1500" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#e8dfd2;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Cream</div></div>
-        <div class="cfg-opt" data-wall="gray" data-price="2000" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#8894a2;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Gray</div></div>
-        <div class="cfg-opt" data-wall="timber" data-price="4000" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#b89068;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Timber</div></div>
-        <div class="cfg-opt" data-wall="charcoal" data-price="2500" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#3a404a;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Charcoal</div></div>
-        <div class="cfg-opt" data-wall="navy" data-price="2800" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#2a3a52;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Navy</div></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">3D Home Builder</div><h2>Design your modular home</h2><p>Select materials — your home updates instantly with real-time pricing.</p></div>
+  <div class="builder-wrap fade-in">
+    <div class="builder-panel">
+      <h3>⚙️ Options</h3>
+      <div class="b-group"><div class="b-label">Exterior</div><div class="b-opts" id="wallOpts">
+        <div class="b-opt active" data-wall="white" data-price="0"><div class="sw" style="background:#f0f2f6"></div><div class="lb">White</div></div>
+        <div class="b-opt" data-wall="cream" data-price="1500"><div class="sw" style="background:#e8dfd2"></div><div class="lb">Cream</div></div>
+        <div class="b-opt" data-wall="gray" data-price="2000"><div class="sw" style="background:#8894a2"></div><div class="lb">Gray</div></div>
+        <div class="b-opt" data-wall="timber" data-price="4000"><div class="sw" style="background:#b89068"></div><div class="lb">Timber</div></div>
+        <div class="b-opt" data-wall="charcoal" data-price="2500"><div class="sw" style="background:#3a404a"></div><div class="lb">Charcoal</div></div>
+        <div class="b-opt" data-wall="navy" data-price="2800"><div class="sw" style="background:#2a3a52"></div><div class="lb">Navy</div></div>
       </div></div>
-      <div style="margin-bottom:16px"><div style="font-size:9px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Roof</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px" id="roofOpts">
-        <div class="cfg-opt active" data-roof="dark" data-price="0" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#3b4452;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Slate</div></div>
-        <div class="cfg-opt" data-roof="terra" data-price="2800" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#a0523b;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Terracotta</div></div>
-        <div class="cfg-opt" data-roof="metal" data-price="3500" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#8899aa;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Metal</div></div>
-        <div class="cfg-opt" data-roof="green" data-price="3000" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="width:100%;height:20px;background:#4a6a3e;border-radius:3px;margin-bottom:3px"></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Green</div></div>
+      <div class="b-group"><div class="b-label">Roof</div><div class="b-opts" id="roofOpts">
+        <div class="b-opt active" data-roof="dark" data-price="0"><div class="sw" style="background:#3b4452"></div><div class="lb">Slate</div></div>
+        <div class="b-opt" data-roof="terra" data-price="2800"><div class="sw" style="background:#a0523b"></div><div class="lb">Terracotta</div></div>
+        <div class="b-opt" data-roof="metal" data-price="3500"><div class="sw" style="background:#8899aa"></div><div class="lb">Metal</div></div>
+        <div class="b-opt" data-roof="green" data-price="3000"><div class="sw" style="background:#4a6a3e"></div><div class="lb">Green</div></div>
       </div></div>
-      <div style="margin-bottom:16px"><div style="font-size:9px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Windows</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px" id="winOpts">
-        <div class="cfg-opt active" data-window="clear" data-price="0" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="font-size:9px;color:rgba(255,255,255,.5)">Clear</div></div>
-        <div class="cfg-opt" data-window="black" data-price="1800" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="font-size:9px;color:rgba(255,255,255,.5)">Black</div></div>
-        <div class="cfg-opt" data-window="bronze" data-price="1600" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="font-size:9px;color:rgba(255,255,255,.5)">Bronze</div></div>
-        <div class="cfg-opt" data-window="wood" data-price="2200" style="background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:6px;padding:7px;cursor:pointer;text-align:center;transition:.2s"><div style="font-size:9px;color:rgba(255,255,255,.5)">Wood</div></div>
+      <div class="b-group"><div class="b-label">Windows</div><div class="b-opts" id="winOpts">
+        <div class="b-opt active" data-window="clear" data-price="0"><div class="lb">Clear</div></div>
+        <div class="b-opt" data-window="black" data-price="1800"><div class="lb">Black</div></div>
+        <div class="b-opt" data-window="bronze" data-price="1600"><div class="lb">Bronze</div></div>
+        <div class="b-opt" data-window="wood" data-price="2200"><div class="lb">Wood</div></div>
       </div></div>
-      <button id="resetCfg" style="width:100%;background:transparent;border:1px solid var(--b);color:var(--s);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:4px">↺ Reset</button>
+      <button id="resetCfg" style="width:100%;background:transparent;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;margin-top:4px">↺ Reset</button>
     </div>
-    <div style="position:relative;min-height:520px;background:var(--n)" id="vframe"><canvas id="vcanvas" style="display:block;width:100%;height:100%;cursor:grab"></canvas></div>
-    <div style="padding:20px 16px;border-left:1px solid var(--b);display:flex;flex-direction:column;gap:12px">
-      <h3 style="font-size:14px;font-weight:600;color:var(--w)">💰 Estimate</h3>
-      <div style="background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:14px;text-align:center"><div style="font-size:28px;font-weight:700;color:var(--g)" id="priceTotal">$124,500</div><div style="font-size:9px;color:var(--s);margin-top:3px">ESTIMATED TOTAL</div></div>
-      <div style="font-size:11px;color:var(--s)"><div style="display:flex;justify-content:space-between;padding:2px 0">Base<span style="color:#c9d1d9">$98,000</span></div><div style="display:flex;justify-content:space-between;padding:2px 0">Foundation<span style="color:#c9d1d9">$14,500</span></div><div style="display:flex;justify-content:space-between;padding:2px 0">Interior<span style="color:#c9d1d9" id="priceInt">$12,000</span></div><div style="display:flex;justify-content:space-between;padding:2px 0">Upgrades<span style="color:var(--g)" id="priceUpgrades">$0</span></div></div>
-      <div style="font-size:10px;color:var(--s);text-align:center">Build: <strong style="color:var(--g)" id="buildDays">90</strong> days</div>
-      <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="width:100%;background:var(--g);border:none;color:#0d1117;padding:10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Get Quote →</button>
+    <div class="builder-viewer" id="vframe"><canvas id="vcanvas"></canvas></div>
+    <div class="builder-price">
+      <h3>💰 Estimate</h3>
+      <div class="price-box"><div class="pv" id="priceTotal">$124,500</div><div class="pl">ESTIMATED TOTAL</div></div>
+      <div class="price-row"><span>Base</span><span>$98,000</span></div><div class="price-row"><span>Foundation</span><span>$14,500</span></div><div class="price-row"><span>Interior</span><span id="priceInt">$12,000</span></div><div class="price-row"><span>Upgrades</span><span id="priceUpgrades" style="color:var(--g)">$0</span></div>
+      <div style="font-size:10px;color:var(--s);text-align:center;margin-top:6px">Build: <strong style="color:var(--g)">90</strong> days</div>
+      <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="width:100%;background:var(--g);border:none;color:var(--w);padding:10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px">Get Exact Quote →</button>
     </div>
   </div>
 </div></section>
 
 <section><div class="container">
-  <div style="text-align:center;margin-bottom:48px"><div class="section-label">Portfolio</div><h2 class="section-title" style="text-align:center">Recent projects</h2></div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
-    <div class="fade-in" style="aspect-ratio:16/10;background:url('images/senior-solutions (1).webp') center/cover;border-radius:var(--r);transition:transform .4s;cursor:pointer" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"></div>
-    <div class="fade-in" style="aspect-ratio:16/10;background:url('images/traditional-design.webp') center/cover;border-radius:var(--r);transition:transform .4s;cursor:pointer" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"></div>
-    <div class="fade-in" style="aspect-ratio:16/10;background:url('images/InnovationCenter.webp') center/cover;border-radius:var(--r);transition:transform .4s;cursor:pointer" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"></div>
-    <div class="fade-in" style="aspect-ratio:16/10;background:url('images/images.jfif') center/cover;border-radius:var(--r);transition:transform .4s;cursor:pointer" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'"></div>
-  </div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Portfolio</div><h2>Recent projects</h2></div>
+  <div class="gallery fade-in"><div class="gallery-item" style="background-image:url('images/senior-solutions (1).webp')"></div><div class="gallery-item" style="background-image:url('images/traditional-design.webp')"></div><div class="gallery-item" style="background-image:url('images/InnovationCenter.webp')"></div><div class="gallery-item" style="background-image:url('images/images.jfif')"></div></div>
 </div></section>
 
 <section class="alt"><div class="container">
-  <div style="text-align:center;margin-bottom:56px"><div class="section-label">Why instaBuild</div><h2 class="section-title" style="text-align:center">The advantage is clear</h2></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Why instaBuild</div><h2>The advantage is clear</h2></div>
   <div class="why-grid">
     <div class="why-item fade-in"><div class="why-icon">🏭</div><div><h3>Offsite Manufacturing</h3><p>Climate-controlled factory precision. No weather delays. Perfect quality, every time.</p></div></div>
-    <div class="why-item fade-in"><div class="why-icon">⚡</div><div><h3>30-90 Day Delivery</h3><p>POP-UP in 30 days. Custom in 90. Traditional takes 12-24 months. We're 3-4× faster.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">⚡</div><div><h3>30–90 Day Delivery</h3><p>POP-UP in 30 days. Custom in 90. Traditional takes 12–24 months. We're 3–4× faster.</p></div></div>
     <div class="why-item fade-in"><div class="why-icon">🔒</div><div><h3>Fixed-Price Guarantee</h3><p>Your budget is locked. No surprises. No ballooning. What we quote is what you pay.</p></div></div>
-    <div class="why-item fade-in"><div class="why-icon">🛡️</div><div><h3>Built-In Compliance</h3><p>EU and US codes met automatically. Permits and safety verified before manufacturing starts.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🛡️</div><div><h3>Built-In Compliance</h3><p>EU and US codes met automatically. Permits and safety verified before manufacturing.</p></div></div>
     <div class="why-item fade-in"><div class="why-icon">🌱</div><div><h3>60% Less Waste</h3><p>Panelized systems slash material waste. Better for budgets. Better for the planet.</p></div></div>
-    <div class="why-item fade-in"><div class="why-icon">🌐</div><div><h3>Global Operations</h3><p>Kosovo (EU) & Delaware (US). Serving clients across two continents.</p></div></div>
+    <div class="why-item fade-in"><div class="why-icon">🌐</div><div><h3>Global Operations</h3><p>Kosovo (EU) &amp; Delaware (US). Serving clients across two continents.</p></div></div>
   </div>
 </div></section>
 
 <section id="process"><div class="container">
-  <div style="text-align:center;margin-bottom:56px"><div class="section-label">Process</div><h2 class="section-title" style="text-align:center">5 steps to your new home</h2></div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Process</div><h2>5 steps to your new home</h2></div>
   <div style="position:relative;max-width:900px;margin:0 auto"><div class="ps-line"></div>
     <div class="process-steps">
       <div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>Vision, budget, timeline. Designs in days.</p></div>
       <div class="ps fade-in"><div class="ps-num">2</div><h3>Design</h3><p>Full structural and energy modeling.</p></div>
-      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacture</h3><p>Precision-built in our indoor factories.</p></div>
+      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacture</h3><p>Precision-built in indoor factories.</p></div>
       <div class="ps fade-in"><div class="ps-num">4</div><h3>Assemble</h3><p>Modules arrive. We connect and finish.</p></div>
       <div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Walkthrough. Sign-off. You're home.</p></div>
     </div>
   </div>
 </div></section>
 
-<section class="alt" id="map"><div class="container">
-  <div style="text-align:center;margin-bottom:40px"><div class="section-label">Global Reach</div><h2 class="section-title" style="text-align:center">Where we operate</h2><p class="section-subtitle" style="margin:0 auto">Click any country to explore projects and availability.</p></div>
+<div class="map-section" id="map"><div class="container">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Global Reach</div><h2>Where we operate</h2><p>Click any country to explore projects and availability.</p></div>
   <div class="map-container" id="mapContainer">
     <div class="map-toggle"><button class="active" data-mode="all">All Countries</button><button data-mode="active">Active Only</button><button data-mode="density">Project Density</button></div>
   </div>
-</div></section>
+</div></div>
 
 <section class="alt"><div class="container">
-  <div style="text-align:center;margin-bottom:48px"><div class="section-label">Sustainability</div><h2 class="section-title" style="text-align:center">Built green from the ground up</h2></div>
-  <div class="grid2 fade-in">
-    <img src="images/InnovationCenter.webp" alt="Innovation Center" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r)">
-    <div><h3 style="font-size:22px;font-weight:700;color:var(--w);margin-bottom:14px">Net-positive by design</h3><p style="color:var(--s);line-height:1.75">Sustainability isn't a checkbox — it's engineered into every square meter. Our offsite process reduces waste by 60%. Panelized systems exceed LEED Gold. Buildings can be relocated instead of demolished. Renewable energy integrated from day one.</p></div>
-  </div>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Sustainability</div><h2>Built green from the ground up</h2></div>
+  <div class="grid2 fade-in"><img class="grid2-img" src="images/InnovationCenter.webp" alt="Innovation"><div><h3>Net-positive by design</h3><p>Sustainability is engineered into every square meter. 60% less waste. LEED Gold exceeding. Buildings relocatable instead of demolished. Renewable energy integrated from day one. Responsibly sourced materials throughout.</p></div></div>
 </div></section>
 
 <section id="contact"><div class="container">
-  <div style="text-align:center;margin-bottom:48px"><div class="section-label">Get Started</div><h2 class="section-title" style="text-align:center">Your project begins here</h2><p class="section-subtitle" style="margin:0 auto">Tell us what you need. We'll respond within 24 hours.</p></div>
-  <div class="contact-form fade-in"><div class="form-status" id="formStatus"></div>
-    <form id="contactForm"><div class="form-row"><div class="form-field"><label>Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-field"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
-    <div class="form-row"><div class="form-field"><label>Phone</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-field"><label>Project Type</label><select name="project_type"><option>Select…</option><option>POP-UP</option><option>Multi-Family</option><option>Commercial</option><option>Custom Home</option></select></div></div>
-    <div class="form-field"><label>Details</label><textarea name="message" rows="4" required placeholder="Size, location, timeline, budget…"></textarea></div>
-    <button type="submit" class="btn btn-primary" style="width:100%;padding:14px;font-size:15px">Send Inquiry</button></form>
+  <div class="sec-hdr fade-in"><div class="sec-tag">Get Started</div><h2>Your project begins here</h2><p>Tell us what you need. We'll respond within 24 hours.</p></div>
+  <div class="form-wrap fade-in"><div class="form-status" id="formStatus"></div>
+    <form id="contactForm"><div class="form-row"><div class="form-field"><label>Full Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-field"><label>Email Address</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
+    <div class="form-row"><div class="form-field"><label>Phone</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-field"><label>Project Type</label><select name="project_type"><option>Select…</option><option>POP-UP Community</option><option>Multi-Family</option><option>Commercial</option><option>Custom Home</option></select></div></div>
+    <div class="form-field"><label>Project Details</label><textarea name="message" rows="4" required placeholder="Size, location, timeline, budget…"></textarea></div>
+    <button type="submit" class="btn btn-p" style="width:100%;padding:15px;font-size:15px">Send Inquiry</button></form>
   </div>
 </div></section>
 
-<div class="cta"><div class="container"><h2>The future of construction<br>is already here.</h2><p>POP-UP communities in 30 days. Custom homes in 90. Sustainable. Precise. Turnkey.</p><div class="cta-btns"><a href="#builder" class="btn btn-primary">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-outline">contact@instabuild.com</a></div></div></div>
+<div class="cta"><div class="container"><h2>The future of construction<br>is already here.</h2><p>POP-UP communities in 30 days. Custom homes in 90. Sustainable. Precise. Turnkey.</p><div class="cta-btns"><a href="#builder" class="btn btn-w btn-lg">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div></div></div>
 
 <footer><div class="container"><div class="footer-grid">
-  <div><h4>instaBuild</h4><p style="font-size:12px;line-height:1.7">Redefining construction through modular technology. Faster, smarter, greener.</p></div>
-  <div><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a></div>
-  <div><h4>Company</h4><a href="#about">About</a><a href="#builder">3D Builder</a><a href="#map">Global</a></div>
-  <div><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="font-size:11px;margin-top:8px">Prishtina, Kosovo<br>Dover, DE · US</p></div>
+  <div><h4>instaBuild</h4><p>Redefining construction through modular technology. Faster, smarter, greener.</p></div>
+  <div><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a><a href="#services">Community</a></div>
+  <div><h4>Company</h4><a href="#about">About</a><a href="#builder">3D Builder</a><a href="#map">Global</a><a href="#contact">Contact</a></div>
+  <div><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="margin-top:8px">Prishtina, Kosovo<br>Dover, DE · United States</p></div>
 </div><div class="footer-bottom"><span>© 2026 instaBuild</span><span>Building the future, faster.</span></div></div></footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// Google Translate
+(function(){var gt=document.createElement('script');gt.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateInit';gt.async=true;document.head.appendChild(gt)})();
+function googleTranslateInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,fr,de,it,pt,ru,zh-CN,zh-TW,ja,ko,ar,hi,tr,nl,pl,sv,da,fi,no,cs,ro,hu,el,he,th,vi,id,ms,uk,bg,hr,sr,sk,sl,et,lv,lt,fa,sw,ta,bn,ur,fil,iw,am,km,my,ne,si,te,gu,pa,ml',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element')}
 // Nav
+window.addEventListener('scroll',()=>document.getElementById('header').classList.toggle('scrolled',window.scrollY>20));
 document.getElementById('menuToggle').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));
 // Fade
 const io=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.08});document.querySelectorAll('.fade-in').forEach(e=>io.observe(e));setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('visible')}),120);
 // Form
 document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.className='form-status';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'s':'e');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status e';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry'});
 // Config
-document.querySelectorAll('.cfg-opt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.cfg-opt').forEach(x=>{x.classList.remove('active');x.style.borderColor='rgba(255,255,255,.06)';x.style.background='rgba(255,255,255,.03)'});this.classList.add('active');this.style.borderColor='#2ecc71';this.style.background='rgba(46,204,113,.08)';refresh3D();updatePrice()})});
-document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts'].forEach(id=>{const g=document.getElementById(id);g.querySelectorAll('.cfg-opt').forEach((o,i)=>{if(i===0){o.classList.add('active');o.style.borderColor='#2ecc71';o.style.background='rgba(46,204,113,.08)'}else{o.classList.remove('active');o.style.borderColor='rgba(255,255,255,.06)';o.style.background='rgba(255,255,255,.03)'}})});refresh3D();updatePrice()});
-function updatePrice(){let up=0;document.querySelectorAll('.cfg-opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));const base=98000;document.getElementById('priceTotal').textContent='$'+(base+14500+12000+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+up.toLocaleString()}
+document.querySelectorAll('.b-opt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.b-opt').forEach(x=>x.classList.remove('active'));this.classList.add('active');refresh3D();updatePrice()})});
+document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts'].forEach(id=>{document.getElementById(id).querySelectorAll('.b-opt').forEach((o,i)=>o.classList.toggle('active',i===0))});refresh3D();updatePrice()});
+function updatePrice(){let up=0;document.querySelectorAll('.b-opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(124500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+up.toLocaleString()}
 // Map
 (function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([35,10],3);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
-const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ. Manufacturing hub.',c:104},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects.',c:340},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP.',c:70},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos premium.',c:15},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich.',c:0},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London.',c:0},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam.',c:0},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon.',c:0},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan.',c:0},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto.',c:0},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai.',c:0},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green.',c:0}];
+const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ & Innovation Center.',c:104},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects across 8 states.',c:340},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP in 30 days.',c:70},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos premium modular.',c:15},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich breaking ground 2026.',c:0},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London partnerships active.',c:0},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam pilot.',c:0},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon targeted 2027.',c:0},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan assessment underway.',c:0},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto & Vancouver.',c:0},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai exploration.',c:0},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green Deal aligned.',c:0}];
 const cv=new Set(ac.map(c=>c.n));const wc=[{n:'Spain',t:40,o:-3},{n:'Portugal',t:39.5,o:-8},{n:'Norway',t:62,o:10},{n:'Sweden',t:62,o:15},{n:'Finland',t:64,o:26},{n:'Denmark',t:56,o:10},{n:'Poland',t:52,o:20},{n:'Romania',t:46,o:25},{n:'Greece',t:39,o:22},{n:'Turkey',t:39,o:35},{n:'Ireland',t:53,o:-8},{n:'Hungary',t:47,o:20},{n:'Mexico',t:23,o:-102},{n:'Brazil',t:-10,o:-55},{n:'India',t:20,o:78},{n:'China',t:35,o:105},{n:'Japan',t:36,o:138},{n:'Australia',t:-25,o:133},{n:'S.Africa',t:-29,o:24},{n:'Egypt',t:27,o:30},{n:'Saudi',t:24,o:45},{n:'Singapore',t:1.3,o:103.8},{n:'Thailand',t:15,o:101}];
-const cls={active:'#2ecc71',expanding:'#f59e0b',unavailable:'#f85149'};
+const cls={active:'#41ab5d',expanding:'#f59e0b',unavailable:'#ef4444'};
 function rM(m){c._m&&c._m.forEach(mk=>map.removeLayer(mk));const ms=[];let maxC=0;ac.forEach(p=>{if(p.c>maxC)maxC=p.c});
-if(m==='density'){ac.forEach(p=>{if(p.c===0)return;const r=6+(p.c/maxC)*28;const ic=L.divIcon({className:'',html:`<div style="width:${r}px;height:${r}px;background:rgba(46,204,113,${.3+(p.c/maxC)*.6});border-radius:50%;border:2px solid rgba(46,204,113,.8)"></div>`,iconSize:[r,r],iconAnchor:[r/2,r/2]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="color:#c9d1d9;font-family:Inter,sans-serif;font-size:12px;padding:4px"><strong style="color:#fff;font-size:14px">${p.n}</strong><br>${p.c} projects</div>`,{maxWidth:200});ms.push(mk)})
-}else{ac.forEach(p=>{if(m==='active'&&p.s!=='active')return;const ic=L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${cls[p.s]};border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 3px ${cls[p.s]}44"></div>`,iconSize:[13,13],iconAnchor:[7,7]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="color:#c9d1d9;font-family:Inter,sans-serif;font-size:12px;padding:4px"><strong style="color:#fff;font-size:14px">${p.n}</strong><br><span style="color:${cls[p.s]}">${p.s==='active'?'✓ Active':'↗ Expanding'}</span><br>${p.d}</div>`,{maxWidth:220});ms.push(mk)});
-if(m==='all'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:7px;height:7px;background:${cls.unavailable};border-radius:50%;border:1.5px solid #fff;opacity:.5"></div>`,iconSize:[7,7],iconAnchor:[4,4]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="color:#c9d1d9;font-family:Inter,sans-serif;font-size:12px"><strong style="color:#fff;font-size:13px">${p.n}</strong><br><span style="color:#f85149">✗ Not yet available</span><br><a href="#contact" style="color:#2ecc71">Register interest →</a></div>`,{maxWidth:200});ms.push(mk)})}}c._m=ms}rM('all');
+if(m==='density'){ac.forEach(p=>{if(p.c===0)return;const r=8+(p.c/maxC)*26;const ic=L.divIcon({className:'',html:`<div style="width:${r}px;height:${r}px;background:rgba(65,171,93,${.3+(p.c/maxC)*.6});border-radius:50%;border:2px solid rgba(65,171,93,.8)"></div>`,iconSize:[r,r],iconAnchor:[r/2,r/2]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;color:#1e3a52;padding:4px"><strong style="font-size:15px">${p.n}</strong><br><span style="color:#41ab5d;font-weight:600">${p.c} projects</span></div>`,{maxWidth:200});ms.push(mk)})}
+else{ac.forEach(p=>{if(m==='active'&&p.s!=='active')return;const ic=L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${cls[p.s]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 3px ${cls[p.s]}44"></div>`,iconSize:[13,13],iconAnchor:[7,7]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;color:#0a1628;padding:4px"><strong style="font-size:15px">${p.n}</strong><br><span style="color:${cls[p.s]};font-weight:600">${p.s==='active'?'✓ Active':'↗ Expanding'}</span><br>${p.d}</div>`,{maxWidth:240});ms.push(mk)});
+if(m==='all'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:7px;height:7px;background:${cls.unavailable};border-radius:50%;border:1.5px solid #fff;opacity:.5"></div>`,iconSize:[7,7],iconAnchor:[4,4]});const mk=L.marker([p.t,p.o],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px"><strong style="font-size:14px">${p.n}</strong><br><span style="color:#ef4444">✗ Not yet available</span><br><a href="#contact" style="color:#41ab5d;font-weight:500">Register interest →</a></div>`,{maxWidth:200});ms.push(mk)})}}c._m=ms}rM('all');
 document.querySelectorAll('.map-toggle button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.map-toggle button').forEach(x=>x.classList.remove('active'));b.classList.add('active');rM(b.dataset.mode)}));
 new ResizeObserver(()=>map.invalidateSize()).observe(c);new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)map.invalidateSize()})}).observe(c)})();
 </script>
 <script type="module">
 import*as THREE from'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
 const frame=document.getElementById('vframe'),canvas=document.getElementById('vcanvas');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#161b22');scene.fog=new THREE.Fog('#161b22',12,38);
-const camera=new THREE.PerspectiveCamera(38,1.8,.5,50);camera.position.set(5.5,3.8,7.5);
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#0f1f36');scene.fog=new THREE.Fog('#0f1f36',12,38);
+const camera=new THREE.PerspectiveCamera(38,1.8,.5,50);camera.position.set(5,3.5,7);
 const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,0);controls.enableDamping=true;controls.dampingFactor=.06;controls.minDistance=2.5;controls.maxDistance=12;controls.maxPolarAngle=1.35;controls.update();
 scene.add(new THREE.AmbientLight('#c0d8f0',.9));const sun=new THREE.DirectionalLight('#fffef8',3.2);sun.position.set(14,9,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);scene.add(new THREE.DirectionalLight('#b0c8e0',.3).translateX(-4).translateZ(-4));
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#3a4a3c',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;ground.receiveShadow=true;scene.add(ground);
 const mSteel=new THREE.MeshStandardMaterial({color:'#4a5a6a',roughness:.3,metalness:.85});
-const mFound=new THREE.MeshStandardMaterial({color:'#a0a8b0',roughness:.65,metalness:.02});
 const mDoor=new THREE.MeshStandardMaterial({color:'#1a2535',roughness:.2,metalness:.6});
-const mAccent=new THREE.MeshStandardMaterial({color:'#2ecc71',roughness:.2,metalness:.4,emissive:'#2ecc71',emissiveIntensity:.08});
-const matCache={};
-function wM(){const v=document.querySelector('#wallOpts .cfg-opt.active')?.dataset.wall||'white';if(!matCache['w_'+v]){const c={white:'#e8ecf2',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return matCache['w_'+v]}
-function wAM(){const v=document.querySelector('#wallOpts .cfg-opt.active')?.dataset.wall||'white';if(!matCache['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042'};matCache['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return matCache['wa_'+v]}
-function rM2(){const v=document.querySelector('#roofOpts .cfg-opt.active')?.dataset.roof||'dark';if(!matCache['r_'+v]){const c={dark:'#3b4452',terra:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};matCache['r_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.25:.35,metalness:v==='metal'?.4:.2})}return matCache['r_'+v]}
-function wiM(){const v=document.querySelector('#winOpts .cfg-opt.active')?.dataset.window||'clear';if(!matCache['wi_'+v]){const o={clear:{c:'#c8ddf4',o:.78},black:{c:'#7090b0',o:.58},bronze:{c:'#c0a888',o:.58},wood:{c:'#b8a888',o:.6}};matCache['wi_'+v]=new THREE.MeshStandardMaterial({color:o[v].c,roughness:.03,metalness:.03,transparent:true,opacity:o[v].o})}return matCache['wi_'+v]}
-const dyn=[];function ad(geo,pos,rot,type){const m=new THREE.Mesh(geo,type==='w'?wM():type==='wa'?wAM():type==='wi'?wiM():type==='r'?rM2():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dynType:type};dyn.push(m);scene.add(m);return m}
-function build(){
-  dyn.forEach(m=>scene.remove(m));dyn.length=0;
-  const H=3.2;ad(new THREE.BoxGeometry(5.8,.2,4.4),new THREE.Vector3(0,.1,0),null,'w');
-  for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),mSteel);c.position.set(x,H/2+.1,z);c.castShadow=c.receiveShadow=true;scene.add(c)}
-  for(let fl=0;fl<1;fl++){const y=.2+fl*3;ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,-2.1),null,'w');ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,2.1),null,'w');for(let x=-2.8;x<=2.8;x+=5.6)ad(new THREE.BoxGeometry(.1,.06,4.2),new THREE.Vector3(x,y,0),null,'w')}
-  const bY=.2,mid=1.65;ad(new THREE.BoxGeometry(5.6,2.8,.08),new THREE.Vector3(0,mid,-2.13),null,'w');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(-1.15,mid-.7,2.13),null,'wa');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(1.15,mid-.7,2.13),null,'wa');ad(new THREE.BoxGeometry(5.6,1.3,.08),new THREE.Vector3(0,mid+.75,2.13),null,'wa');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(-2.83,mid,0),null,'w');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(2.83,mid,0),null,'w');
-  for(let x=-1;x<=1;x+=2)for(let wy=-.6;wy<=.6;wy+=1.2)ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(x,mid+wy,-2.09),null,'wi');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(-1.5,mid,2.09),null,'wi');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(1.5,mid,2.09),null,'wi');
-  const dm=new THREE.Mesh(new THREE.BoxGeometry(1.05,2.1,.06),mDoor);dm.position.set(0,1.15,2.13);dm.castShadow=dm.receiveShadow=true;scene.add(dm);
-  ad(new THREE.BoxGeometry(5.5,.06,4.0),new THREE.Vector3(0,3.1,0),null,'w');
-  const rY=3.2,rpG=new THREE.BoxGeometry(6.0,.1,2.2);
-  const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rY+.3,-1.1);rf.rotation.x=-.4;rf.castShadow=rf.receiveShadow=true;rf.userData={dynType:'r'};dyn.push(rf);scene.add(rf);
-  const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rY+.3,1.1);rr.rotation.x=.4;rr.castShadow=rr.receiveShadow=true;rr.userData={dynType:'r'};dyn.push(rr);scene.add(rr);
-  ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,-2.2),null,'r');ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,2.2),null,'r');
-  for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,.16,8),mAccent);c.position.set(x,.2,z);scene.add(c)}
-}
-build();
+const mc={};function wM(){const v=document.querySelector('#wallOpts .b-opt.active')?.dataset.wall||'white';if(!mc['w_'+v]){const c={white:'#e8ecf2',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52'};mc['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return mc['w_'+v]}function wAM(){const v=document.querySelector('#wallOpts .b-opt.active')?.dataset.wall||'white';if(!mc['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042'};mc['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return mc['wa_'+v]}function rM2(){const v=document.querySelector('#roofOpts .b-opt.active')?.dataset.roof||'dark';if(!mc['r_'+v]){const c={dark:'#3b4452',terra:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};mc['r_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.25:.35,metalness:v==='metal'?.4:.2})}return mc['r_'+v]}function wiM(){const v=document.querySelector('#winOpts .b-opt.active')?.dataset.window||'clear';if(!mc['wi_'+v]){const o={clear:{c:'#c8ddf4',o:.78},black:{c:'#7090b0',o:.58},bronze:{c:'#c0a888',o:.58},wood:{c:'#b8a888',o:.6}};mc['wi_'+v]=new THREE.MeshStandardMaterial({color:o[v].c,roughness:.03,metalness:.03,transparent:true,opacity:o[v].o})}return mc['wi_'+v]}
+const dyn=[];function ad(geo,pos,rot,type){const m=new THREE.Mesh(geo,type==='w'?wM():type==='wa'?wAM():type==='wi'?wiM():type==='r'?rM2():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dynType:type};dyn.push(m);scene.add(m)}
+function build(){dyn.forEach(m=>scene.remove(m));dyn.length=0;const H=3.2;ad(new THREE.BoxGeometry(5.8,.2,4.4),new THREE.Vector3(0,.1,0),null,'w');for(let x=-2.8;x<=2.8;x+=5.6)for(let z=-2.1;z<=2.1;z+=4.2){const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),mSteel);c.position.set(x,H/2+.1,z);c.castShadow=c.receiveShadow=true;scene.add(c)}
+for(let y=.2;y<3.2;y+=3.0){ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,-2.1),null,'w');ad(new THREE.BoxGeometry(5.7,.06,.1),new THREE.Vector3(0,y,2.1),null,'w');for(let x=-2.8;x<=2.8;x+=5.6)ad(new THREE.BoxGeometry(.1,.06,4.2),new THREE.Vector3(x,y,0),null,'w')}
+const mid=1.65;ad(new THREE.BoxGeometry(5.6,2.8,.08),new THREE.Vector3(0,mid,-2.13),null,'w');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(-1.15,mid-.7,2.13),null,'wa');ad(new THREE.BoxGeometry(2.5,1.4,.08),new THREE.Vector3(1.15,mid-.7,2.13),null,'wa');ad(new THREE.BoxGeometry(5.6,1.3,.08),new THREE.Vector3(0,mid+.75,2.13),null,'wa');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(-2.83,mid,0),null,'w');ad(new THREE.BoxGeometry(.08,2.8,4.25),new THREE.Vector3(2.83,mid,0),null,'w');
+for(let x=-1;x<=1;x+=2)for(let wy=-.6;wy<=.6;wy+=1.2)ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(x,mid+wy,-2.09),null,'wi');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(-1.5,mid,2.09),null,'wi');ad(new THREE.BoxGeometry(.7,.85,.035),new THREE.Vector3(1.5,mid,2.09),null,'wi');
+const dm=new THREE.Mesh(new THREE.BoxGeometry(1.05,2.1,.06),mDoor);dm.position.set(0,1.15,2.13);dm.castShadow=dm.receiveShadow=true;scene.add(dm);
+ad(new THREE.BoxGeometry(5.5,.06,4.0),new THREE.Vector3(0,3.1,0),null,'w');
+const rY=3.2,rpG=new THREE.BoxGeometry(6.0,.1,2.2);const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rY+.3,-1.1);rf.rotation.x=-.4;rf.castShadow=rf.receiveShadow=true;rf.userData={dynType:'r'};dyn.push(rf);scene.add(rf);const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rY+.3,1.1);rr.rotation.x=.4;rr.castShadow=rr.receiveShadow=true;rr.userData={dynType:'r'};dyn.push(rr);scene.add(rr);
+ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,-2.2),null,'r');ad(new THREE.BoxGeometry(6.0,.04,.12),new THREE.Vector3(0,rY+.45,2.2),null,'r');
+}build();
 window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dynType;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
-function resize(){const w=frame.clientWidth,h=Math.min(w*.65,520);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();canvas.style.height=h+'px'}window.addEventListener('resize',resize);resize();
+function resize(){const w=frame.clientWidth,h=frame.clientHeight||520;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}window.addEventListener('resize',resize);resize();
 function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
 </script>
 </body>
