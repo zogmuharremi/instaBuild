@@ -3,151 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>instaBuild — Design Your Home</title>
+  <title>instaBuild — Design & Price Your Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <style>
-    :root{--g:#41ab5d;--gh:#238b45;--gl:#c7e9c0;--gg:rgba(65,171,93,.07);--gd:#003d1f;--glb:#edf8e9;--n:#0a1628;--s:#5b6e84;--w:#fff;--b:#dce8e0;--r:10px;--rl:14px}
+    :root{--g:#41ab5d;--gh:#238b45;--gl:#c7e9c0;--gg:rgba(65,171,93,.07);--gd:#003d1f;--glb:#edf8e9;--n:#0a1628;--s:#5b6e84;--w:#fff;--b:#dce8e0}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
     body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--s);background:var(--w);font-weight:350;font-size:16px;line-height:1.6;overflow-x:hidden}
-
     .menu-btn{position:fixed;top:20px;left:22px;z-index:2000;width:44px;height:44px;background:rgba(10,22,40,.9);border:1px solid rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:5px}
-    .menu-btn span{width:18px;height:1.5px;background:var(--w);border-radius:1px;transition:all .3s}
-    .menu-btn.open span:nth-child(1){transform:rotate(45deg) translate(3px,3px)}.menu-btn.open span:nth-child(2){opacity:0}.menu-btn.open span:nth-child(3){transform:rotate(-45deg) translate(3px,-3px)}
+    .menu-btn span{width:18px;height:1.5px;background:var(--w);border-radius:1px;transition:.3s}
+    .menu-btn.open span:nth-child(1){transform:rotate(45deg)translate(3px,3px)}.menu-btn.open span:nth-child(2){opacity:0}.menu-btn.open span:nth-child(3){transform:rotate(-45deg)translate(3px,-3px)}
     .menu-panel{position:fixed;top:78px;left:22px;z-index:1999;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:8px 0;min-width:220px;display:none;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.45)}
-    .menu-panel.open{display:flex}
-    .menu-panel a{color:rgba(255,255,255,.65);text-decoration:none;font-size:13.5px;font-weight:450;padding:11px 22px;transition:all .2s;display:flex;align-items:center;gap:10px}
+    .menu-panel.open{display:flex}.menu-panel a{color:rgba(255,255,255,.65);text-decoration:none;font-size:13.5px;font-weight:450;padding:11px 22px;display:flex;align-items:center;gap:10px}
     .menu-panel a:hover{color:var(--w);background:rgba(65,171,93,.08)}.menu-panel a .mi{font-size:15px;width:22px;text-align:center;color:var(--g)}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 24px;border-radius:7px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s;gap:7px;font-family:inherit}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 24px;border-radius:7px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:.2s;font-family:inherit}
     .btn-p{background:var(--g);color:#0a1628;font-weight:600}.btn-p:hover{background:var(--gh);transform:translateY(-2px);box-shadow:0 6px 20px rgba(65,171,93,.38)}
     .btn-w{background:var(--w);color:var(--n);font-weight:550}.btn-w:hover{background:var(--glb);transform:translateY(-2px)}
     .btn-ow{background:transparent;color:var(--w);border:1.5px solid rgba(255,255,255,.28)}.btn-ow:hover{background:rgba(255,255,255,.05)}
     .btn-lg{padding:14px 30px;font-size:15.5px;border-radius:8px}
-
     .hero{position:relative;min-height:100vh;display:flex;align-items:center}
     .hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0;filter:brightness(.5)}
-    .hero-ol{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(10,22,40,.25) 0%,rgba(10,22,40,.95) 70%);z-index:1}
+    .hero-ol{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(10,22,40,.2) 0%,rgba(10,22,40,.95) 70%);z-index:1}
     .hero-c{position:relative;z-index:2;max-width:740px;padding:140px 48px 100px}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(65,171,93,.12);color:var(--g);font-size:12px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:36px;border:1px solid rgba(65,171,93,.18)}
-    .hero-dot{width:8px;height:8px;background:var(--g);border-radius:50%;animation:pulse 2.5s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .hero h1{font-size:clamp(40px,8vw,74px);font-weight:200;color:var(--w);line-height:1.04;letter-spacing:-2px;margin-bottom:28px}
-    .hero h1 span{color:var(--g);font-weight:400}
+    .hero-dot{width:8px;height:8px;background:var(--g);border-radius:50%;animation:pulse2 2.5s infinite}@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero h1{font-size:clamp(40px,8vw,74px);font-weight:200;color:var(--w);line-height:1.04;letter-spacing:-2px;margin-bottom:28px}.hero h1 span{color:var(--g);font-weight:400}
     .hero p{font-size:18px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.7;max-width:540px;margin-bottom:44px}
     .hero-btns{display:flex;gap:15px;flex-wrap:wrap}
-
-    .sec{max-width:1160px;margin:0 auto;padding:100px 48px}
-    .sec-alt{background:var(--glb);padding:100px 0}.sec-inner{max-width:1160px;margin:0 auto;padding:0 48px}
-    .sec-hdr{text-align:center;margin-bottom:72px}
-    .sec-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:18px}
-    .sec-hdr h2{font-size:clamp(28px,4.5vw,42px);font-weight:200;color:var(--n);letter-spacing:-1px;line-height:1.16;margin-bottom:18px}
-    .sec-hdr p{font-size:17px;font-weight:300;color:var(--s);max-width:580px;margin:0 auto}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-    .split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:16px;box-shadow:0 24px 60px rgba(10,22,40,.15)}
-    .split-txt h3{font-size:32px;font-weight:200;color:var(--n);letter-spacing:-.7px;margin-bottom:22px}.split-txt p{font-size:15px;font-weight:300;color:var(--s);line-height:1.75;margin-bottom:20px}
+    .sec{max-width:1160px;margin:0 auto;padding:100px 48px}.sec-alt{background:var(--glb);padding:100px 0}.sec-inner{max-width:1160px;margin:0 auto;padding:0 48px}
+    .sec-hdr{text-align:center;margin-bottom:48px}.sec-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:18px}
+    .sec-hdr h2{font-size:clamp(28px,4.5vw,42px);font-weight:200;color:var(--n);letter-spacing:-1px;line-height:1.16;margin-bottom:14px}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:10px;overflow:hidden;max-width:940px;margin:-35px auto 68px;z-index:10;box-shadow:0 20px 48px rgba(10,22,40,.1)}
+    .stat{background:var(--w);padding:32px 24px;text-align:center}.stat:hover{background:var(--glb)}.stat-val{font-size:34px;font-weight:200;color:var(--n)}.stat-lbl{font-size:10.5px;font-weight:550;color:var(--s);text-transform:uppercase}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:16px;box-shadow:0 24px 60px rgba(10,22,40,.15)}
     .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:26px}
-    .card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:38px 32px;transition:all .35s;box-shadow:0 1px 2px rgba(10,22,40,.04);position:relative;overflow:hidden}
-    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--gh));opacity:0;transition:opacity .35s}
+    .card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:38px 32px;transition:.35s;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--gh));opacity:0;transition:.35s}
     .card:hover{box-shadow:0 16px 44px rgba(10,22,40,.12);transform:translateY(-5px);border-color:transparent}.card:hover::before{opacity:1}
-    .card-icon{width:54px;height:54px;background:var(--gg);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}.card h3{font-size:18px;font-weight:500;color:var(--n);margin-bottom:8px}.card p{font-size:13.5px;font-weight:300;color:var(--s);line-height:1.6}
+    .card-icon{width:54px;height:54px;background:var(--gg);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:20px}
     .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:26px}
-    .svc-card{background:var(--w);border:1px solid var(--b);border-radius:16px;overflow:hidden;transition:all .4s}
-    .svc-card:hover{transform:translateY(-7px);box-shadow:0 24px 56px rgba(10,22,40,.14)}.svc-img{height:250px;background-size:cover;background-position:center;position:relative;transition:transform .6s}.svc-card:hover .svc-img{transform:scale(1.06)}
-    .svc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,22,40,.45))}.svc-tag{position:absolute;top:18px;left:18px;background:rgba(10,22,40,.88);color:var(--g);font-size:9.5px;font-weight:600;padding:4px 13px;border-radius:4px;text-transform:uppercase;z-index:1}
-    .svc-body{padding:28px}.svc-body h3{font-size:20px;font-weight:450;color:var(--n);margin-bottom:8px}.svc-body p{font-size:13.5px;font-weight:300;color:var(--s);line-height:1.6}
+    .svc-card{background:var(--w);border:1px solid var(--b);border-radius:16px;overflow:hidden;transition:.4s}.svc-card:hover{transform:translateY(-7px);box-shadow:0 24px 56px rgba(10,22,40,.14)}
+    .svc-img{height:250px;background-size:cover;background-position:center;position:relative;transition:transform .6s}.svc-card:hover .svc-img{transform:scale(1.06)}
+    .svc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,22,40,.45))}
+    .svc-tag{position:absolute;top:18px;left:18px;background:rgba(10,22,40,.88);color:var(--g);font-size:9.5px;font-weight:600;padding:4px 13px;border-radius:4px;text-transform:uppercase;z-index:1}
+    .svc-body{padding:28px}.svc-body h3{font-size:20px;font-weight:450;color:var(--n)}.svc-body p{font-size:13.5px;color:var(--s);line-height:1.6}
     .svc-features{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.svc-feat{font-size:10.5px;font-weight:500;color:var(--g);background:var(--gg);padding:4px 12px;border-radius:5px}
 
-    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
-    .gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:12px;transition:all .45s;box-shadow:0 3px 10px rgba(10,22,40,.06)}.gallery-item:hover{transform:scale(1.05);box-shadow:0 24px 56px rgba(10,22,40,.16)}
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}.gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:12px;transition:.45s}.gallery-item:hover{transform:scale(1.05);box-shadow:0 24px 56px rgba(10,22,40,.16)}
+    .map-section{background:var(--n);padding:90px 0}.map-section .sec-tag{color:var(--gl)}.map-section .sec-hdr h2{color:var(--w)}
+    .fade-in{opacity:0;transform:translateY(40px);transition:.8s}.fade-in.visible{opacity:1;transform:translateY(0)}
 
-    .map-section{background:var(--n);padding:90px 0}.map-section .sec-tag{color:var(--gl)}.map-section .sec-hdr h2{color:var(--w)}.map-section .sec-hdr p{color:rgba(255,255,255,.42)}
-    .map-wrap{max-width:1160px;margin:0 auto;padding:0 48px}.map-container{width:100%;height:560px;border-radius:18px;overflow:hidden;box-shadow:0 32px 90px rgba(0,0,0,.55);position:relative;background:#132030}
-    .map-container .leaflet-container{width:100%;height:100%;background:#132030}
-    .map-popup{font-family:'Source Sans 3',system-ui,sans-serif;font-size:13px;line-height:1.55;min-width:260px}.map-popup h3{font-size:17px;font-weight:600;color:var(--n)}.mp-status{display:inline-block;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:3px;text-transform:uppercase;margin-bottom:12px}.mp-status.active{background:var(--glb);color:var(--gh)}.mp-status.expanding{background:#fef3c7;color:#92400e}.mp-status.unavailable{background:#fce4e4;color:#b91c1c}
-    .map-toggle{position:absolute;top:22px;right:22px;z-index:1000;display:flex;gap:8px}.map-toggle button{background:rgba(10,22,40,.9);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);padding:9px 18px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}.map-toggle button.active{background:var(--g);border-color:var(--g);color:#0a1628;font-weight:600}
-    .map-legend{position:absolute;bottom:26px;left:26px;background:rgba(10,22,40,.95);border-radius:9px;padding:15px 20px;z-index:1000;font-size:11px;display:flex;gap:20px;border:1px solid rgba(255,255,255,.05)}.map-legend-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7)}.map-legend-dot{width:11px;height:11px;border-radius:50%}.map-legend-dot.active{background:var(--g)}.map-legend-dot.expanding{background:#f59e0b}.map-legend-dot.unavailable{background:#ef4444}
+    /* ── CONFIGURATOR ── */
+    .cfg-section{background:linear-gradient(180deg,#0a1628,#0f1f36);padding:40px 0 80px}
+    .cfg-layout{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:340px 1fr 280px;gap:0;padding:0 48px}
+    .cfg-panel{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);border-radius:16px 0 0 16px;padding:24px 20px;overflow-y:auto;max-height:680px}
+    .cfg-panel h2{font-size:17px;font-weight:300;color:var(--w);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+    .cfg-panel h2 span{color:var(--g)}
+    .cfg-group{margin-bottom:22px}
+    .cfg-group-title{font-size:10px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.05)}
+    .cfg-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .cfg-opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:8px;padding:8px;cursor:pointer;transition:.2s;text-align:center}
+    .cfg-opt:hover{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.06)}
+    .cfg-opt.active{border-color:var(--g);background:rgba(65,171,93,.1)}
+    .cfg-opt .swatch{width:100%;height:28px;border-radius:5px;margin-bottom:5px;border:1px solid rgba(255,255,255,.08)}
+    .cfg-opt .opt-label{font-size:10px;font-weight:500;color:rgba(255,255,255,.6)}
+    .cfg-opt.active .opt-label{color:var(--g)}
+    .cfg-opt .opt-price{font-size:9px;color:rgba(255,255,255,.35);margin-top:2px}
+    .cfg-opt.active .opt-price{color:var(--g)}
 
-    .process-steps{display:grid;grid-template-columns:repeat(5,1fr);position:relative;max-width:940px;margin:0 auto}.ps{text-align:center;padding:30px 20px;position:relative;z-index:1}
-    .ps-num{width:52px;height:52px;background:linear-gradient(135deg,var(--g),var(--gh));color:var(--w);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:600;margin:0 auto 18px}
-    .ps h3{font-size:15px;font-weight:500;color:var(--n)}.ps p{font-size:11.5px;font-weight:300;color:var(--s)}
-    .process-line{position:absolute;top:56px;left:calc(10% + 52px);width:calc(80% - 52px);height:1.5px;background:linear-gradient(90deg,var(--gl),var(--g),var(--gl));z-index:0}
+    .cfg-viewer{background:#0d1a2d;position:relative;overflow:hidden}
+    .cfg-viewer canvas{display:block;width:100%;height:680px;cursor:grab}.cfg-viewer canvas:active{cursor:grabbing}
+    .viewer-info{position:absolute;top:20px;left:20px;background:rgba(10,22,40,.92);border:1px solid rgba(65,171,93,.18);border-radius:10px;padding:14px 18px;color:var(--w);max-width:260px;z-index:10;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;backdrop-filter:blur(12px)}
+    .viewer-info.visible{opacity:1;transform:translateY(0)}.viewer-info h3{font-size:14px;font-weight:500;color:var(--g)}.viewer-info p{font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.5}
+    .viewer-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.22);font-size:11px;z-index:10;pointer-events:none}
 
-    .form-wrap{max-width:600px;margin:0 auto}.form-group{margin-bottom:20px}.form-group label{display:block;font-size:13px;font-weight:500;color:#1e3a52;margin-bottom:7px}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 17px;border:1.5px solid var(--b);border-radius:7px;font-size:15px;font-family:inherit;font-weight:350;color:var(--n);transition:all .2s;background:var(--w);outline:none}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(65,171,93,.06)}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.form-status{display:none;padding:16px 22px;border-radius:7px;font-size:14px;margin-bottom:24px;text-align:center}
-    .form-status.success{display:block;background:rgba(65,171,93,.08);color:var(--gh);border:1px solid rgba(65,171,93,.18)}.form-status.error{display:block;background:rgba(239,68,68,.05);color:#b91c1c;border:1px solid rgba(239,68,68,.12)}
-
-    .cta-bg{position:relative;padding:140px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}
-    .cta-ol{position:absolute;inset:0;background:linear-gradient(165deg,rgba(10,22,40,.96),rgba(10,22,40,.82));z-index:0}
-    .cta-c{position:relative;z-index:1;max-width:640px;margin:0 auto}.cta-c h2{font-size:clamp(30px,4.5vw,44px);font-weight:200;color:var(--w);letter-spacing:-1px;margin-bottom:20px}
-    .cta-c p{font-size:17px;font-weight:300;color:rgba(255,255,255,.48);margin-bottom:38px}.cta-btns{display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
-
-    footer{background:var(--gd);padding:80px 48px 40px;color:rgba(255,255,255,.4);font-size:13px}
-    .ft-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px;margin-bottom:60px}
-    .ft h4{color:var(--w);font-size:13.5px;font-weight:500;margin-bottom:22px}.ft a{display:block;color:rgba(255,255,255,.3);text-decoration:none;font-size:12.5px;margin-bottom:10px}.ft a:hover{color:var(--g)}
-    .ft p{font-size:12.5px;line-height:1.75}.ft-bot{max-width:1160px;margin:0 auto;border-top:1px solid rgba(255,255,255,.05);padding-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px}
-
-    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b);border-radius:10px;overflow:hidden;max-width:940px;margin:-35px auto 68px;position:relative;z-index:10;box-shadow:0 20px 48px rgba(10,22,40,.1)}
-    .stat{background:var(--w);padding:36px 28px;text-align:center}.stat:hover{background:var(--glb)}.stat-val{font-size:38px;font-weight:200;color:var(--n)}.stat-lbl{font-size:10.5px;font-weight:550;color:var(--s);text-transform:uppercase}
-
-    .fade-in{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s}.fade-in.visible{opacity:1;transform:translateY(0)}
-
-    /* ── 3D CONFIGURATOR ── */
-    .config-section{background:linear-gradient(180deg,#0a1628,#0f1f36);padding:60px 0 100px}
-    .config-layout{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;gap:0;padding:0 48px}
-    .config-panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:18px 0 0 18px;padding:28px 24px;overflow-y:auto;max-height:660px;backdrop-filter:blur(8px)}
-    .config-panel h2{font-size:18px;font-weight:300;color:var(--w);margin-bottom:24px;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
-    .config-panel h2 span{color:var(--g);font-weight:400}
-    .config-group{margin-bottom:28px}
-    .config-group-title{font-size:11px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .config-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .config-option{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;padding:10px;cursor:pointer;transition:all .2s;text-align:center}
-    .config-option:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.08)}
-    .config-option.active{border-color:var(--g);background:rgba(65,171,93,.12)}
-    .config-option .swatch{width:100%;height:32px;border-radius:5px;margin-bottom:6px;border:1px solid rgba(255,255,255,.1)}
-    .config-option .opt-label{font-size:10.5px;font-weight:500;color:rgba(255,255,255,.65)}
-    .config-option.active .opt-label{color:var(--g)}
-    .config-option .opt-icon{font-size:22px;margin-bottom:4px;display:block}
-    .reset-btn{width:100%;margin-top:12px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:10px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
+    /* Price panel */
+    .price-panel{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);border-radius:0 16px 16px 0;padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+    .price-panel h2{font-size:17px;font-weight:300;color:var(--w);display:flex;align-items:center;gap:8px}
+    .price-panel h2 span{color:var(--g)}
+    .price-total{background:rgba(65,171,93,.12);border:1px solid rgba(65,171,93,.25);border-radius:10px;padding:18px;text-align:center}
+    .price-total .total-amount{font-size:36px;font-weight:300;color:var(--g);letter-spacing:-1px;line-height:1.1}
+    .price-total .total-label{font-size:10px;font-weight:500;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+    .price-total .total-savings{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px}
+    .price-breakdown{display:flex;flex-direction:column;gap:8px}
+    .price-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.5);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .price-line .pl-val{color:rgba(255,255,255,.7);font-weight:500}
+    .price-note{font-size:10px;color:rgba(255,255,255,.3);text-align:center;line-height:1.5;margin-top:8px}
+    .reset-btn{width:100%;background:transparent;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.4);padding:10px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;margin-top:auto}
     .reset-btn:hover{background:rgba(255,255,255,.05);color:var(--w)}
 
-    .config-viewer{background:#0d1a2d;border:1px solid rgba(255,255,255,.06);border-radius:0 18px 18px 0;overflow:hidden;position:relative;border-left:none}
-    .config-viewer canvas{display:block;width:100%;height:660px;cursor:grab}.config-viewer canvas:active{cursor:grabbing}
-    .viewer-info{position:absolute;top:24px;left:24px;background:rgba(10,22,40,.9);border:1px solid rgba(65,171,93,.2);border-radius:10px;padding:16px 20px;color:var(--w);max-width:280px;z-index:10;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
-    .viewer-info.visible{opacity:1;transform:translateY(0)}.viewer-info h3{font-size:15px;font-weight:500;color:var(--g);margin-bottom:4px}.viewer-info p{font-size:12px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.5}
-    .viewer-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.28);font-size:12px;z-index:10;pointer-events:none}
-    .total-label{position:absolute;top:24px;right:24px;background:rgba(65,171,93,.15);border:1px solid rgba(65,171,93,.3);border-radius:8px;padding:10px 16px;color:var(--g);font-size:13px;font-weight:500;z-index:10;backdrop-filter:blur(8px);display:flex;align-items:center;gap:8px}
+    footer{background:var(--gd);padding:80px 48px 40px;color:rgba(255,255,255,.4);font-size:13px}.ft-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px;margin-bottom:60px}
+    .ft h4{color:var(--w);font-size:13.5px;font-weight:500;margin-bottom:22px}.ft a{display:block;color:rgba(255,255,255,.3);font-size:12.5px;margin-bottom:10px;text-decoration:none}.ft a:hover{color:var(--g)}.ft p{font-size:12.5px;line-height:1.75}
+    .ft-bot{max-width:1160px;margin:0 auto;border-top:1px solid rgba(255,255,255,.05);padding-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px}
+    .cta-bg{position:relative;padding:120px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}
+    .cta-ol{position:absolute;inset:0;background:linear-gradient(165deg,rgba(10,22,40,.96),rgba(10,22,40,.82));z-index:0}
+    .cta-c{position:relative;z-index:1;max-width:640px;margin:0 auto}.cta-c h2{font-size:clamp(28px,4vw,40px);font-weight:200;color:var(--w);letter-spacing:-1px;margin-bottom:16px}
+    .cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
-    @media(max-width:1000px){
-      .config-layout{grid-template-columns:1fr;padding:0 24px}.config-panel{border-radius:18px 18px 0 0;max-height:none}.config-viewer{border-radius:0 0 18px 18px;border-left:1px solid rgba(255,255,255,.06)}.config-viewer canvas{height:420px}
-    }
-    @media(max-width:900px){.hero-c{padding:120px 24px 80px}.split{grid-template-columns:1fr}.sec{padding:72px 24px}.process-steps{grid-template-columns:1fr}.process-line{display:none}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.ft-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:500px){.ft-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}.hero h1{font-size:34px}}
+    .form-wrap{max-width:600px;margin:0 auto}.form-group{margin-bottom:18px}.form-group label{display:block;font-size:12px;font-weight:500;color:#1e3a52;margin-bottom:6px}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:13px 16px;border:1.5px solid var(--b);border-radius:7px;font-size:15px;font-family:inherit;color:var(--n);transition:.2s;outline:none}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(65,171,93,.05)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-status{display:none;padding:14px 20px;border-radius:7px;font-size:14px;margin-bottom:22px;text-align:center}
+    .form-status.success{display:block;background:rgba(65,171,93,.08);color:var(--gh);border:1px solid rgba(65,171,93,.18)}.form-status.error{display:block;background:rgba(239,68,68,.05);color:#b91c1c;border:1px solid rgba(239,68,68,.12)}
+
+    @media(max-width:1200px){.cfg-layout{grid-template-columns:300px 1fr 260px}}
+    @media(max-width:1000px){.cfg-layout{grid-template-columns:1fr;padding:0 24px}.cfg-panel{border-radius:16px 16px 0 0;max-height:none}.cfg-viewer{min-height:420px}.price-panel{border-radius:0 0 16px 16px}}
+    @media(max-width:900px){.hero-c{padding:120px 24px 80px}.sec{padding:72px 24px}.stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}.ft-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:500px){.ft-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 
 <button class="menu-btn" id="menuBtn"><span></span><span></span><span></span></button>
 <div class="menu-panel" id="menuPanel">
-  <a href="#about"><span class="mi">◈</span> About instaBuild</a>
-  <a href="#values"><span class="mi">◆</span> Core Values</a>
-  <a href="#services"><span class="mi">◉</span> Solutions</a>
-  <a href="#configurator"><span class="mi">⬡</span> Design Your Home</a>
-  <a href="#map"><span class="mi">◎</span> Global Map</a>
-  <a href="#process"><span class="mi">◫</span> Process</a>
-  <a href="#contact"><span class="mi">◻</span> Get Started</a>
+  <a href="#about"><span class="mi">◈</span> About</a><a href="#services"><span class="mi">◉</span> Solutions</a><a href="#configurator"><span class="mi">⬡</span> Design & Price</a><a href="#map"><span class="mi">◎</span> Global</a><a href="#contact"><span class="mi">◻</span> Contact</a>
 </div>
 
 <section class="hero"><div class="hero-bg"></div><div class="hero-ol"></div>
   <div class="hero-c">
-    <div class="hero-badge"><span class="hero-dot"></span>POP-UP Communities — Deployed in 30 Days</div>
-    <h1>Design your<br><span>future home.</span></h1>
-    <p>instaBuild puts you in control. Choose your walls, windows, floors, and finishes — then watch your modular home come to life in real-time 3D. When you're ready, we build it in 90 days.</p>
-    <div class="hero-btns"><a href="#configurator" class="btn btn-w btn-lg">Start Designing</a><a href="#contact" class="btn btn-ow btn-lg">Talk to Sales</a></div>
+    <div class="hero-badge"><span class="hero-dot"></span>Design it. Price it. We build it in 90 days.</div>
+    <h1>Your home,<br><span>your way.</span></h1>
+    <p>Choose every detail below — walls, windows, flooring, roof, even landscaping. Watch the price update in real-time. Then we manufacture and deliver your custom modular home.</p>
+    <div class="hero-btns"><a href="#configurator" class="btn btn-w btn-lg">Start Designing ↓</a><a href="#contact" class="btn btn-ow btn-lg">Talk to Sales</a></div>
   </div>
 </section>
 
@@ -158,86 +138,94 @@
   <div class="stat"><div class="stat-val">98%</div><div class="stat-lbl">Satisfaction</div></div>
 </div>
 
-<section class="sec" id="about">
-  <div class="sec-hdr fade-in"><div class="sec-tag">About instaBuild</div><h2>Construction, reimagined</h2><p>We didn't set out to build a company. We set out to fix an industry. Modular technology is how we do it.</p></div>
-  <div class="split">
-    <div class="split-img fade-in" style="background-image:url('images/maxresdefault.jpg')"></div>
-    <div class="split-txt fade-in"><h3>A technology company that builds</h3><p>Headquartered in Europe with operations spanning the EU and United States, instaBuild pioneered panelized systems that slash delivery times without compromise. Every component is precision-engineered indoors — no weather, no delays, no inconsistency.</p><p>Mission: Build smarter, greener, faster. Vision: High-quality sustainable housing for everyone — in weeks, not years.</p></div>
-  </div>
+<section class="sec" id="about"><div class="sec-hdr fade-in"><div class="sec-tag">About</div><h2>Construction, reimagined</h2></div>
+  <div class="split"><div class="split-img fade-in" style="background-image:url('images/maxresdefault.jpg')"></div><div class="fade-in"><h3 style="font-size:32px;font-weight:200;color:var(--n);margin-bottom:22px">A technology company that builds</h3><p style="font-size:15px;color:var(--s);line-height:1.75;margin-bottom:20px">Headquartered in Europe with operations across the EU and US, instaBuild pioneered panelized modular systems that slash delivery times — every component precision-engineered indoors.</p><p style="font-size:15px;color:var(--s);line-height:1.75">Mission: Build smarter, greener, faster. Vision: High-quality sustainable housing for everyone.</p></div></div>
 </section>
 
-<section class="sec" id="values">
-  <div class="sec-hdr fade-in"><div class="sec-tag">Principles</div><h2>What we stand for</h2></div>
-  <div class="grid3">
-    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Velocity Without Sacrifice</h3><p>3× faster than traditional construction. Offsite manufacturing eliminates weather, waste, and waiting.</p></div>
-    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability Engineered</h3><p>60% less material waste. Panelized systems exceed LEED Gold. Every building gives back more than it takes.</p></div>
-    <div class="card fade-in"><div class="card-icon">🎯</div><h3>Absolute Transparency</h3><p>Fixed pricing. Real-time dashboards. Open books. If it matters, you can see it.</p></div>
-    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Obsessive Craftsmanship</h3><p>Technology amplifies skill — never replaces it. Our builders are artisans with the best tools on Earth.</p></div>
-    <div class="card fade-in"><div class="card-icon">🤝</div><h3>True Collaboration</h3><p>We work with you — developers, architects, communities. One team, one vision.</p></div>
-    <div class="card fade-in"><div class="card-icon">🚀</div><h3>Unrelenting Innovation</h3><p>R&D isn't a department. It's the pulse of everything we do.</p></div>
-  </div>
-</section>
-
-<section class="sec-alt" id="services"><div class="sec-inner">
-  <div class="sec-hdr fade-in"><div class="sec-tag">Solutions</div><h2>What we build</h2></div>
+<section class="sec-alt" id="services"><div class="sec-inner"><div class="sec-hdr fade-in"><div class="sec-tag">Solutions</div><h2>What we build</h2></div>
   <div class="svc-grid">
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Full neighborhoods in 30 days. 28–104m². Workforce housing, resorts, rapid deployment.</p><div class="svc-features"><span class="svc-feat">30 Days</span><span class="svc-feat">3 Sizes</span></div></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Multi-Family</span></div><div class="svc-body"><h3>Multi-Family Housing</h3><p>Apartments, condos, townhomes. 12–200+ units. Panelized precision at any scale.</p><div class="svc-features"><span class="svc-feat">Scalable</span><span class="svc-feat">Panelized</span></div></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial</h3><p>Office, retail, hospitality — enterprise-grade modular that's faster without looking it.</p><div class="svc-features"><span class="svc-feat">Fast Track</span></div></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Community</span></div><div class="svc-body"><h3>Community Living</h3><p>Student and senior housing — accessible, safe, and vibrant. Purpose-built for dignity.</p><div class="svc-features"><span class="svc-feat">Accessible</span></div></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Components</span></div><div class="svc-body"><h3>Modular Systems</h3><p>Factory-built kitchens, BathPods, interiors — pre-fabricated perfection, plug-and-play.</p><div class="svc-features"><span class="svc-feat">Pre-Fab</span></div></div></div>
-    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Custom</span></div><div class="svc-body"><h3>Custom Projects</h3><p>One-of-a-kind residences and landmarks. When imagination has no limits, neither do we.</p><div class="svc-features"><span class="svc-feat">Bespoke</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Aster-Domo.webp')"><span class="svc-tag">POP-UP</span></div><div class="svc-body"><h3>POP-UP Communities</h3><p>Full neighborhoods in 30 days. 28–104m². Workforce housing, resorts, emergency response.</p><div class="svc-features"><span class="svc-feat">30 Days</span><span class="svc-feat">3 Sizes</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Workforce-Housing.webp')"><span class="svc-tag">Multi-Family</span></div><div class="svc-body"><h3>Multi-Family</h3><p>Apartments, condos, townhomes. 12–200+ units. Panelized precision at scale.</p><div class="svc-features"><span class="svc-feat">Scalable</span><span class="svc-feat">Panelized</span></div></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/2021-12-1-166-jpg.webp')"><span class="svc-tag">Commercial</span></div><div class="svc-body"><h3>Commercial</h3><p>Office, retail, hospitality — enterprise-grade modular that's fast without looking it.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/senior-solutions.webp')"><span class="svc-tag">Community</span></div><div class="svc-body"><h3>Community Living</h3><p>Student and senior housing — accessible, safe, and purpose-built for vibrant living.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/Instabuilt-Modular-Kitchen.webp')"><span class="svc-tag">Components</span></div><div class="svc-body"><h3>Modular Systems</h3><p>Factory-built kitchens, BathPods, interiors — pre-fabricated perfection, plug-and-play.</p></div></div>
+    <div class="svc-card fade-in"><div class="svc-img" style="background-image:url('images/signature-home.png')"><span class="svc-tag">Custom</span></div><div class="svc-body"><h3>Custom Projects</h3><p>Bespoke residences and landmarks. When imagination has no limits, neither do we.</p></div></div>
   </div>
 </div></section>
 
-<!-- ── 3D HOME CONFIGURATOR ── -->
-<div class="config-section" id="configurator">
-  <div class="sec-hdr fade-in" style="margin-bottom:40px"><div class="sec-tag">Design Your Home</div><h2 style="color:var(--w)">Build it. See it. Love it.</h2><p style="color:rgba(255,255,255,.42)">Select materials below — your home updates instantly. Click any component to learn about it.</p></div>
-  <div class="config-layout">
-    <div class="config-panel">
-      <h2><span>🏠</span> Home Configurator</h2>
-      <div class="config-group">
-        <div class="config-group-title">Exterior Walls</div>
-        <div class="config-options" id="wallOptions">
-          <div class="config-option active" data-wall="white"><div class="swatch" style="background:#f0f2f5"></div><div class="opt-label">Arctic White</div></div>
-          <div class="config-option" data-wall="warm"><div class="swatch" style="background:#e8dfd4"></div><div class="opt-label">Warm Beige</div></div>
-          <div class="config-option" data-wall="slate"><div class="swatch" style="background:#7b8a9e"></div><div class="opt-label">Slate Gray</div></div>
-          <div class="config-option" data-wall="timber"><div class="swatch" style="background:#b8956a"></div><div class="opt-label">Natural Timber</div></div>
-        </div>
-      </div>
-      <div class="config-group">
-        <div class="config-group-title">Window Style</div>
-        <div class="config-options" id="windowOptions">
-          <div class="config-option active" data-window="clear"><div class="opt-icon">🪟</div><div class="opt-label">Clear Glass</div></div>
-          <div class="config-option" data-window="tinted"><div class="swatch" style="background:linear-gradient(135deg,#a0b8d0,#607890)"></div><div class="opt-label">Tinted</div></div>
-          <div class="config-option" data-window="bronze"><div class="swatch" style="background:linear-gradient(135deg,#c4a882,#8b6914)"></div><div class="opt-label">Bronze</div></div>
-          <div class="config-option" data-window="black"><div class="swatch" style="background:#2a2a2a"></div><div class="opt-label">Dark Frame</div></div>
-        </div>
-      </div>
-      <div class="config-group">
-        <div class="config-group-title">Roof Material</div>
-        <div class="config-options" id="roofOptions">
-          <div class="config-option active" data-roof="dark"><div class="swatch" style="background:#3b4452"></div><div class="opt-label">Slate Dark</div></div>
-          <div class="config-option" data-roof="terracotta"><div class="swatch" style="background:#a0523b"></div><div class="opt-label">Terracotta</div></div>
-          <div class="config-option" data-roof="metal"><div class="swatch" style="background:#8899aa"></div><div class="opt-label">Galvanized</div></div>
-          <div class="config-option" data-roof="green"><div class="swatch" style="background:#5a7a4a"></div><div class="opt-label">Green Metal</div></div>
-        </div>
-      </div>
-      <div class="config-group">
-        <div class="config-group-title">Floor / Foundation</div>
-        <div class="config-options" id="floorOptions">
-          <div class="config-option active" data-floor="concrete"><div class="swatch" style="background:#c8d2dc"></div><div class="opt-label">Concrete</div></div>
-          <div class="config-option" data-floor="stone"><div class="swatch" style="background:#b0a898"></div><div class="opt-label">Natural Stone</div></div>
-          <div class="config-option" data-floor="deck"><div class="swatch" style="background:#8b7355"></div><div class="opt-label">Wood Deck</div></div>
-        </div>
-      </div>
-      <button class="reset-btn" id="resetConfig">↺ Reset to Default</button>
+<!-- ── 3D CONFIGURATOR ── -->
+<div class="cfg-section" id="configurator">
+  <div class="sec-hdr fade-in" style="margin-bottom:32px"><div class="sec-tag">Design & Price Your Home</div><h2 style="color:var(--w)">Configure. Visualize. Get a price.</h2><p style="color:rgba(255,255,255,.4);font-size:15px">Select options on the left. Your home updates instantly. Price recalculates in real-time.</p></div>
+  <div class="cfg-layout">
+    <div class="cfg-panel">
+      <h2><span>🏠</span> Build Options</h2>
+      <!-- Walls -->
+      <div class="cfg-group"><div class="cfg-group-title">Exterior Walls</div><div class="cfg-opts" id="wallOpts">
+        <div class="cfg-opt active" data-wall="arctic" data-price="0"><div class="swatch" style="background:#f2f4f7"></div><div class="opt-label">Arctic White</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-wall="cream" data-price="1200"><div class="swatch" style="background:#e8dfd4"></div><div class="opt-label">Warm Cream</div><div class="opt-price">+$1,200</div></div>
+        <div class="cfg-opt" data-wall="slate" data-price="1800"><div class="swatch" style="background:#7b8a9e"></div><div class="opt-label">Slate Gray</div><div class="opt-price">+$1,800</div></div>
+        <div class="cfg-opt" data-wall="timber" data-price="3500"><div class="swatch" style="background:#b8956a"></div><div class="opt-label">Natural Timber</div><div class="opt-price">+$3,500</div></div>
+        <div class="cfg-opt" data-wall="charcoal" data-price="2200"><div class="swatch" style="background:#3a3f4a"></div><div class="opt-label">Charcoal</div><div class="opt-price">+$2,200</div></div>
+        <div class="cfg-opt" data-wall="terracotta" data-price="2800"><div class="swatch" style="background:#c4825c"></div><div class="opt-label">Terracotta</div><div class="opt-price">+$2,800</div></div>
+      </div></div>
+      <!-- Windows -->
+      <div class="cfg-group"><div class="cfg-group-title">Window Style</div><div class="cfg-opts" id="winOpts">
+        <div class="cfg-opt active" data-window="clear" data-price="0"><div class="swatch" style="background:linear-gradient(135deg,#b8d8f0,#d0e8ff)"></div><div class="opt-label">Clear Glass</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-window="tinted" data-price="900"><div class="swatch" style="background:linear-gradient(135deg,#809ab8,#607890)"></div><div class="opt-label">Solar Tinted</div><div class="opt-price">+$900</div></div>
+        <div class="cfg-opt" data-window="bronze" data-price="1400"><div class="swatch" style="background:linear-gradient(135deg,#b8a080,#8b6914)"></div><div class="opt-label">Bronze</div><div class="opt-price">+$1,400</div></div>
+        <div class="cfg-opt" data-window="black" data-price="1600"><div class="swatch" style="background:#3a4048"></div><div class="opt-label">Black Frame</div><div class="opt-price">+$1,600</div></div>
+      </div></div>
+      <!-- Floors -->
+      <div class="cfg-group"><div class="cfg-group-title">Flooring</div><div class="cfg-opts" id="floorOpts">
+        <div class="cfg-opt active" data-floor="oak" data-price="0"><div class="swatch" style="background:linear-gradient(90deg,#c4a882,#b8956a,#a08060)"></div><div class="opt-label">Natural Oak</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-floor="walnut" data-price="1800"><div class="swatch" style="background:#5c3d2e"></div><div class="opt-label">Dark Walnut</div><div class="opt-price">+$1,800</div></div>
+        <div class="cfg-opt" data-floor="marble" data-price="4200"><div class="swatch" style="background:linear-gradient(90deg,#e8e0d8,#d0c8c0)"></div><div class="opt-label">Italian Marble</div><div class="opt-price">+$4,200</div></div>
+        <div class="cfg-opt" data-floor="concrete" data-price="600"><div class="swatch" style="background:#bcc4cc"></div><div class="opt-label">Polished Concrete</div><div class="opt-price">+$600</div></div>
+      </div></div>
+      <!-- Roof -->
+      <div class="cfg-group"><div class="cfg-group-title">Roof Material</div><div class="cfg-opts" id="roofOpts">
+        <div class="cfg-opt active" data-roof="slate" data-price="0"><div class="swatch" style="background:#3b4452"></div><div class="opt-label">Slate Dark</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-roof="terracotta" data-price="2500"><div class="swatch" style="background:#a0523b"></div><div class="opt-label">Terracotta</div><div class="opt-price">+$2,500</div></div>
+        <div class="cfg-opt" data-roof="metal" data-price="3200"><div class="swatch" style="background:#8899aa"></div><div class="opt-label">Standing Seam Metal</div><div class="opt-price">+$3,200</div></div>
+        <div class="cfg-opt" data-roof="cedar" data-price="3800"><div class="swatch" style="background:#8b7355"></div><div class="opt-label">Cedar Shake</div><div class="opt-price">+$3,800</div></div>
+      </div></div>
+      <!-- Stories -->
+      <div class="cfg-group"><div class="cfg-group-title">Building Height</div><div class="cfg-opts" id="storyOpts">
+        <div class="cfg-opt active" data-stories="1" data-price="0"><div class="swatch" style="background:linear-gradient(180deg,#0a1628 50%,#41ab5d 50%)"></div><div class="opt-label">Single Story</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-stories="2" data-price="28000"><div class="swatch" style="background:linear-gradient(180deg,#0a1628 33%,#238b45 33%,#238b45 66%,#41ab5d 66%)"></div><div class="opt-label">Two Story</div><div class="opt-price">+$28,000</div></div>
+      </div></div>
+      <!-- Ground/Landscaping -->
+      <div class="cfg-group"><div class="cfg-group-title">Ground & Landscaping</div><div class="cfg-opts" id="groundOpts">
+        <div class="cfg-opt active" data-ground="grass" data-price="0"><div class="swatch" style="background:linear-gradient(180deg,#5a8a5c,#4a7a4c)"></div><div class="opt-label">Natural Lawn</div><div class="opt-price">Standard</div></div>
+        <div class="cfg-opt" data-ground="gravel" data-price="800"><div class="swatch" style="background:#b0a898"></div><div class="opt-label">Gravel Garden</div><div class="opt-price">+$800</div></div>
+        <div class="cfg-opt" data-ground="deck" data-price="4500"><div class="swatch" style="background:#8b7355"></div><div class="opt-label">Timber Deck</div><div class="opt-price">+$4,500</div></div>
+        <div class="cfg-opt" data-ground="stone" data-price="6200"><div class="swatch" style="background:#a09888"></div><div class="opt-label">Stone Terrace</div><div class="opt-price">+$6,200</div></div>
+      </div></div>
+      <button class="reset-btn" id="resetCfg">↺ Reset All Options</button>
     </div>
-    <div class="config-viewer" id="vframe">
+
+    <div class="cfg-viewer" id="vframe">
       <canvas id="vcanvas"></canvas>
       <div class="viewer-info" id="vinfo"><h3 id="vtitle"></h3><p id="vdesc"></p></div>
-      <div class="total-label" id="totalDays">⏱ ~90 days to build</div>
-      <div class="viewer-hint">Drag to rotate &bull; Scroll to zoom &bull; Click to inspect</div>
+      <div class="viewer-hint">🖱 Drag to rotate &bull; Scroll to zoom &bull; Click parts</div>
+    </div>
+
+    <div class="price-panel">
+      <h2><span>💰</span> Price Estimate</h2>
+      <div class="price-total">
+        <div class="total-amount" id="priceTotal">$124,500</div>
+        <div class="total-label">Estimated Total</div>
+        <div class="total-savings">Including manufacturing & assembly</div>
+      </div>
+      <div class="price-breakdown">
+        <div class="price-line"><span>Base Module</span><span class="pl-val">$98,000</span></div>
+        <div class="price-line"><span>Foundation</span><span class="pl-val">$14,500</span></div>
+        <div class="price-line"><span>Interior Finish</span><span class="pl-val" id="priceInt">$12,000</span></div>
+        <div class="price-line" id="priceUpgradesRow"><span>Selected Upgrades</span><span class="pl-val" id="priceUpgrades" style="color:var(--g)">$0</span></div>
+        <div class="price-line"><span>Delivery & Assembly</span><span class="pl-val">Included</span></div>
+      </div>
+      <div class="price-note">Prices are estimates. Final quote provided after project review. Typical build time: <strong id="buildDays" style="color:var(--g)">90</strong> days.</div>
+      <button class="reset-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="border-color:rgba(65,171,93,.3);color:var(--g);margin-top:12px">Get Exact Quote →</button>
     </div>
   </div>
 </div>
@@ -248,45 +236,26 @@
   </div>
 </section>
 
-<div class="map-section" id="map"><div class="map-wrap">
+<div class="map-section" id="map"><div class="map-wrap" style="max-width:1160px;margin:0 auto;padding:0 48px">
   <div class="sec-hdr fade-in"><div class="sec-tag">Global</div><h2>Where we operate</h2></div>
-  <div class="map-container fade-in" id="mapContainer">
-    <div class="map-toggle"><button class="active" data-mode="coverage">All Countries</button><button data-mode="projects">Active Only</button></div>
-    <div class="map-legend"><div class="map-legend-item"><span class="map-legend-dot active"></span> Available</div><div class="map-legend-item"><span class="map-legend-dot expanding"></span> Coming</div><div class="map-legend-item"><span class="map-legend-dot unavailable"></span> Future</div></div>
+  <div class="map-container fade-in" id="mapContainer" style="width:100%;height:500px;border-radius:18px;overflow:hidden;box-shadow:0 32px 90px rgba(0,0,0,.55);position:relative;background:#132030">
+    <div style="position:absolute;top:22px;right:22px;z-index:1000;display:flex;gap:8px"><button class="active" data-mode="coverage" style="background:rgba(10,22,40,.9);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);padding:9px 18px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit">All Countries</button><button data-mode="projects" style="background:rgba(10,22,40,.9);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);padding:9px 18px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit">Active Only</button></div>
+    <div style="position:absolute;bottom:26px;left:26px;background:rgba(10,22,40,.95);border-radius:9px;padding:15px 20px;z-index:1000;font-size:11px;display:flex;gap:20px;border:1px solid rgba(255,255,255,.05)"><div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7)"><span style="width:11px;height:11px;border-radius:50%;background:var(--g)"></span> Available</div><div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7)"><span style="width:11px;height:11px;border-radius:50%;background:#f59e0b"></span> Coming</div><div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.7)"><span style="width:11px;height:11px;border-radius:50%;background:#ef4444"></span> Future</div></div>
   </div>
 </div></div>
 
-<section class="sec" id="process"><div class="sec-hdr fade-in"><div class="sec-tag">Process</div><h2>5 steps to your home</h2></div>
-  <div style="position:relative;max-width:940px;margin:0 auto"><div class="process-line"></div>
-    <div class="process-steps">
-      <div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>Vision, requirements, budget — designs in days.</p></div>
-      <div class="ps fade-in"><div class="ps-num">2</div><h3>Design</h3><p>Structural analysis, energy modeling, compliance.</p></div>
-      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacture</h3><p>Precision-built indoors — no weather, no delays.</p></div>
-      <div class="ps fade-in"><div class="ps-num">4</div><h3>Assemble</h3><p>Modules arrive. We connect, finish, inspect.</p></div>
-      <div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Walkthrough. Sign-off. You're home.</p></div>
-    </div>
-  </div>
-</section>
-
 <section class="sec" id="contact"><div class="sec-hdr fade-in"><div class="sec-tag">Get Started</div><h2>Your project starts here</h2></div>
   <div class="form-wrap fade-in"><div class="form-status" id="formStatus"></div>
-    <form id="contactForm">
-      <div class="form-row"><div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
-      <div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-group"><label>Type</label><select name="project_type"><option>Select…</option><option>POP-UP Community</option><option>Multi-Family</option><option>Commercial</option><option>Senior/Student</option><option>Custom</option></select></div></div>
-      <div class="form-group"><label>Tell us about your project</label><textarea name="message" rows="5" required placeholder="Size, location, timeline…"></textarea></div>
-      <button type="submit" class="btn btn-p" style="width:100%;padding:16px;font-size:16px">Send Inquiry</button>
-    </form>
+    <form id="contactForm"><div class="form-row"><div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="John Smith"></div><div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div></div>
+    <div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="+1 (555) 000-0000"></div><div class="form-group"><label>Type</label><select name="project_type"><option>Select…</option><option>POP-UP</option><option>Multi-Family</option><option>Commercial</option><option>Senior/Student</option><option>Custom Home</option></select></div></div>
+    <div class="form-group"><label>Project Details</label><textarea name="message" rows="4" required placeholder="Size, location, timeline…"></textarea></div>
+    <button type="submit" class="btn btn-p" style="width:100%;padding:16px;font-size:16px">Send Inquiry</button></form>
   </div>
 </section>
 
-<div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in"><h2>The future of construction<br>is already here.</h2><p>POP-UP in 30 days. Custom in 90. Sustainable. Precise. Turnkey.</p><div class="cta-btns"><a href="#configurator" class="btn btn-w btn-lg">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div></div></div>
+<div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in"><h2>The future of construction<br>is already here.</h2><div class="cta-btns"><a href="#configurator" class="btn btn-w btn-lg">Design Your Home</a><a href="mailto:contact@instabuild.com" class="btn btn-ow">contact@instabuild.com</a></div></div></div>
 
-<footer><div class="ft-grid">
-  <div class="ft"><h4>instaBuild</h4><p>Redefining construction through modular technology. POP-UP communities, multi-family, commercial — faster, smarter, better.</p></div>
-  <div class="ft"><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a><a href="#services">Community</a><a href="#services">Custom</a></div>
-  <div class="ft"><h4>Company</h4><a href="#about">About</a><a href="#configurator">3D Configurator</a><a href="#map">Global</a><a href="#">Careers</a></div>
-  <div class="ft"><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="margin-top:12px">Prishtina, Kosovo<br>Dover, DE · United States</p></div>
-</div><div class="ft-bot"><span>© 2026 instaBuild</span><span>Building the future, faster.</span></div></footer>
+<footer><div class="ft-grid"><div class="ft"><h4>instaBuild</h4><p>Redefining construction through modular technology. Faster, smarter, better.</p></div><div class="ft"><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a><a href="#services">Community</a></div><div class="ft"><h4>Company</h4><a href="#about">About</a><a href="#configurator">Configurator</a><a href="#map">Global</a></div><div class="ft"><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="margin-top:12px">Prishtina, Kosovo<br>Dover, DE · US</p></div></div><div class="ft-bot"><span>© 2026 instaBuild</span><span>Building the future, faster.</span></div></footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -296,92 +265,140 @@ document.getElementById('contactForm').addEventListener('submit',async function(
 </script>
 <script type="module">
 import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
-const frame=document.getElementById('vframe'),canvas=document.getElementById('vcanvas'),info=document.getElementById('vinfo'),vtitle=document.getElementById('vtitle'),vdesc=document.getElementById('vdesc'),hint=document.querySelector('.viewer-hint'),totalDays=document.getElementById('totalDays');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1a2d');scene.fog=new THREE.Fog('#0d1a2d',8,35);
-const camera=new THREE.PerspectiveCamera(38,2,.5,50);camera.position.set(6,4.5,7.5);
-const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,0);controls.enableDamping=true;controls.dampingFactor=.05;controls.minDistance=3;controls.maxDistance=12;controls.maxPolarAngle=1.2;controls.update();
-scene.add(new THREE.AmbientLight('#d0e4f8',.6));
-const sun=new THREE.DirectionalLight('#fffef5',2.6);sun.position.set(10,8,5);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=.3;sun.shadow.camera.far=40;scene.add(sun);
-scene.add(new THREE.DirectionalLight('#b8d8f0',.35).translateX(-4).translateZ(-6));
+const frame=document.getElementById('vframe'),canvas=document.getElementById('vcanvas'),vinfo=document.getElementById('vinfo'),vtitle=document.getElementById('vtitle'),vdesc=document.getElementById('vdesc'),hint=document.querySelector('.viewer-hint');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1a2d');scene.fog=new THREE.Fog('#0d1a2d',10,40);
+const camera=new THREE.PerspectiveCamera(38,2,.5,55);camera.position.set(7,5,8.5);
+const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.6,0);controls.enableDamping=true;controls.dampingFactor=.05;controls.minDistance=3;controls.maxDistance=14;controls.maxPolarAngle=1.3;controls.update();
+scene.add(new THREE.AmbientLight('#dce8f4',.55));
+const sun=new THREE.DirectionalLight('#fffef8',2.8);sun.position.set(12,9,6);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+scene.add(new THREE.DirectionalLight('#c0d8f0',.3).translateX(-5).translateZ(-6));
 
-// Ground
-const gGeo=new THREE.PlaneGeometry(20,20);const ground=new THREE.Mesh(gGeo,new THREE.MeshStandardMaterial({color:'#4a7a4c',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.position.y=-.02;ground.receiveShadow=true;scene.add(ground);
-const pGeo=new THREE.PlaneGeometry(1.2,3.5);const path=new THREE.Mesh(pGeo,new THREE.MeshStandardMaterial({color:'#b0b8c0',roughness:.8}));path.rotation.x=-Math.PI/2;path.position.set(0,.005,2.8);path.receiveShadow=true;scene.add(path);
+// Ground system
+let groundMesh,pathMesh,gardenMesh;
+function createGround(type){
+  if(groundMesh)scene.remove(groundMesh);if(pathMesh)scene.remove(pathMesh);if(gardenMesh)scene.remove(gardenMesh);
+  const colors={grass:'#5a8a5c',gravel:'#b8b0a0',deck:'#8b7355',stone:'#a09888'};
+  const gGeo=new THREE.PlaneGeometry(24,24);
+  groundMesh=new THREE.Mesh(gGeo,new THREE.MeshStandardMaterial({color:colors[type]||colors.grass,roughness:type==='deck'?.5:.9,metalness:0}));
+  groundMesh.rotation.x=-Math.PI/2;groundMesh.position.y=-.02;groundMesh.receiveShadow=true;scene.add(groundMesh);
+  // Path
+  const pGeo=new THREE.PlaneGeometry(1.3,3.8);
+  pathMesh=new THREE.Mesh(pGeo,new THREE.MeshStandardMaterial({color:type==='grass'?'#c0b8a8':type==='deck'?'#a09080':'#c8c0b8',roughness:.75}));
+  pathMesh.rotation.x=-Math.PI/2;pathMesh.position.set(0,.005,3);pathMesh.receiveShadow=true;scene.add(pathMesh);
+}
+createGround('grass');
 
-// Materials — dynamic
-const matCache={};
+// Materials
 const matSteel=new THREE.MeshStandardMaterial({color:'#5a6677',roughness:.35,metalness:.9});
 const matFoundation=new THREE.MeshStandardMaterial({color:'#c8d2dc',roughness:.7,metalness:.02});
-const matDoor=new THREE.MeshStandardMaterial({color:'#1a2535',roughness:.25,metalness:.55});
+const matDoor=new THREE.MeshStandardMaterial({color:'#1e293b',roughness:.25,metalness:.55});
 const matAccent=new THREE.MeshStandardMaterial({color:'#41ab5d',roughness:.25,metalness:.35,emissive:'#41ab5d',emissiveIntensity:.1});
 const matTrim=new THREE.MeshStandardMaterial({color:'#e8edf2',roughness:.4,metalness:.05});
 
-function getWallMat(){const v=document.querySelector('#wallOptions .active')?.dataset.wall||'white';if(!matCache['wall_'+v]){const colors={white:'#f0f2f5',warm:'#e8dfd4',slate:'#7b8a9e',timber:'#b8956a'};matCache['wall_'+v]=new THREE.MeshStandardMaterial({color:colors[v],roughness:.45,metalness:.04})}return matCache['wall_'+v]}
-function getWallAccent(){const v=document.querySelector('#wallOptions .active')?.dataset.wall||'white';if(!matCache['wacc_'+v]){const colors={white:'#dce8f0',warm:'#ddd4c8',slate:'#6d7a8e',timber:'#a8855e'};matCache['wacc_'+v]=new THREE.MeshStandardMaterial({color:colors[v],roughness:.45,metalness:.04})}return matCache['wacc_'+v]}
-function getWindowMat(){const v=document.querySelector('#windowOptions .active')?.dataset.window||'clear';if(!matCache['win_'+v]){const opts={clear:{color:'#b8d8f0',opacity:.72},tinted:{color:'#889eb8',opacity:.65},bronze:{color:'#b8a080',opacity:.6},black:{color:'#557080',opacity:.55}};matCache['win_'+v]=new THREE.MeshStandardMaterial({color:opts[v].color,roughness:.05,metalness:.05,transparent:true,opacity:opts[v].opacity})}return matCache['win_'+v]}
-function getRoofMat(){const v=document.querySelector('#roofOptions .active')?.dataset.roof||'dark';if(!matCache['roof_'+v]){const colors={dark:'#3b4452',terracotta:'#a0523b',metal:'#8899aa',green:'#5a7a4a'};matCache['roof_'+v]=new THREE.MeshStandardMaterial({color:colors[v],roughness:.4,metalness:v==='metal'?.5:.25})}return matCache['roof_'+v]}
-function getFloorMat(){const v=document.querySelector('#floorOptions .active')?.dataset.floor||'concrete';if(!matCache['floor_'+v]){const colors={concrete:'#c8d2dc',stone:'#b0a898',deck:'#8b7355'};matCache['floor_'+v]=new THREE.MeshStandardMaterial({color:colors[v],roughness:v==='deck'?.55:.7,metalness:.02})}return matCache['floor_'+v]}
+const matCache={};
+function getWallMat(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'arctic';if(!matCache['w_'+v]){const c={arctic:'#f2f4f7',cream:'#e8dfd4',slate:'#7b8a9e',timber:'#b8956a',charcoal:'#3a3f4a',terracotta:'#c4825c'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.45,metalness:.04})}return matCache['w_'+v]}
+function getWallAMat(){const v=document.querySelector('#wallOpts .active')?.dataset.wall||'arctic';if(!matCache['wa_'+v]){const c={arctic:'#dde4ed',cream:'#dcd4c8',slate:'#6d7a8e',timber:'#a8855e',charcoal:'#303540',terracotta:'#b07550'};matCache['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.45,metalness:.04})}return matCache['wa_'+v]}
+function getWinMat(){const v=document.querySelector('#winOpts .active')?.dataset.window||'clear';if(!matCache['win_'+v]){const o={clear:{color:'#c0ddf5',opacity:.75},tinted:{color:'#8aa5c0',opacity:.62},bronze:{color:'#c0a888',opacity:.58},black:{color:'#6880a0',opacity:.52}};matCache['win_'+v]=new THREE.MeshStandardMaterial({color:o[v].color,roughness:.05,metalness:.05,transparent:true,opacity:o[v].opacity})}return matCache['win_'+v]}
+function getRoofMat(){const v=document.querySelector('#roofOpts .active')?.dataset.roof||'slate';if(!matCache['roof_'+v]){const c={slate:'#3b4452',terracotta:'#a0523b',metal:'#8899aa',cedar:'#8b7355'};matCache['roof_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.3:v==='cedar'?.55:.4,metalness:v==='metal'?.55:.2})}return matCache['roof_'+v]}
+function getFloorMat(){const v=document.querySelector('#floorOpts .active')?.dataset.floor||'oak';if(!matCache['fl_'+v]){const c={oak:'#c4a882',walnut:'#5c3d2e',marble:'#e8e0d8',concrete:'#bcc4cc'};matCache['fl_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='marble'?.2:v==='concrete'?.55:.4,metalness:v==='marble'?.1:0})}return matCache['fl_'+v]}
 
-const dynamicParts=[]; // parts that change material on config update
-function addDynamic(geo,pos,rot,type,name,desc){const m=new THREE.Mesh(geo,getMatForType(type));m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=true;m.receiveShadow=true;m.userData={name,desc,type,isPart:true};dynamicParts.push(m);scene.add(m);return m}
-function getMatForType(t){if(t==='wall')return getWallMat();if(t==='wallA')return getWallAccent();if(t==='window')return getWindowMat();if(t==='roof')return getRoofMat();if(t==='floor')return getFloorMat();return null}
-function refreshMaterials(){dynamicParts.forEach(m=>{const t=m.userData.type;if(t==='wall')m.material=getWallMat();else if(t==='wallA')m.material=getWallAccent();else if(t==='window')m.material=getWindowMat();else if(t==='roof')m.material=getRoofMat();else if(t==='floor')m.material=getFloorMat()})}
+const dyn=[];function addDyn(geo,pos,rot,type,name,desc){const m=new THREE.Mesh(geo,type==='wall'?getWallMat():type==='wallA'?getWallAMat():type==='window'?getWinMat():type==='roof'?getRoofMat():type==='floor'?getFloorMat():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={name,desc,type,dynType:type,isPart:true};dyn.push(m);scene.add(m);return m}
+function refreshMats(){dyn.forEach(m=>{const t=m.userData.dynType;if(t==='wall')m.material=getWallMat();else if(t==='wallA')m.material=getWallAMat();else if(t==='window')m.material=getWinMat();else if(t==='roof')m.material=getRoofMat();else if(t==='floor')m.material=getFloorMat()})}
 
-// Build house
-const foundation=addDynamic(new THREE.BoxGeometry(5.4,.18,4.0),new THREE.Vector3(0,.09,0),null,'floor','Foundation Slab','Precision-cast with integrated utilities. 3 days factory time.');
-// Columns
-for(let x=-2.55;x<=2.55;x+=5.1)for(let z=-1.85;z<=1.85;z+=3.7){const m=new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,.1),matSteel);m.position.set(x,1.7,z);m.castShadow=m.receiveShadow=true;m.userData={name:'Steel Column',desc:'Hot-rolled H-beam. Bolted connections.',isPart:true};scene.add(m)}
-for(let x=-2.55;x<=2.55;x+=5.1)for(let z=-1.85;z<=1.85;z+=3.7){const m=new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,.1),matSteel);m.position.set(x,1.7,z===0?0:z===1.85?.55:-.55);m.castShadow=m.receiveShadow=true;m.userData={name:'Steel Column',desc:'Hot-rolled H-beam. Bolted connections.',isPart:true};scene.add(m)}
-
-// Wait, let me keep the columns simple — 4 corners + 2 mid
-for(let x=-2.55;x<=2.55;x+=5.1){for(let z=-1.85;z<=1.85;z+=3.7){const m=new THREE.Mesh(new THREE.BoxGeometry(.1,3.1,.1),matSteel);m.position.set(x,1.7,z);m.castShadow=m.receiveShadow=true;m.userData={name:'Steel Column',desc:'Hot-rolled H-beam. Bolted.',isPart:true};scene.add(m)}}
-// Beams
-for(let y=.18;y<3.2;y+=3.0){addDynamic(new THREE.BoxGeometry(5.3,.08,.1),new THREE.Vector3(0,y,-1.85),null,'wall','Longitudinal Beam','I-beam with standard bolt pattern.');addDynamic(new THREE.BoxGeometry(5.3,.08,.1),new THREE.Vector3(0,y,1.85),null,'wall','Longitudinal Beam','I-beam with standard bolt pattern.');for(let x=-2.55;x<=2.55;x+=5.1)addDynamic(new THREE.BoxGeometry(.1,.08,3.7),new THREE.Vector3(x,y,0),null,'wall','Cross Beam','Transverse locking beam.')}
-// Roof structure
-addDynamic(new THREE.BoxGeometry(5.6,.06,.15),new THREE.Vector3(0,3.15,-1.2),null,'wall','Roof Truss','Prefab steel truss.');addDynamic(new THREE.BoxGeometry(5.6,.06,.15),new THREE.Vector3(0,3.15,1.2),null,'wall','Roof Truss','Prefab steel truss.');addDynamic(new THREE.BoxGeometry(5.6,.06,.1),new THREE.Vector3(0,3.55,0),null,'wall','Ridge Beam','Central ridge.');
-// Walls
-addDynamic(new THREE.BoxGeometry(5.2,2.85,.07),new THREE.Vector3(0,1.58,-1.88),null,'wall','Rear Wall','Sandwich panel, R-30 insulation.').userData.type='wall';
-addDynamic(new THREE.BoxGeometry(2.3,1.4,.07),new THREE.Vector3(-1.2,.8,1.88),null,'wallA','Front Wall Left','Thermal panel, QuickLock™.').userData.type='wallA';
-addDynamic(new THREE.BoxGeometry(2.3,1.4,.07),new THREE.Vector3(1.2,.8,1.88),null,'wallA','Front Wall Right','Thermal panel, QuickLock™.').userData.type='wallA';
-addDynamic(new THREE.BoxGeometry(5.2,1.35,.07),new THREE.Vector3(0,2.28,1.88),null,'wallA','Front Wall Upper','Smart home controller housing.').userData.type='wallA';
-addDynamic(new THREE.BoxGeometry(.07,2.85,3.85),new THREE.Vector3(-2.63,1.58,0),null,'wall','Left Side Wall','Pre-cut openings, weather barrier.').userData.type='wall';
-addDynamic(new THREE.BoxGeometry(.07,2.85,3.85),new THREE.Vector3(2.63,1.58,0),null,'wall','Right Side Wall','Pre-cut openings, weather barrier.').userData.type='wall';
-// Floor cassette
-addDynamic(new THREE.BoxGeometry(5.1,.06,3.7),new THREE.Vector3(0,2.95,0),null,'wall','Floor Cassette','Subfloor + acoustic + finish.');
-// Roof panels
-const rfpGeo=new THREE.BoxGeometry(5.8,.08,1.8);
-const rf=new THREE.Mesh(rfpGeo,getRoofMat());rf.position.set(0,3.4,-.9);rf.rotation.x=-.45;rf.castShadow=rf.receiveShadow=true;rf.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',type:'roof',isPart:true};dynamicParts.push(rf);scene.add(rf);
-const rr=new THREE.Mesh(rfpGeo,getRoofMat());rr.position.set(0,3.4,.9);rr.rotation.x=.45;rr.castShadow=rr.receiveShadow=true;rr.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',type:'roof',isPart:true};dynamicParts.push(rr);scene.add(rr);
-// Door + trim
-const dm=new THREE.Mesh(new THREE.BoxGeometry(1.0,2.1,.06),matDoor);dm.position.set(0,1.15,1.88);dm.castShadow=dm.receiveShadow=true;dm.userData={name:'Entry Door',desc:'Pre-hung steel, multi-point lock.',isPart:true};scene.add(dm);
-addDynamic(new THREE.BoxGeometry(1.15,.08,.08),new THREE.Vector3(0,2.2,1.85),null,'wall','Door Header','Aluminum trim.');
-// Windows
-const winP=[[-1.0,2.7,-1.84],[1.0,2.7,-1.84],[-1.0,.9,-1.84],[1.0,.9,-1.84],[-1.5,2.1,1.84],[1.5,2.1,1.84]];
-winP.forEach(([x,y,z])=>{const w=addDynamic(new THREE.BoxGeometry(.65,.85,.04),new THREE.Vector3(x,y,z),null,'window','Triple-Glazed Window','Argon-filled, U-value 0.7.');w.userData.type='window'});
-// Eaves
-addDynamic(new THREE.BoxGeometry(5.7,.04,.12),new THREE.Vector3(0,3.5,-1.9),null,'wall','Eave Trim','Aluminum eave.');addDynamic(new THREE.BoxGeometry(5.7,.04,.12),new THREE.Vector3(0,3.5,1.9),null,'wall','Eave Trim','Aluminum eave.');
-// Connectors
-for(let x=-2.55;x<=2.55;x+=5.1)for(let z=-1.85;z<=1.85;z+=3.7){const c=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,.18,8),matAccent);c.position.set(x,.18,z);c.userData={name:'QuickLock™',desc:'Self-aligning connector.',isPart:true};scene.add(c)}
+function buildHouse(stories){
+  // Remove old dynamic parts
+  dyn.forEach(m=>scene.remove(m));dyn.length=0;
+  const h=stories===2?6.2:3.2;
+  // Foundation
+  addDyn(new THREE.BoxGeometry(5.6,.2,4.2),new THREE.Vector3(0,.1,0),null,'floor','Foundation Slab','Precision-cast with integrated utilities.');
+  // Columns
+  for(let x=-2.65;x<=2.65;x+=5.3)for(let z=-1.95;z<=1.95;z+=3.9){const c=new THREE.Mesh(new THREE.BoxGeometry(.12,h,.12),matSteel);c.position.set(x,h/2+.1,z);c.castShadow=c.receiveShadow=true;c.userData={name:'Steel Column',desc:'Hot-rolled H-beam. Bolted.',isPart:true};scene.add(c)}
+  // Beams per floor
+  for(let fl=0;fl<stories;fl++){const y=.2+fl*3.0;addDyn(new THREE.BoxGeometry(5.5,.08,.12),new THREE.Vector3(0,y,-1.95),null,'wall','Floor Beam','I-beam.');addDyn(new THREE.BoxGeometry(5.5,.08,.12),new THREE.Vector3(0,y,1.95),null,'wall','Floor Beam','I-beam.');for(let x=-2.65;x<=2.65;x+=5.3)addDyn(new THREE.BoxGeometry(.12,.08,3.9),new THREE.Vector3(x,y,0),null,'wall','Cross Beam','Transverse.')}
+  // Roof trusses
+  const rY=stories*3.0+.15;
+  addDyn(new THREE.BoxGeometry(5.8,.06,.16),new THREE.Vector3(0,rY,-1.2),null,'wall','Roof Truss','Prefab steel.');addDyn(new THREE.BoxGeometry(5.8,.06,.16),new THREE.Vector3(0,rY,1.2),null,'wall','Roof Truss','Prefab steel.');addDyn(new THREE.BoxGeometry(5.8,.06,.1),new THREE.Vector3(0,rY+.4,0),null,'wall','Ridge Beam','Central ridge.');
+  // Walls per floor
+  for(let fl=0;fl<stories;fl++){const bY=fl*3.0+.2,midY=bY+1.45;
+    addDyn(new THREE.BoxGeometry(5.4,2.85,.08),new THREE.Vector3(0,midY,-1.98),null,'wall','Rear Wall','R-30 sandwich panel.');
+    addDyn(new THREE.BoxGeometry(2.4,1.45,.08),new THREE.Vector3(-1.15,midY-.7,1.98),null,'wallA','Front Wall Lower L','QuickLock™ thermal panel.');
+    addDyn(new THREE.BoxGeometry(2.4,1.45,.08),new THREE.Vector3(1.15,midY-.7,1.98),null,'wallA','Front Wall Lower R','QuickLock™ thermal panel.');
+    addDyn(new THREE.BoxGeometry(5.4,1.3,.08),new THREE.Vector3(0,midY+.75,1.98),null,'wallA','Front Wall Upper','Smart home controller.');
+    addDyn(new THREE.BoxGeometry(.08,2.85,4.0),new THREE.Vector3(-2.73,midY,0),null,'wall','Left Side Wall','Pre-cut openings.');
+    addDyn(new THREE.BoxGeometry(.08,2.85,4.0),new THREE.Vector3(2.73,midY,0),null,'wall','Right Side Wall','Pre-cut openings.');
+    // Windows per floor
+    for(let x=-.95;x<=.95;x+=1.9)for(let wy=-.7;wy<=.7;wy+=1.4){addDyn(new THREE.BoxGeometry(.7,.9,.04),new THREE.Vector3(x,midY+wy,-1.94),null,'window','Triple-Glazed Window','Argon-filled. U=0.7.')}
+    addDyn(new THREE.BoxGeometry(.7,.9,.04),new THREE.Vector3(-1.4,midY,1.94),null,'window','Triple-Glazed Window','Argon-filled. U=0.7.');
+    addDyn(new THREE.BoxGeometry(.7,.9,.04),new THREE.Vector3(1.4,midY,1.94),null,'window','Triple-Glazed Window','Argon-filled. U=0.7.');
+  }
+  // Floor cassette
+  addDyn(new THREE.BoxGeometry(5.3,.07,3.8),new THREE.Vector3(0,stories*3.0+.1,0),null,'wall','Floor Cassette','Subfloor+acoustic+finish.');
+  // Roof panels
+  const rpGeo=new THREE.BoxGeometry(6.0,.1,2.0);
+  const rf=new THREE.Mesh(rpGeo,getRoofMat());rf.position.set(0,rY+.3,-1);rf.rotation.x=-.45;rf.castShadow=rf.receiveShadow=true;rf.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',dynType:'roof',isPart:true};dyn.push(rf);scene.add(rf);
+  const rr=new THREE.Mesh(rpGeo,getRoofMat());rr.position.set(0,rY+.3,1);rr.rotation.x=.45;rr.castShadow=rr.receiveShadow=true;rr.userData={name:'Roof Panel',desc:'R-40 insulated. Solar-ready.',dynType:'roof',isPart:true};dyn.push(rr);scene.add(rr);
+  // Door
+  const dm=new THREE.Mesh(new THREE.BoxGeometry(1.05,2.15,.06),matDoor);dm.position.set(0,1.2,1.98);dm.castShadow=dm.receiveShadow=true;dm.userData={name:'Entry Door',desc:'Pre-hung steel, multi-point lock.',isPart:true};scene.add(dm);
+  addDyn(new THREE.BoxGeometry(1.2,.08,.08),new THREE.Vector3(0,2.28,1.95),null,'wall','Door Header','Trim.');
+  // Eaves
+  addDyn(new THREE.BoxGeometry(5.9,.05,.14),new THREE.Vector3(0,rY+.4,-2),null,'wall','Eave Trim','Aluminum.');
+  addDyn(new THREE.BoxGeometry(5.9,.05,.14),new THREE.Vector3(0,rY+.4,2),null,'wall','Eave Trim','Aluminum.');
+  // Connectors
+  for(let x=-2.65;x<=2.65;x+=5.3)for(let z=-1.95;z<=1.95;z+=3.9){const c=new THREE.Mesh(new THREE.CylinderGeometry(.06,.08,.2,8),matAccent);c.position.set(x,.2,z);c.userData={name:'QuickLock™',desc:'Self-aligning. 3 min join.',isPart:true};scene.add(c)}
+}
+buildHouse(1);
 
 // Config handlers
-['wallOptions','windowOptions','roofOptions','floorOptions'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{const opt=e.target.closest('.config-option');if(!opt)return;e.currentTarget.querySelectorAll('.config-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');refreshMaterials();updateBuildTime()})});
-document.getElementById('resetConfig').addEventListener('click',()=>{['wallOptions','windowOptions','roofOptions','floorOptions'].forEach(id=>{const g=document.getElementById(id);g.querySelectorAll('.config-option').forEach((o,i)=>o.classList.toggle('active',i===0))});refreshMaterials();updateBuildTime()});
-function updateBuildTime(){const opts=document.querySelectorAll('.config-option.active').length;const days=85+opts*2;totalDays.textContent='⏱ ~'+days+' days to build'}
+['wallOpts','winOpts','floorOpts','roofOpts','storyOpts','groundOpts'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    const opt=e.target.closest('.cfg-opt');if(!opt)return;
+    e.currentTarget.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('active'));
+    opt.classList.add('active');
+    if(id==='storyOpts'){dyn.forEach(m=>scene.remove(m));dyn.length=0;buildHouse(parseInt(opt.dataset.stories))}
+    else if(id==='groundOpts')createGround(opt.dataset.ground);
+    else refreshMats();
+    updatePrice();
+  });
+});
+
+document.getElementById('resetCfg').addEventListener('click',()=>{
+  ['wallOpts','winOpts','floorOpts','roofOpts','storyOpts','groundOpts'].forEach(id=>{
+    document.getElementById(id).querySelectorAll('.cfg-opt').forEach((o,i)=>o.classList.toggle('active',i===0));
+  });
+  dyn.forEach(m=>scene.remove(m));dyn.length=0;buildHouse(1);createGround('grass');
+  updatePrice();
+});
+
+function updatePrice(){
+  let upgrades=0;
+  document.querySelectorAll('.cfg-opt.active').forEach(o=>upgrades+=parseInt(o.dataset.price||0));
+  const stories=parseInt(document.querySelector('#storyOpts .active')?.dataset.stories||1);
+  const baseModule=stories===1?98000:98000+28000;
+  const interiorBase=stories===1?12000:24000;
+  document.getElementById('priceTotal').textContent='$'+(baseModule+14500+interiorBase+upgrades).toLocaleString();
+  document.getElementById('priceUpgrades').textContent='$'+upgrades.toLocaleString();
+  document.getElementById('priceInt').textContent='$'+interiorBase.toLocaleString();
+  document.getElementById('buildDays').textContent=stories===1?'90':'120';
+}
+updatePrice();
 
 // Raycaster
 const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();let outlines=[];
-canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children.filter(c=>c.userData?.isPart));outlines.forEach(o=>scene.remove(o));outlines=[];if(hits.length>0){canvas.style.cursor='pointer';const obj=hits[0].object;if(obj.geometry){const edg=new THREE.EdgesGeometry(obj.geometry);const ln=new THREE.LineSegments(edg,new THREE.LineBasicMaterial({color:'#41ab5d',transparent:true,opacity:.85}));ln.position.copy(obj.position);ln.rotation.copy(obj.rotation);ln.scale.copy(obj.scale).multiplyScalar(1.05);scene.add(ln);outlines.push(ln)}}else{canvas.style.cursor='grab';info.classList.remove('visible')}});
-canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children.filter(c=>c.userData?.isPart));if(hits.length>0&&hits[0].object.userData.name){const d=hits[0].object.userData;vtitle.textContent=d.name;vdesc.textContent=d.desc||'';info.classList.add('visible');hint.style.opacity='0';setTimeout(()=>{info.classList.remove('visible');hint.style.opacity='1'},6000)}});
-function resize(){const w=frame.clientWidth,h=Math.min(w*.65,660);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();canvas.style.height=h+'px'}window.addEventListener('resize',resize);resize();
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children.filter(c=>c.userData?.isPart));outlines.forEach(o=>scene.remove(o));outlines=[];if(hits.length>0&&hits[0].object.geometry){canvas.style.cursor='pointer';const obj=hits[0].object;const edg=new THREE.EdgesGeometry(obj.geometry);const ln=new THREE.LineSegments(edg,new THREE.LineBasicMaterial({color:'#41ab5d',transparent:true,opacity:.85}));ln.position.copy(obj.position);ln.rotation.copy(obj.rotation);ln.scale.copy(obj.scale).multiplyScalar(1.06);scene.add(ln);outlines.push(ln)}else{canvas.style.cursor='grab';vinfo.classList.remove('visible')}});
+canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect();mouse.x=((e.clientX-r.left)/r.width)*2-1;mouse.y=-((e.clientY-r.top)/r.height)*2+1;raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(scene.children.filter(c=>c.userData?.isPart));if(hits.length>0&&hits[0].object.userData.name){const d=hits[0].object.userData;vtitle.textContent=d.name;vdesc.textContent=d.desc||'';vinfo.classList.add('visible');hint.style.opacity='0';setTimeout(()=>{vinfo.classList.remove('visible');hint.style.opacity='1'},6000)}});
+function resize(){const w=frame.clientWidth,h=Math.min(w*.68,680);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();canvas.style.height=h+'px'}window.addEventListener('resize',resize);resize();
 function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}animate();
 </script>
 <script>
 (function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([30,0],2.6);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
-const ac=[{name:'Kosovo',lat:42.6,lng:21,status:'active',desc:'HQ & Innovation Center.',projects:['POP-UP Prishtina (104)','Innovation Center','Multi-Family (64)']},{name:'USA',lat:39.5,lng:-98,status:'active',desc:'NA HQ. 120+ projects.',projects:['Dover, DE (200)','Austin, TX (52)','Phoenix, AZ (88)']},{name:'Austria',lat:47.5,lng:14.5,status:'active',desc:'First EU POP-UP.',projects:['Vienna (28)','Graz (42)']},{name:'Switzerland',lat:46.8,lng:8.2,status:'active',desc:'Davos partnership.',projects:['Davos','Alps Resort']},{name:'Germany',lat:51,lng:10.5,status:'expanding',desc:'Berlin & Munich 2026.',projects:['Berlin (86)','Munich']},{name:'UK',lat:54.5,lng:-3.5,status:'expanding',desc:'London active.',projects:['London (120)']},{name:'Netherlands',lat:52.1,lng:5.3,status:'expanding',desc:'Amsterdam pilot.',projects:['Amsterdam']},{name:'France',lat:46.6,lng:2.2,status:'expanding',desc:'Paris & Lyon 2027.',projects:['Paris','Lyon']},{name:'Italy',lat:42,lng:12.5,status:'expanding',desc:'Milan assessment.',projects:['Milan']},{name:'Canada',lat:56,lng:-106,status:'expanding',desc:'Toronto & Vancouver.',projects:['Toronto','Vancouver']},{name:'UAE',lat:24,lng:54,status:'expanding',desc:'Dubai exploration.',projects:['Dubai']},{name:'Belgium',lat:50.5,lng:4.5,status:'expanding',desc:'EU Green Deal.',projects:['Brussels']}];
-const covered=new Set(ac.map(c=>c.name));const wc=[{name:'Spain',lat:40,lng:-3},{name:'Portugal',lat:39.5,lng:-8},{name:'Norway',lat:62,lng:10},{name:'Sweden',lat:62,lng:15},{name:'Finland',lat:64,lng:26},{name:'Denmark',lat:56,lng:10},{name:'Poland',lat:52,lng:20},{name:'Ukraine',lat:49,lng:31},{name:'Romania',lat:46,lng:25},{name:'Greece',lat:39,lng:22},{name:'Turkey',lat:39,lng:35},{name:'Ireland',lat:53,lng:-8},{name:'Czechia',lat:49.8,lng:15.5},{name:'Hungary',lat:47,lng:20},{name:'Croatia',lat:45,lng:16},{name:'Bulgaria',lat:43,lng:25},{name:'Lithuania',lat:55,lng:24},{name:'Latvia',lat:57,lng:25},{name:'Estonia',lat:59,lng:26},{name:'Iceland',lat:65,lng:-19},{name:'Mexico',lat:23,lng:-102},{name:'Brazil',lat:-10,lng:-55},{name:'Argentina',lat:-34,lng:-64},{name:'Chile',lat:-35,lng:-71},{name:'India',lat:20,lng:78},{name:'China',lat:35,lng:105},{name:'Japan',lat:36,lng:138},{name:'SKorea',lat:36,lng:128},{name:'Australia',lat:-25,lng:133},{name:'NZ',lat:-41,lng:174},{name:'SAfrica',lat:-29,lng:24},{name:'Nigeria',lat:9,lng:8},{name:'Kenya',lat:-1,lng:37},{name:'Egypt',lat:27,lng:30},{name:'Morocco',lat:32,lng:-6},{name:'Saudi',lat:24,lng:45},{name:'Singapore',lat:1.3,lng:103.8},{name:'Malaysia',lat:4,lng:102},{name:'Indonesia',lat:-5,lng:120},{name:'Thailand',lat:15,lng:101},{name:'Vietnam',lat:14,lng:108}];
-const colors={active:'#41ab5d',expanding:'#f59e0b',unavailable:'#ef4444'};const labels={active:'✓ Available',expanding:'↗ Coming',unavailable:'✗ Future'};
-let mode='coverage';function renderMap(m){const container=document.getElementById('mapContainer');container._markers&&container._markers.forEach(mk=>map.removeLayer(mk));const markers=[];ac.forEach(p=>{const icon=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:${colors[p.status]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 4px ${colors[p.status]}33"></div>`,iconSize:[14,14],iconAnchor:[7,7]});const mk=L.marker([p.lat,p.lng],{icon}).addTo(map);mk.bindPopup(`<div class="map-popup"><h3>${p.name}</h3><span class="mp-status ${p.status}">${labels[p.status]}</span><p>${p.desc}</p>${p.projects.map(pr=>`<div style="font-size:12px;padding:3px 0">• ${pr}</div>`).join('')}</div>`,{maxWidth:280});markers.push(mk)});if(m==='coverage'){wc.forEach(p=>{if(covered.has(p.name))return;const icon=L.divIcon({className:'',html:`<div style="width:8px;height:8px;background:${colors.unavailable};border-radius:50%;border:2px solid #fff;opacity:.5"></div>`,iconSize:[8,8],iconAnchor:[4,4]});const mk=L.marker([p.lat,p.lng],{icon}).addTo(map);mk.bindPopup(`<div class="map-popup"><h3>${p.name}</h3><span class="mp-status unavailable">${labels.unavailable}</span><p>Not yet available.</p><p style="font-size:11px"><a href="#contact" style="color:#41ab5d">Register interest →</a></p></div>`,{maxWidth:260});markers.push(mk)})}container._markers=markers}renderMap('coverage');map.on('click',function(e){let best=null,bestD=Infinity;const all=[...ac,...wc.filter(p=>!covered.has(p.name))];all.forEach(p=>{const d=map.distance(e.latlng,[p.lat,p.lng]);if(d<bestD){bestD=d;best=p}});if(bestD<1500000){const ml=document.getElementById('mapContainer')._markers||[];ml.forEach(mk=>{if(mk.getLatLng&&Math.abs(mk.getLatLng().lat-best.lat)<.5&&Math.abs(mk.getLatLng().lng-best.lng)<.5)mk.openPopup()})}});document.querySelectorAll('.map-toggle button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.map-toggle button').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderMap(b.dataset.mode)}));new ResizeObserver(()=>map.invalidateSize()).observe(c);new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)map.invalidateSize()})}).observe(c)})();
+const ac=[{n:'Kosovo',t:42.6,n2:21,s:'active',d:'HQ & Innovation Center.',p:['POP-UP Prishtina (104)','Innovation Center','Multi-Family (64)']},{n:'USA',t:39.5,n2:-98,s:'active',d:'NA HQ. 120+ projects.',p:['Dover, DE (200)','Austin, TX (52)','Phoenix, AZ (88)']},{n:'Austria',t:47.5,n2:14.5,s:'active',d:'First EU POP-UP.',p:['Vienna (28)','Graz (42)']},{n:'Switzerland',t:46.8,n2:8.2,s:'active',d:'Davos partnership.',p:['Davos','Alps Resort']},{n:'Germany',t:51,n2:10.5,s:'expanding',d:'Berlin & Munich 2026.',p:['Berlin (86)','Munich']},{n:'UK',t:54.5,n2:-3.5,s:'expanding',d:'London active.',p:['London (120)']},{n:'Netherlands',t:52.1,n2:5.3,s:'expanding',d:'Amsterdam pilot.',p:['Amsterdam']},{n:'France',t:46.6,n2:2.2,s:'expanding',d:'Paris & Lyon 2027.',p:['Paris','Lyon']},{n:'Italy',t:42,n2:12.5,s:'expanding',d:'Milan assessment.',p:['Milan']},{n:'Canada',t:56,n2:-106,s:'expanding',d:'Toronto & Vancouver.',p:['Toronto','Vancouver']},{n:'UAE',t:24,n2:54,s:'expanding',d:'Dubai.',p:['Dubai']},{n:'Belgium',t:50.5,n2:4.5,s:'expanding',d:'EU Green Deal.',p:['Brussels']}];
+const cv=new Set(ac.map(c=>c.n));const wc=[{n:'Spain',t:40,n2:-3},{n:'Portugal',t:39.5,n2:-8},{n:'Norway',t:62,n2:10},{n:'Sweden',t:62,n2:15},{n:'Finland',t:64,n2:26},{n:'Denmark',t:56,n2:10},{n:'Poland',t:52,n2:20},{n:'Ukraine',t:49,n2:31},{n:'Romania',t:46,n2:25},{n:'Greece',t:39,n2:22},{n:'Turkey',t:39,n2:35},{n:'Ireland',t:53,n2:-8},{n:'Czechia',t:49.8,n2:15.5},{n:'Hungary',t:47,n2:20},{n:'Croatia',t:45,n2:16},{n:'Bulgaria',t:43,n2:25},{n:'Lithuania',t:55,n2:24},{n:'Latvia',t:57,n2:25},{n:'Estonia',t:59,n2:26},{n:'Iceland',t:65,n2:-19},{n:'Mexico',t:23,n2:-102},{n:'Brazil',t:-10,n2:-55},{n:'Argentina',t:-34,n2:-64},{n:'Chile',t:-35,n2:-71},{n:'India',t:20,n2:78},{n:'China',t:35,n2:105},{n:'Japan',t:36,n2:138},{n:'S.Korea',t:36,n2:128},{n:'Australia',t:-25,n2:133},{n:'New Zealand',t:-41,n2:174},{n:'S.Africa',t:-29,n2:24},{n:'Nigeria',t:9,n2:8},{n:'Kenya',t:-1,n2:37},{n:'Egypt',t:27,n2:30},{n:'Morocco',t:32,n2:-6},{n:'Saudi Arabia',t:24,n2:45},{n:'Singapore',t:1.3,n2:103.8},{n:'Malaysia',t:4,n2:102},{n:'Indonesia',t:-5,n2:120},{n:'Thailand',t:15,n2:101},{n:'Vietnam',t:14,n2:108}];
+const cls={active:'#41ab5d',expanding:'#f59e0b',unavailable:'#ef4444'};const lbs={active:'✓ Available',expanding:'↗ Coming',unavailable:'✗ Future'};
+let mode='coverage';function rM(m){const ct=document.getElementById('mapContainer');ct._m&&ct._m.forEach(mk=>map.removeLayer(mk));const ms=[];ac.forEach(p=>{const ic=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:${cls[p.s]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 4px ${cls[p.s]}33"></div>`,iconSize:[14,14],iconAnchor:[7,7]});const mk=L.marker([p.t,p.n2],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;line-height:1.5;min-width:240px;padding:4px"><h3 style="font-size:16px;font-weight:600;color:#0a1628">${p.n}</h3><span style="display:inline-block;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:3px;text-transform:uppercase;margin-bottom:10px;${p.s==='active'?'background:#edf8e9;color:#238b45':p.s==='expanding'?'background:#fef3c7;color:#92400e':''}">${lbs[p.s]}</span><p style="font-size:12px;color:#64748d">${p.d}</p>${p.p.map(pr=>`<div style="font-size:12px;padding:2px 0">• ${pr}</div>`).join('')}</div>`,{maxWidth:280});ms.push(mk)});if(m==='coverage'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:8px;height:8px;background:${cls.unavailable};border-radius:50%;border:2px solid #fff;opacity:.5"></div>`,iconSize:[8,8],iconAnchor:[4,4]});const mk=L.marker([p.t,p.n2],{icon:ic}).addTo(map);mk.bindPopup(`<div style="font-family:'Source Sans 3',sans-serif;font-size:13px;padding:4px"><h3 style="font-size:16px;font-weight:600">${p.n}</h3><span style="display:inline-block;font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:3px;background:#fce4e4;color:#b91c1c;text-transform:uppercase;margin-bottom:10px">${lbs.unavailable}</span><p style="font-size:12px">Not yet available.</p><p style="font-size:11px"><a href="#contact" style="color:#41ab5d">Register interest →</a></p></div>`,{maxWidth:260});ms.push(mk)})}ct._m=ms}rM('coverage');
+map.on('click',function(e){let b=null,bd=Infinity;const all=[...ac,...wc.filter(p=>!cv.has(p.n))];all.forEach(p=>{const d=map.distance(e.latlng,[p.t,p.n2]);if(d<bd){bd=d;b=p}});if(bd<1500000){const ml=document.getElementById('mapContainer')._m||[];ml.forEach(mk=>{if(mk.getLatLng&&Math.abs(mk.getLatLng().lat-b.t)<.5&&Math.abs(mk.getLatLng().lng-b.n2)<.5)mk.openPopup()})}});
+document.querySelectorAll('.map-section [data-mode]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.map-section [data-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');rM(b.dataset.mode)}));
+new ResizeObserver(()=>map.invalidateSize()).observe(c);new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)map.invalidateSize()})}).observe(c)})();
 </script>
 </body>
 </html>
