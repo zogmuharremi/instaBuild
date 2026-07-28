@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block title %}3D Builder{% endblock %}
+{% block extra_head %}
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<style>
+  .builder-hero{background:var(--n);padding:120px 48px 40px;text-align:center;color:white}
+  .builder-hero .sec-tag{color:var(--gl)}
+  .builder-hero h1{font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:-.7px;margin-bottom:10px}
+  .builder-hero p{color:rgba(255,255,255,0.5);font-size:15px;max-width:500px;margin:0 auto}
+  .builder-wrap{max-width:1120px;margin:0 auto;padding:0 48px 60px;background:var(--n)}
+  .builder-frame{width:100%;background:#0d1f33;border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.5);position:relative}
+  .builder-frame canvas{display:block;width:100%;height:600px;cursor:grab}
+  .builder-frame canvas:active{cursor:grabbing}
+  .builder-ui{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10}
+  .b-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);padding:8px 18px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+  .b-btn:hover{background:rgba(255,255,255,.14);color:white}
+  .b-btn.active{background:var(--g);border-color:var(--g);color:#0a1628;font-weight:600}
+  .builder-info{position:absolute;top:24px;right:24px;background:rgba(10,22,40,.94);backdrop-filter:blur(14px);border:1px solid rgba(65,171,93,.3);border-radius:10px;padding:18px 22px;color:white;max-width:300px;z-index:10;transition:all .3s;opacity:0;transform:translateX(20px);pointer-events:none}
+  .builder-info.visible{opacity:1;transform:translateX(0)}
+  .builder-info h3{font-size:15px;font-weight:500;color:var(--g);margin-bottom:4px}
+  .builder-info p{font-size:12px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.5}
+  .builder-info .bi-time{font-size:11px;color:var(--gl);margin-top:6px;font-weight:500}
+  .builder-hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.35);font-size:12px;z-index:10;pointer-events:none}
+  .builder-legend{position:absolute;bottom:24px;right:24px;display:flex;flex-direction:column;gap:6px;z-index:10}
+  .bl-item{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.5)}
+  .bl-dot{width:8px;height:8px;border-radius:2px}
+  @media(max-width:900px){.builder-frame canvas{height:400px}.builder-info{top:12px;right:12px;max-width:240px}.builder-hint{display:none}}
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="builder-hero"><div class="sec-tag">Interactive 3D Builder</div><h1>Explore a Modular Home</h1><p>Rotate, zoom, and click any component to discover how it's built — from foundation to finish.</p></div>
+
+<div class="builder-wrap">
+  <div class="builder-frame" id="bframe">
+    <canvas id="bcanvas"></canvas>
+    <div class="builder-info" id="binfo"><h3 id="btitle"></h3><p id="bdesc"></p><div class="bi-time" id="btime"></div></div>
+    <div class="builder-hint" id="bhint">🖱 Drag to rotate &bull; Scroll to zoom &bull; Click parts to learn</div>
+    <div class="builder-ui" id="bui">
+      <button class="b-btn active" data-view="assembled">Assembled</button>
+      <button class="b-btn" data-view="exploded">Exploded View</button>
+      <button class="b-btn" data-view="structure">Structure Only</button>
+      <button class="b-btn" data-view="modules">Modules</button>
+    </div>
+    <div class="builder-legend">
+      <div class="bl-item"><span class="bl-dot" style="background:#64748b"></span> Steel Frame</div>
+      <div class="bl-item"><span class="bl-dot" style="background:#e2e8f0"></span> Wall Panels</div>
+      <div class="bl-item"><span class="bl-dot" style="background:#41ab5d"></span> QuickLock™ Connectors</div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const frame = document.getElementById('bframe');
+const canvas = document.getElementById('bcanvas');
+const info = document.getElementById('binfo');
+const btitle = document.getElementById('btitle');
+const bdesc = document.getElementById('bdesc');
+const btime = document.getElementById('btime');
+const hint = document.getElementById('bhint');
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#0d1f33');
+scene.fog = new THREE.Fog('#0d1f33', 10, 35);
+
+const camera = new THREE.PerspectiveCamera(42, 2, 0.5, 50);
+camera.position.set(7, 5, 9);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1.8, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 3;
+controls.maxDistance = 16;
+controls.maxPolarAngle = Math.PI * 0.6;
+controls.update();
+
+// Lighting
+scene.add(new THREE.AmbientLight('#b8cfe0', 0.7));
+const sun = new THREE.DirectionalLight('#ffffff', 2.2);
+sun.position.set(12, 10, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near = 0.5; sun.shadow.camera.far = 50;
+sun.shadow.camera.left = -10; sun.shadow.camera.right = 10;
+sun.shadow.camera.top = 10; sun.shadow.camera.bottom = -5;
+scene.add(sun);
+scene.add(new THREE.DirectionalLight('#9cc0d8', 0.5).translateX(-5).translateZ(-5));
+
+// Materials
+const mSteel = new THREE.MeshStandardMaterial({ color: '#64748b', roughness: 0.4, metalness: 0.85 });
+const mWall = new THREE.MeshStandardMaterial({ color: '#e8ecf1', roughness: 0.5, metalness: 0.04 });
+const mWallG = new THREE.MeshStandardMaterial({ color: '#c7e9c0', roughness: 0.5, metalness: 0.04 });
+const mGlass = new THREE.MeshStandardMaterial({ color: '#a8d8f0', roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.7 });
+const mSlab = new THREE.MeshStandardMaterial({ color: '#c8d2dc', roughness: 0.65, metalness: 0.02 });
+const mRoof = new THREE.MeshStandardMaterial({ color: '#334155', roughness: 0.45, metalness: 0.25 });
+const mDoor = new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.3, metalness: 0.5 });
+const mAccent = new THREE.MeshStandardMaterial({ color: '#41ab5d', roughness: 0.3, metalness: 0.35, emissive: '#41ab5d', emissiveIntensity: 0.12 });
+
+const main = new THREE.Group();
+scene.add(main);
+const parts = [];
+const origPos = new Map();
+
+function add(geo, mat, pos, rot, name, desc, time) {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.copy(pos);
+  if (rot) m.rotation.set(rot.x, rot.y, rot.z);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  m.userData = { name, desc, time, isPart: true };
+  parts.push(m);
+  main.add(m);
+  origPos.set(m, pos.clone());
+  return m;
+}
+
+// Foundation slab
+add(new THREE.BoxGeometry(5.2, 0.15, 3.8), mSlab, new THREE.Vector3(0, 0.075, 0), null,
+  'Concrete Foundation Slab', 'Precision-cast in our factory with integrated utility channels. Delivered as a single piece, eliminating 2 weeks of on-site concrete work.', 'Factory: 3 days');
+
+// Steel columns
+for (let x = -2.5; x <= 2.5; x += 5) {
+  for (let z = -1.75; z <= 1.75; z += 3.5) {
+    add(new THREE.BoxGeometry(0.1, 3.2, 0.1), mSteel, new THREE.Vector3(x, 1.75, z), null,
+      'Structural Steel Column', 'Hot-rolled H-beam with pre-drilled bolt holes. No welding required on site — all connections are bolted.', 'Factory: 1 day');
+  }
+}
+
+// Floor beams
+for (let y = 0.2; y < 3.3; y += 3.0) {
+  add(new THREE.BoxGeometry(5.1, 0.08, 0.1), mSteel, new THREE.Vector3(0, y, -1.75), null, 'Floor Beam', 'Galvanized I-beam spanning the module length. Pre-engineered with standardized bolt points.', 'Factory: 2 days');
+  add(new THREE.BoxGeometry(5.1, 0.08, 0.1), mSteel, new THREE.Vector3(0, y, 1.75), null, 'Floor Beam', 'Galvanized I-beam spanning the module length. Pre-engineered with standardized bolt points.', 'Factory: 2 days');
+}
+
+// Roof truss
+add(new THREE.BoxGeometry(5.4, 0.07, 4.0), mSteel, new THREE.Vector3(0, 3.3, 0), null,
+  'Roof Truss Assembly', 'Prefabricated steel truss with integrated solar mounting rails. Craned into place as one complete assembly.', 'Factory: 1 day');
+
+// Wall panels
+add(new THREE.BoxGeometry(5.0, 2.95, 0.06), mWall, new THREE.Vector3(0, 1.65, -1.78), null,
+  'Rear Wall Panel', 'Sandwich panel: weather-resistant exterior + polyurethane foam (R-30) + pre-finished drywall interior. Electrical conduits pre-installed.', 'Factory: 2 days');
+
+add(new THREE.BoxGeometry(2.4, 1.5, 0.06), mWallG, new THREE.Vector3(-1.1, 0.85, 1.78), null,
+  'Front Wall Panel (Left)', 'Green-tinted high-efficiency thermal panel with integrated moisture barrier. QuickLock™ edges for snap-fit assembly.', 'Factory: 1.5 days');
+add(new THREE.BoxGeometry(2.4, 1.5, 0.06), mWallG, new THREE.Vector3(1.1, 0.85, 1.78), null,
+  'Front Wall Panel (Right)', 'Green-tinted high-efficiency thermal panel with integrated moisture barrier. QuickLock™ edges for snap-fit assembly.', 'Factory: 1.5 days');
+add(new THREE.BoxGeometry(5.0, 1.5, 0.06), mWallG, new THREE.Vector3(0, 2.4, 1.78), null,
+  'Front Wall Panel (Upper)', 'Upper section with pre-installed data & power distribution. Houses the smart home controller.', 'Factory: 1 day');
+
+// Side walls
+add(new THREE.BoxGeometry(0.06, 2.95, 3.65), mWall, new THREE.Vector3(-2.53, 1.65, 0), null,
+  'Left Side Wall', 'Side panel with pre-cut window openings and factory-applied weather sealing. Under 180 kg for easy placement.', 'Factory: 1.5 days');
+add(new THREE.BoxGeometry(0.06, 2.95, 3.65), mWall, new THREE.Vector3(2.53, 1.65, 0), null,
+  'Right Side Wall', 'Side panel with pre-cut window openings and factory-applied weather sealing. Under 180 kg for easy placement.', 'Factory: 1.5 days');
+
+// Floor cassette
+add(new THREE.BoxGeometry(5.0, 0.07, 3.6), mWall, new THREE.Vector3(0, 3.05, 0), null,
+  'Floor Cassette', 'Finished sandwich: structural subfloor + acoustic layer + flooring surface. Drops into frame and locks.', 'Factory: 1 day');
+
+// Roof panel
+add(new THREE.BoxGeometry(5.6, 0.1, 4.2), mRoof, new THREE.Vector3(0, 3.38, 0), null,
+  'Insulated Roof Panel', 'R-40 insulated panel with vapor barrier + solar-ready rails. Single panel covers the entire module.', 'Factory: 1 day');
+
+// Door
+add(new THREE.BoxGeometry(1.0, 2.0, 0.05), mDoor, new THREE.Vector3(0, 1.1, 1.78), null,
+  'Modular Entry Door', 'Pre-hung steel door with multi-point lock. Factory-installed into its frame — bolts in, in minutes. Smart-lock ready.', 'Factory: 0.5 days');
+
+// Windows (rear — 2, front — 2)
+for (let x = -0.9; x <= 0.9; x += 1.8) {
+  add(new THREE.BoxGeometry(0.6, 0.8, 0.03), mGlass, new THREE.Vector3(x, 2.8, -1.75), null,
+    'Triple-Glazed Window', 'Argon-filled triple glaze (U-value 0.7). Factory-sealed into wall panel — zero on-site glazing.', 'Factory: included in wall');
+  add(new THREE.BoxGeometry(0.6, 0.8, 0.03), mGlass, new THREE.Vector3(x, 1.0, -1.75), null,
+    'Triple-Glazed Window', 'Argon-filled triple glaze (U-value 0.7). Tilt-turn mechanism for natural ventilation.', 'Factory: included in wall');
+}
+add(new THREE.BoxGeometry(0.6, 0.8, 0.03), mGlass, new THREE.Vector3(-1.4, 2.2, 1.75), null, 'Triple-Glazed Window', 'Factory-sealed window cassette. Pre-installed — no on-site glazing needed.', 'Factory: included in wall');
+add(new THREE.BoxGeometry(0.6, 0.8, 0.03), mGlass, new THREE.Vector3(1.4, 2.2, 1.75), null, 'Triple-Glazed Window', 'Factory-sealed window cassette. Pre-installed — no on-site glazing needed.', 'Factory: included in wall');
+
+// QuickLock connectors
+for (let x = -2.5; x <= 2.5; x += 5) {
+  for (let z = -1.75; z <= 1.75; z += 3.5) {
+    add(new THREE.CylinderGeometry(0.06, 0.08, 0.2, 8), mAccent, new THREE.Vector3(x, 0.18, z), null,
+      'QuickLock™ Connector', 'Patented self-aligning connector. Two modules join in under 3 minutes. Corrosion-resistant ceramic coating.', 'Assembly: 3 minutes');
+  }
+}
+
+// View modes
+let view = 'assembled';
+function setView(mode) {
+  view = mode;
+  document.querySelectorAll('.b-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-view="${mode}"]`).classList.add('active');
+  parts.forEach(m => { m.visible = true; m.position.copy(origPos.get(m)); });
+
+  if (mode === 'exploded') {
+    parts.forEach(m => {
+      const p = origPos.get(m);
+      const n = m.userData.name;
+      if (n.includes('Roof')) { m.position.y += 3; m.position.z += 1; }
+      else if (n.includes('Floor Cassette')) m.position.y += 1.8;
+      else if (n.includes('Roof Truss')) m.position.y += 2.2;
+      else if (n.includes('Wall Panel')) {
+        if (p.z < -1.5) m.position.z -= 1.2;
+        else if (p.z > 1.5) m.position.z += 1.2;
+        else if (p.x < -2) m.position.x -= 1.2;
+        else if (p.x > 2) m.position.x += 1.2;
+      }
+      else if (n.includes('Window')) { if (p.z < -1.5) m.position.z -= 0.7; else if (p.z > 1.5) m.position.z += 0.7; }
+      else if (n.includes('Door')) m.position.z += 1.2;
+      else if (n.includes('Connector')) m.position.y += 1.5;
+      else if (n.includes('Column')) { m.position.x *= 1.2; m.position.z *= 1.2; }
+    });
+  } else if (mode === 'structure') {
+    parts.forEach(m => {
+      const n = m.userData.name;
+      if (!n.includes('Column') && !n.includes('Beam') && !n.includes('Truss') && !n.includes('Foundation') && !n.includes('Connector')) m.visible = false;
+    });
+  } else if (mode === 'modules') {
+    parts.forEach(m => {
+      const n = m.userData.name;
+      if (!n.includes('Wall') && !n.includes('Floor Cassette') && !n.includes('Window') && !n.includes('Door') && !n.includes('Roof Panel')) m.visible = false;
+    });
+  }
+}
+
+document.querySelectorAll('.b-btn').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+// Raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let outlines = [];
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+  mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(parts.filter(m => m.visible));
+  outlines.forEach(o => scene.remove(o)); outlines = [];
+  if (hits.length > 0 && hits[0].object.userData.isPart) {
+    canvas.style.cursor = 'pointer';
+    const obj = hits[0].object;
+    const edg = new THREE.EdgesGeometry(obj.geometry);
+    const ln = new THREE.LineSegments(edg, new THREE.LineBasicMaterial({ color: '#41ab5d', transparent: true, opacity: 0.8 }));
+    ln.position.copy(obj.position); ln.rotation.copy(obj.rotation); ln.scale.copy(obj.scale).multiplyScalar(1.04);
+    scene.add(ln); outlines.push(ln);
+  } else { canvas.style.cursor = 'grab'; info.classList.remove('visible'); }
+});
+
+canvas.addEventListener('click', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+  mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(parts.filter(m => m.visible));
+  if (hits.length > 0 && hits[0].object.userData.isPart) {
+    const d = hits[0].object.userData;
+    btitle.textContent = d.name;
+    bdesc.textContent = d.desc;
+    btime.textContent = '⏱ ' + d.time;
+    info.classList.add('visible');
+    hint.style.opacity = '0';
+    setTimeout(() => { info.classList.remove('visible'); hint.style.opacity = '1'; }, 7000);
+  }
+});
+
+// Resize
+function resize() {
+  const w = frame.clientWidth;
+  const h = Math.min(w * 0.6, 600);
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  canvas.style.height = h + 'px';
+}
+window.addEventListener('resize', resize);
+resize();
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+{% endblock %}

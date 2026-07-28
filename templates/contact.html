@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+
+<div class="page-hdr"><div class="sec-tag">Get Started</div><h1>Ready to build?</h1><p>Tell us about your project. We'll get back to you within 24 hours.</p></div>
+
+<section class="sec"><div class="form-wrap fade-in">
+  <div class="form-status" id="formStatus"></div>
+  <form id="contactForm">
+    <div class="form-row">
+      <div class="form-group"><label for="name">Full Name *</label><input type="text" id="name" name="name" required placeholder="John Smith"></div>
+      <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" required placeholder="john@example.com"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label for="phone">Phone Number</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000"></div>
+      <div class="form-group"><label for="project_type">Project Type</label><select id="project_type" name="project_type">
+        <option value="">Select...</option><option value="popup">POP-UP Community</option><option value="multifamily">Multi-Family Housing</option><option value="commercial">Commercial Building</option><option value="senior-student">Senior / Student Housing</option><option value="custom">Custom Project</option><option value="other">Other</option>
+      </select></div>
+    </div>
+    <div class="form-group"><label for="message">Tell us about your project *</label><textarea id="message" name="message" rows="5" required placeholder="Describe your project — size, location, timeline, budget..."></textarea></div>
+    <button type="submit" class="btn btn-p" style="width:100%;padding:14px;font-size:16px;justify-content:center">Send Inquiry</button>
+  </form>
+</div></section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button[type=submit]');s.className='form-status';s.textContent='';b.disabled=true;b.textContent='Sending...';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'success':'error');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status error';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry'});
+</script>
+{% endblock %}
