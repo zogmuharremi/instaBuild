@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>instaBuild — The Future of Construction</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script type="importmap">
     {
       "imports": {
@@ -147,7 +148,26 @@
     .builder-info h3{font-size:16px;font-weight:500;color:var(--green);margin-bottom:4px}
     .builder-info p{font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.5}
     .builder-hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.4);font-size:12px;font-weight:300;z-index:10;pointer-events:none}
-    .builder-label{position:absolute;color:white;font-size:11px;font-weight:500;background:rgba(16,185,129,.85);padding:3px 8px;border-radius:3px;pointer-events:none;transform:translate(-50%,-50%);white-space:nowrap;z-index:5}
+    .builder-label{position:absolute;color:white;font-size:11px;font-weight:500;background:rgba(65,171,93,.85);padding:3px 8px;border-radius:3px;pointer-events:none;transform:translate(-50%,-50%);white-space:nowrap;z-index:5}
+
+    /* ── Map ── */
+    .map-wrap{width:100%;height:520px;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px rgba(10,22,40,.15);position:relative}
+    .map-wrap .leaflet-container{width:100%;height:100%;background:#e8f0e8}
+    .map-popup{font-family:'Source Sans 3',system-ui,sans-serif;font-size:13px;line-height:1.5;min-width:220px}
+    .map-popup h3{font-size:15px;font-weight:600;color:#0a1628;margin-bottom:4px}
+    .map-popup .mp-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+    .mp-tag.active{background:#edf8e9;color:#238b45}
+    .mp-tag.expanding{background:#fef3c7;color:#92400e}
+    .mp-tag.soon{background:#e0e7ff;color:#3730a3}
+    .map-popup p{font-size:12px;color:#64748d;margin-bottom:6px}
+    .map-popup .mp-projects{font-size:12px;color:#0a1628}
+    .map-popup .mp-projects strong{color:#41ab5d}
+    .map-legend{position:absolute;bottom:20px;left:20px;background:rgba(255,255,255,.95);border-radius:8px;padding:12px 16px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:1000;font-size:11px;font-weight:500;display:flex;flex-direction:column;gap:6px}
+    .map-legend-item{display:flex;align-items:center;gap:8px}
+    .map-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+    .map-legend-dot.active{background:#41ab5d;box-shadow:0 0 0 4px rgba(65,171,93,.2)}
+    .map-legend-dot.expanding{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+    .map-legend-dot.soon{background:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.2)}
 
     .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
     .fade-in.visible{opacity:1;transform:translateY(0)}
@@ -163,6 +183,7 @@
       .sec,.sec-inner{padding:64px 24px}.process-steps{grid-template-columns:1fr}.process-line{display:none}
       .stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}
       .builder-canvas{height:400px}.builder-info{top:12px;right:12px;max-width:220px}
+      .map-wrap{height:380px}
       .ft-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}
     }
     @media(max-width:500px){
@@ -175,7 +196,7 @@
 
 <nav id="nav"><a href="/" class="logo"><div class="lm">iB</div>instaBuild</a>
   <div class="nav-r" id="nr">
-    <a href="#about">About</a><a href="#services">Solutions</a><a href="#builder">3D Builder</a><a href="#why">Why Us</a><a href="#process">Process</a><a href="#contact">Contact</a>
+    <a href="#about">About</a><a href="#services">Solutions</a><a href="#builder">3D Builder</a><a href="#map">Global</a><a href="#why">Why Us</a><a href="#process">Process</a><a href="#contact">Contact</a>
     <a href="#contact" class="btn btn-p start-project-btn">Get Started</a>
   </div>
   <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -275,6 +296,18 @@
     <div class="gallery-item fade-in" style="background-image:url('images/traditional-design.webp')"></div>
     <div class="gallery-item fade-in" style="background-image:url('images/InnovationCenter.webp')"></div>
     <div class="gallery-item fade-in" style="background-image:url('images/images.jfif')"></div>
+  </div>
+</section>
+
+<!-- Global Map -->
+<section class="sec" id="map">
+  <div class="sec-hdr fade-in"><div class="sec-tag">Global Reach</div><h2>Where we build</h2><p>Click any country to discover our projects, service availability, and expansion plans.</p></div>
+  <div class="map-wrap fade-in" id="mapContainer">
+    <div class="map-legend">
+      <div class="map-legend-item"><span class="map-legend-dot active"></span> Active Projects</div>
+      <div class="map-legend-item"><span class="map-legend-dot expanding"></span> Expanding Soon</div>
+      <div class="map-legend-item"><span class="map-legend-dot soon"></span> Planning Phase</div>
+    </div>
   </div>
 </section>
 
@@ -766,6 +799,84 @@ setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundin
 document.querySelectorAll('.start-project-btn').forEach(btn=>{btn.addEventListener('click',function(e){e.preventDefault();const t=document.getElementById('contact');if(t){t.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{const ni=document.getElementById('name');if(ni)ni.focus()},600)}})});
 
 document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button[type=submit]');s.className='form-status';s.textContent='';b.disabled=true;b.textContent='Sending...';const fd=new FormData(this);try{const r=await fetch('/contact',{method:'POST',body:fd});const d=await r.json();if(d.success){s.className='form-status success';s.textContent='✓ '+d.message;this.reset()}else{s.className='form-status error';s.textContent='✗ '+d.error}}catch(err){s.className='form-status error';s.textContent='✗ Network error. Please try again.'}b.disabled=false;b.textContent='Send Inquiry'});
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  const mapEl = document.getElementById('mapContainer');
+  if (!mapEl) return;
+
+  const map = L.map(mapEl, { scrollWheelZoom: false, zoomControl: true }).setView([42, 15], 4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    maxZoom: 18
+  }).addTo(map);
+
+  // Project data per country
+  const projects = {
+    kosovo: { name: 'Kosovo', lat: 42.6, lng: 21.0, status: 'active', desc: 'Headquarters & Innovation Center. Manufacturing hub for EU operations.', projects: ['POP-UP Community — Prishtina (104 units)', 'Innovation Center — Prishtina-Mitrovica Highway', 'Multi-Family Complex — Prishtina (64 units)'] },
+    usa: { name: 'United States', lat: 39.0, lng: -98.0, status: 'active', desc: 'North American headquarters. Active in 8 states with 120+ projects completed.', projects: ['Workforce Housing — Dover, DE (200 units)', 'POP-UP Community — Austin, TX (52 units)', 'Senior Living — Phoenix, AZ (88 units)', 'Commercial Tower — Miami, FL'] },
+    austria: { name: 'Austria', lat: 47.5, lng: 14.5, status: 'active', desc: 'First EU POP-UP Community deployed in under 30 days. Growing market presence.', projects: ['POP-UP Community — Vienna Region (28 units)', 'Student Housing — Graz (42 units)'] },
+    germany: { name: 'Germany', lat: 51.0, lng: 10.5, status: 'expanding', desc: 'Expansion underway. First projects breaking ground in 2026.', projects: ['Multi-Family — Berlin (planned, 86 units)', 'Commercial — Munich (planned)'] },
+    switzerland: { name: 'Switzerland', lat: 46.8, lng: 8.2, status: 'active', desc: 'Featured at House of Kosova — Davos. Active partnerships with Swiss developers.', projects: ['Signature Home — Davos Region', 'POP-UP Resort Concept — Alps'] },
+    france: { name: 'France', lat: 46.6, lng: 2.2, status: 'soon', desc: 'Planning phase. Market analysis complete. Targeting Paris and Lyon for 2027 launch.', projects: ['Planning — Paris Region (2027)', 'Planning — Lyon (2027)'] },
+    italy: { name: 'Italy', lat: 42.0, lng: 12.5, status: 'soon', desc: 'Early planning stage. Regulatory assessment underway for modular construction approval.', projects: ['Planning — Milan Region (2027)'] },
+    uk: { name: 'United Kingdom', lat: 54.5, lng: -3.5, status: 'expanding', desc: 'Post-Brexit market entry in progress. Partnership discussions with London developers.', projects: ['Multi-Family — London (planned, 120 units)'] },
+    canada: { name: 'Canada', lat: 56.0, lng: -106.0, status: 'soon', desc: 'North American expansion. Exploring Toronto and Vancouver markets for 2027.', projects: ['Planning — Toronto (2027)', 'Planning — Vancouver (2027)'] },
+    uae: { name: 'UAE', lat: 24.0, lng: 54.0, status: 'soon', desc: 'Middle East market exploration. Modular construction ideal for rapid urban development.', projects: ['Planning — Dubai (2027)'] },
+    netherlands: { name: 'Netherlands', lat: 52.1, lng: 5.3, status: 'expanding', desc: 'Strong interest in sustainable modular housing. Pilot project in negotiation.', projects: ['POP-UP Pilot — Amsterdam (planned)'] },
+    belgium: { name: 'Belgium', lat: 50.5, lng: 4.5, status: 'soon', desc: 'EU expansion target. Aligned with EU Green Deal construction standards.', projects: ['Planning — Brussels Region (2028)'] }
+  };
+
+  const statusColors = { active: '#41ab5d', expanding: '#f59e0b', soon: '#6366f1' };
+  const statusLabels = { active: '✓ Active', expanding: '↗ Expanding 2026', soon: '◉ Planned 2027+' };
+
+  const markers = {};
+  Object.entries(projects).forEach(([key, p]) => {
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:16px;height:16px;background:${statusColors[p.status]};border-radius:50%;border:3px solid white;box-shadow:0 0 0 3px ${statusColors[p.status]}44,0 2px 8px rgba(0,0,0,.2)"></div>`,
+      iconSize: [16, 16], iconAnchor: [8, 8]
+    });
+    const marker = L.marker([p.lat, p.lng], { icon }).addTo(map);
+    const projList = p.projects.map(pr => `<div style="margin:2px 0">• ${pr}</div>`).join('');
+    marker.bindPopup(`
+      <div class="map-popup">
+        <h3>${p.name} <span style="font-weight:300;color:#64748d;font-size:12px">${p.lat>0?'EU':'NA'}</span></h3>
+        <span class="mp-tag ${p.status}">${statusLabels[p.status]}</span>
+        <p>${p.desc}</p>
+        <div class="mp-projects"><strong>Projects:</strong></div>
+        ${projList}
+        ${p.status !== 'active' ? `<p style="margin-top:8px;font-size:11px;color:#6366f1">Interested? <a href="#contact" style="color:#41ab5d">Contact us</a> for early access.</p>` : ''}
+      </div>
+    `, { maxWidth: 300, className: '' });
+    markers[key] = marker;
+  });
+
+  // Click on map (non-marker area) shows nearest active/expanding info
+  map.on('click', function(e) {
+    // Check if clicking near a marker (within ~200km)
+    let closestDist = Infinity;
+    let closestKey = null;
+    Object.entries(projects).forEach(([key, p]) => {
+      const d = map.distance(e.latlng, [p.lat, p.lng]);
+      if (d < closestDist) { closestDist = d; closestKey = key; }
+    });
+    if (closestDist < 800000) { // 800km threshold
+      markers[closestKey].openPopup();
+    }
+  });
+
+  // Resize handler for map
+  const resizeMap = () => { setTimeout(() => map.invalidateSize(), 200); };
+  window.addEventListener('resize', resizeMap);
+  // Invalidate on first visibility
+  const mapObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { map.invalidateSize(); mapObserver.disconnect(); } });
+  });
+  mapObserver.observe(mapEl);
+})();
 </script>
 </body>
 </html>
