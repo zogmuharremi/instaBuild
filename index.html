@@ -5,153 +5,163 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>instaBuild — The Future of Construction</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
-      --purple: #533afd; --hover: #4434d4; --plight: #b9b9f9;
-      --navy: #061b31; --slate: #64748d; --label: #273951; --border: #e5edf5;
-      --dark: #1c1e54; --white: #fff; --magenta: #f96bee;
-      --shadow: rgba(50,50,93,0.25); --shadow2: rgba(0,0,0,0.1);
+      --green: #41ab5d; --green-h: #238b45; --green-l: #c7e9c0; --green-ghost: rgba(65,171,93,0.07);
+      --green-dark: #005a32; --green-light-bg: #edf8e9;
+      --navy: #0a1628; --slate: #5b6e84; --label: #1e3a52; --border: #d4e4da;
+      --white: #fff;
+      --shadow: 0 20px 50px rgba(10,22,40,0.10);
+      --shadow-lg: 0 32px 60px rgba(10,22,40,0.14);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--slate);background:var(--white);font-weight:300;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--slate);background:var(--white);font-weight:300;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 
-    /* Nav */
-    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:all .3s}
-    nav.scrolled{border-bottom-color:var(--border);box-shadow:0 1px 20px rgba(0,0,0,.05)}
-    .logo{font-size:22px;font-weight:600;color:var(--navy);letter-spacing:-.22px;display:flex;align-items:center;gap:10px;text-decoration:none}
-    .logo .lm{width:36px;height:36px;background:var(--purple);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:17px}
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(10,22,40,0.94);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06);transition:all .3s}
+    nav.scrolled{box-shadow:0 2px 30px rgba(0,0,0,0.25)}
+    .logo{font-size:22px;font-weight:600;color:var(--white);letter-spacing:-.3px;display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo .lm{width:36px;height:36px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#0a1628;font-weight:700;font-size:17px}
     .nav-r{display:flex;align-items:center;gap:28px}
-    .nav-r a{text-decoration:none;color:var(--navy);font-size:13px;font-weight:500;transition:color .2s;position:relative}
-    .nav-r a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--purple);transition:width .2s;border-radius:2px}
-    .nav-r a:hover,.nav-r a:hover::after{color:var(--purple);width:100%}
-    .btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:6px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s;gap:6px}
-    .btn-p{background:var(--purple);color:var(--white)}.btn-p:hover{background:var(--hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(83,58,253,.35)}
-    .btn-gh{background:transparent;color:var(--purple);border:1.5px solid var(--plight)}.btn-gh:hover{background:rgba(83,58,253,.04)}
-    .btn-w{background:var(--white);color:var(--purple);font-weight:600}.btn-w:hover{background:#f4f0ff;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-    .btn-ow{background:transparent;color:white;border:1.5px solid rgba(255,255,255,.4)}.btn-ow:hover{background:rgba(255,255,255,.08)}
+    .nav-r a{text-decoration:none;color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;transition:color .2s;position:relative}
+    .nav-r a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--green);transition:width .2s;border-radius:2px}
+    .nav-r a:hover,.nav-r a:hover::after{color:var(--green);width:100%}
+    .btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:6px;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s;gap:6px;font-family:inherit}
+    .btn-p{background:var(--green);color:#0a1628;font-weight:600}.btn-p:hover{background:var(--green-h);transform:translateY(-1px);box-shadow:0 4px 18px rgba(65,171,93,.3)}
+    .btn-w{background:var(--white);color:#0a1628;font-weight:600}.btn-w:hover{background:var(--green-light-bg);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.08)}
+    .btn-ow{background:transparent;color:white;border:1.5px solid rgba(255,255,255,.35)}.btn-ow:hover{background:rgba(255,255,255,.06)}
     .ham{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px}
-    .ham span{width:24px;height:2px;background:var(--navy);border-radius:2px;transition:all .3s}
+    .ham span{width:24px;height:2px;background:white;border-radius:2px;transition:all .3s}
     .ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
     .ham.open span:nth-child(2){opacity:0}
     .ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
 
-    /* Hero */
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
     .hero-bg{position:absolute;inset:0;background:url('images/signature-home-1.webp') center/cover no-repeat;z-index:0}
-    .hero-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(6,27,49,.85),rgba(28,30,84,.7),rgba(6,27,49,.88));z-index:1}
-    .hero-c{position:relative;z-index:2;max-width:720px;padding:120px 48px 80px}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.9);font-size:13px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:28px;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px)}
-    .hero-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .hero h1{font-size:clamp(36px,7vw,66px);font-weight:300;color:var(--white);line-height:1.04;letter-spacing:-1.8px;margin-bottom:22px}
-    .hero h1 span{background:linear-gradient(135deg,#b9b9f9,#f96bee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .hero p{font-size:18px;font-weight:300;color:rgba(255,255,255,.7);line-height:1.6;max-width:520px;margin-bottom:36px}
+    .hero-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,22,40,.88),rgba(10,22,40,.72),rgba(10,22,40,.9));z-index:1}
+    .hero-c{position:relative;z-index:2;max-width:700px;padding:120px 48px 80px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(65,171,93,.14);color:var(--green);font-size:13px;font-weight:500;padding:6px 16px;border-radius:20px;margin-bottom:28px;border:1px solid rgba(65,171,93,.22)}
+    .hero-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    .hero h1{font-size:clamp(36px,7vw,64px);font-weight:300;color:var(--white);line-height:1.05;letter-spacing:-1.5px;margin-bottom:22px}
+    .hero h1 span{color:var(--green)}
+    .hero p{font-size:18px;font-weight:300;color:rgba(255,255,255,0.62);line-height:1.6;max-width:520px;margin-bottom:36px}
     .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
 
-    /* Sections */
     .sec{max-width:1120px;margin:0 auto;padding:100px 48px}
-    .sec-alt{background:#f8f9fc;padding:100px 0}
-    .sec-dark{background:var(--dark);padding:100px 0;color:white}
+    .sec-alt{background:var(--green-light-bg);padding:100px 0}
     .sec-inner{max-width:1120px;margin:0 auto;padding:0 48px}
     .sec-hdr{text-align:center;margin-bottom:64px}
-    .sec-tag{display:inline-block;font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
-    .sec-dark .sec-tag{color:rgba(255,255,255,.5)}
-    .sec-hdr h2{font-size:clamp(26px,4vw,38px);font-weight:300;color:var(--navy);letter-spacing:-.7px;line-height:1.15;margin-bottom:14px}
-    .sec-dark .sec-hdr h2,.sec-dark .sec-hdr p{color:var(--white)}
-    .sec-dark .sec-hdr p{color:rgba(255,255,255,.55)}
+    .sec-tag{display:inline-block;font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:14px}
+    .sec-hdr h2{font-size:clamp(26px,4vw,36px);font-weight:300;color:var(--navy);letter-spacing:-.6px;line-height:1.15;margin-bottom:14px}
     .sec-hdr p{font-size:17px;font-weight:300;color:var(--slate);max-width:560px;margin:0 auto}
 
-    /* Split */
     .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-    .split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:12px;box-shadow:var(--shadow) 0px 40px 55px -30px,var(--shadow2) 0px 20px 38px -18px}
+    .split-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:12px;box-shadow:var(--shadow)}
     .split-txt h3{font-size:28px;font-weight:300;color:var(--navy);letter-spacing:-.5px;margin-bottom:18px}
     .split-txt p{font-size:15px;font-weight:300;color:var(--slate);line-height:1.7;margin-bottom:16px}
 
-    /* Cards */
     .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
     .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:32px 28px;transition:all .25s}
-    .card:hover{box-shadow:var(--shadow) 0px 32px 50px -32px,var(--shadow2) 0px 20px 38px -18px;transform:translateY(-3px)}
-    .card-icon{width:52px;height:52px;background:rgba(83,58,253,.07);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+    .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:transparent}
+    .card-icon{width:48px;height:48px;background:var(--green-ghost);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
     .card h3{font-size:18px;font-weight:500;color:var(--navy);margin-bottom:8px}
     .card p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.55}
 
-    /* Service cards */
     .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
-    .svc-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-    .svc-card:hover{transform:translateY(-5px);box-shadow:var(--shadow) 0px 36px 52px -30px,var(--shadow2) 0px 22px 40px -18px}
+    .svc-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+    .svc-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
     .svc-img{height:220px;background-size:cover;background-position:center;position:relative;transition:transform .4s}
     .svc-card:hover .svc-img{transform:scale(1.04)}
-    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);color:var(--purple);font-size:10px;font-weight:600;padding:4px 12px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+    .svc-tag{position:absolute;top:14px;left:14px;background:rgba(10,22,40,.82);backdrop-filter:blur(8px);color:var(--green);font-size:10px;font-weight:600;padding:4px 12px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
     .svc-body{padding:24px}
     .svc-body h3{font-size:19px;font-weight:400;color:var(--navy);letter-spacing:-.3px;margin-bottom:6px}
     .svc-body p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.5}
-    .svc-features{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-    .svc-feat{font-size:11px;font-weight:500;color:var(--purple);background:rgba(83,58,253,.06);padding:3px 10px;border-radius:4px}
+    .svc-features{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .svc-feat{font-size:11px;font-weight:500;color:var(--green);background:var(--green-ghost);padding:3px 10px;border-radius:4px}
 
-    /* Why grid */
     .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
     .why-item{display:flex;gap:16px}
-    .why-icon{flex-shrink:0;width:44px;height:44px;background:rgba(83,58,253,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--purple)}
+    .why-icon{flex-shrink:0;width:44px;height:44px;background:var(--green-ghost);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--green)}
     .why-txt h3{font-size:17px;font-weight:500;color:var(--navy);margin-bottom:4px}
     .why-txt p{font-size:13px;font-weight:300;color:var(--slate);line-height:1.5}
 
-    /* Process */
     .process-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;max-width:900px;margin:0 auto}
     .ps{text-align:center;padding:24px 16px;position:relative;z-index:1}
-    .ps-num{width:44px;height:44px;background:var(--purple);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;margin:0 auto 14px}
+    .ps-num{width:44px;height:44px;background:var(--green);color:#0a1628;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;margin:0 auto 14px}
     .ps h3{font-size:15px;font-weight:500;color:var(--navy);margin-bottom:4px}
     .ps p{font-size:11px;font-weight:300;color:var(--slate);line-height:1.4}
-    .process-line{position:absolute;top:46px;left:calc(10% + 44px);width:calc(80% - 44px);height:2px;background:var(--plight);z-index:0}
+    .process-line{position:absolute;top:46px;left:calc(10% + 44px);width:calc(80% - 44px);height:2px;background:var(--green-l);z-index:0}
 
-    /* Form */
-    .form-wrap{max-width:600px;margin:0 auto}
-    .form-group{margin-bottom:20px}
+    .form-wrap{max-width:580px;margin:0 auto}
+    .form-group{margin-bottom:18px}
     .form-group label{display:block;font-size:13px;font-weight:500;color:var(--label);margin-bottom:6px}
     .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-size:15px;font-family:inherit;font-weight:300;color:var(--navy);transition:border .2s;background:var(--white);resize:vertical}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(83,58,253,.1)}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(65,171,93,.1)}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .form-status{display:none;padding:14px 18px;border-radius:6px;font-size:14px;font-weight:400;margin-bottom:20px;text-align:center}
-    .form-status.success{display:block;background:rgba(21,190,83,.12);color:#108c3d;border:1px solid rgba(21,190,83,.3)}
-    .form-status.error{display:block;background:rgba(234,34,97,.1);color:#c01a50;border:1px solid rgba(234,34,97,.3)}
+    .form-status.success{display:block;background:rgba(65,171,93,.12);color:var(--green-h);border:1px solid rgba(65,171,93,.25)}
+    .form-status.error{display:block;background:rgba(239,68,68,.08);color:#b91c1c;border:1px solid rgba(239,68,68,.2)}
 
-    /* CTA */
     .cta-bg{position:relative;padding:120px 48px;text-align:center;overflow:hidden;background:url('images/popup-exterior-night-tablet.webp') center/cover no-repeat}
-    .cta-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(28,30,84,.94),rgba(6,27,49,.9));z-index:0}
+    .cta-ol{position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,22,40,.94),rgba(10,22,40,.88));z-index:0}
     .cta-c{position:relative;z-index:1;max-width:600px;margin:0 auto}
-    .cta-c h2{font-size:clamp(28px,4vw,40px);font-weight:300;color:var(--white);letter-spacing:-.8px;line-height:1.15;margin-bottom:14px}
-    .cta-c p{font-size:17px;font-weight:300;color:rgba(255,255,255,.6);margin-bottom:32px}
+    .cta-c h2{font-size:clamp(28px,4vw,38px);font-weight:300;color:var(--white);letter-spacing:-.7px;line-height:1.15;margin-bottom:14px}
+    .cta-c p{font-size:17px;font-weight:300;color:rgba(255,255,255,.55);margin-bottom:32px}
     .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 
-    /* Footer */
-    footer{background:#030c16;padding:64px 48px 32px;color:rgba(255,255,255,.45);font-size:13px;font-weight:300}
+    footer{background:var(--green-dark);padding:64px 48px 32px;color:rgba(255,255,255,.45);font-size:13px;font-weight:300}
     .ft-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
     .ft h4{color:var(--white);font-size:13px;font-weight:500;margin-bottom:18px}
-    .ft a{display:block;color:rgba(255,255,255,.4);text-decoration:none;font-size:12px;margin-bottom:9px;transition:color .2s}
-    .ft a:hover{color:var(--white)}
+    .ft a{display:block;color:rgba(255,255,255,.35);text-decoration:none;font-size:12px;margin-bottom:9px;transition:color .2s}
+    .ft a:hover{color:var(--green)}
     .ft p{font-size:12px;line-height:1.7}
     .ft-bot{max-width:1120px;margin:0 auto;border-top:1px solid rgba(255,255,255,.07);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 
-    /* Gallery row */
     .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
-    .gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:8px;transition:transform .3s;cursor:pointer}
-    .gallery-item:hover{transform:scale(1.04)}
+    .gallery-item{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:8px;transition:transform .35s;cursor:pointer}
+    .gallery-item:hover{transform:scale(1.03)}
 
-    /* Fade */
+    /* Map */
+    .map-section{background:var(--navy);padding:100px 0;color:white}
+    .map-section .sec-tag{color:var(--green-l)}
+    .map-section .sec-hdr h2{color:var(--white)}
+    .map-section .sec-hdr p{color:rgba(255,255,255,0.5)}
+    .map-wrap{max-width:1120px;margin:0 auto;padding:0 48px}
+    .map-container{width:100%;height:520px;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.4);position:relative;background:#1a2d3d}
+    .map-container .leaflet-container{width:100%;height:100%;background:#1a2d3d}
+    .map-popup{font-family:'Source Sans 3',system-ui,sans-serif;font-size:13px;line-height:1.5;min-width:240px;padding:4px}
+    .map-popup h3{font-size:16px;font-weight:600;color:#0a1628;margin-bottom:2px}
+    .map-popup .mp-status{display:inline-block;font-size:10px;font-weight:600;padding:3px 10px;border-radius:3px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+    .mp-status.active{background:var(--green-light-bg);color:var(--green-h)}
+    .mp-status.expanding{background:#fef3c7;color:#92400e}
+    .mp-status.planned{background:#e0e7ff;color:#3730a3}
+    .map-popup p{font-size:12px;color:#64748d;margin:0 0 8px 0}
+    .map-popup .mp-projects{margin-top:8px}
+    .map-popup .mp-projects div{font-size:12px;color:#1e3a52;padding:2px 0;border-bottom:1px solid #eef2f5}
+    .map-popup .mp-projects div:last-child{border-bottom:none}
+    .map-legend{position:absolute;bottom:24px;left:24px;background:rgba(10,22,40,0.92);backdrop-filter:blur(12px);border-radius:8px;padding:14px 18px;z-index:1000;font-size:11px;font-weight:500;display:flex;gap:18px;border:1px solid rgba(255,255,255,0.08)}
+    .map-legend-item{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,0.75)}
+    .map-legend-dot{width:10px;height:10px;border-radius:50%}
+    .map-legend-dot.active{background:var(--green);box-shadow:0 0 0 3px rgba(65,171,93,.25)}
+    .map-legend-dot.expanding{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+    .map-legend-dot.planned{background:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.25)}
+
     .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
     .fade-in.visible{opacity:1;transform:translateY(0)}
 
-    /* Stats bar */
-    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:8px;overflow:hidden;max-width:900px;margin:-30px auto 60px;position:relative;z-index:10;box-shadow:var(--shadow) 0px 30px 45px -30px,var(--shadow2) 0px 18px 36px -18px}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:8px;overflow:hidden;max-width:900px;margin:-30px auto 60px;position:relative;z-index:10;box-shadow:var(--shadow)}
     .stat{background:var(--white);padding:28px 20px;text-align:center}
     .stat-val{font-size:30px;font-weight:300;color:var(--navy);letter-spacing:-.5px;line-height:1.1}
     .stat-lbl{font-size:11px;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
 
     @media(max-width:900px){
-      nav{padding:14px 24px}.nav-r{display:none}.nav-r.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:24px;gap:16px;border-bottom:1px solid var(--border)}.ham{display:flex}
+      nav{padding:14px 24px}.nav-r{display:none}.nav-r.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(10,22,40,.98);padding:24px;gap:16px;border-bottom:1px solid rgba(255,255,255,.06)}.ham{display:flex}
       .hero-c{padding:100px 24px 60px}.split{grid-template-columns:1fr;gap:36px}
-      .sec,.sec-inner{padding:64px 24px}.process-steps{grid-template-columns:1fr}.process-line{display:none}
+      .sec,.sec-inner,.map-wrap{padding:64px 24px}.process-steps{grid-template-columns:1fr}.process-line{display:none}
       .stats-bar{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:repeat(2,1fr)}
+      .map-container{height:380px}
       .ft-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}
     }
     @media(max-width:500px){
@@ -164,7 +174,7 @@
 
 <nav id="nav"><a href="/" class="logo"><div class="lm">iB</div>instaBuild</a>
   <div class="nav-r" id="nr">
-    <a href="#about">About</a><a href="#services">Solutions</a><a href="#why">Why Us</a><a href="#process">Process</a><a href="#contact">Contact</a>
+    <a href="#about">About</a><a href="#services">Solutions</a><a href="#map">Global</a><a href="#why">Why Us</a><a href="#process">Process</a><a href="#contact">Contact</a>
     <a href="#contact" class="btn btn-p start-project-btn">Get Started</a>
   </div>
   <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -186,7 +196,6 @@
   <div class="stat"><div class="stat-val">98%</div><div class="stat-lbl">Client Satisfaction</div></div>
 </div>
 
-<!-- About -->
 <section class="sec" id="about">
   <div class="sec-hdr fade-in"><div class="sec-tag">About Us</div><h2>Reinventing construction from the ground up</h2><p>We combine cutting-edge modular technology with world-class design to build structures that are faster, greener, and more cost-effective.</p></div>
   <div class="split">
@@ -199,7 +208,6 @@
   </div>
 </section>
 
-<!-- Mission + Vision -->
 <div class="sec-alt"><div class="sec-inner">
   <div class="split">
     <div class="fade-in">
@@ -215,7 +223,6 @@
   </div>
 </div></div>
 
-<!-- Core Values -->
 <section class="sec">
   <div class="sec-hdr fade-in"><div class="sec-tag">Core Values</div><h2>What drives us</h2></div>
   <div class="grid3">
@@ -228,7 +235,6 @@
   </div>
 </section>
 
-<!-- Services -->
 <section class="sec-alt" id="services"><div class="sec-inner">
   <div class="sec-hdr fade-in"><div class="sec-tag">Our Solutions</div><h2>What we build</h2><p>Scalable, modular solutions for every need — from pop-up communities to luxury custom homes.</p></div>
   <div class="svc-grid">
@@ -241,7 +247,6 @@
   </div>
 </div></section>
 
-<!-- Gallery -->
 <section class="sec"><div class="sec-hdr fade-in"><div class="sec-tag">Our Work</div><h2>Projects we're proud of</h2></div>
   <div class="gallery">
     <div class="gallery-item fade-in" style="background-image:url('images/senior-solutions (1).webp')"></div>
@@ -251,7 +256,20 @@
   </div>
 </section>
 
-<!-- Why Us -->
+<!-- World Map -->
+<div class="map-section" id="map">
+  <div class="map-wrap">
+    <div class="sec-hdr fade-in"><div class="sec-tag">Global Reach</div><h2>Where we build</h2><p>Click any country marker to explore our active projects, expansion plans, and service availability worldwide.</p></div>
+    <div class="map-container fade-in" id="mapContainer">
+      <div class="map-legend">
+        <div class="map-legend-item"><span class="map-legend-dot active"></span> Active</div>
+        <div class="map-legend-item"><span class="map-legend-dot expanding"></span> Expanding</div>
+        <div class="map-legend-item"><span class="map-legend-dot planned"></span> Planned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <section class="sec-alt" id="why"><div class="sec-inner">
   <div class="sec-hdr fade-in"><div class="sec-tag">Why Choose instaBuild</div><h2>The instaBuild advantage</h2></div>
   <div class="why-grid">
@@ -264,7 +282,6 @@
   </div>
 </div></section>
 
-<!-- Process -->
 <section class="sec" id="process">
   <div class="sec-hdr fade-in"><div class="sec-tag">Our Process</div><h2>From concept to completion</h2></div>
   <div style="position:relative;max-width:900px;margin:0 auto">
@@ -279,7 +296,6 @@
   </div>
 </section>
 
-<!-- Sustainability + Innovation -->
 <div class="sec-alt"><div class="sec-inner">
   <div class="sec-hdr fade-in"><div class="sec-tag">Sustainability & Innovation</div><h2>Building greener, building smarter</h2></div>
   <div class="split" style="margin-bottom:64px">
@@ -302,7 +318,6 @@
   </div>
 </div></div>
 
-<!-- Contact -->
 <section class="sec" id="contact">
   <div class="sec-hdr fade-in"><div class="sec-tag">Get Started</div><h2>Ready to build?</h2><p>Tell us about your project. We'll get back to you within 24 hours.</p></div>
   <div class="form-wrap fade-in">
@@ -333,7 +348,6 @@
   </div>
 </section>
 
-<!-- CTA -->
 <div class="cta-bg"><div class="cta-ol"></div><div class="cta-c fade-in">
   <h2>Your project deserves<br>the InstaBuilt advantage</h2>
   <p>POP-UP in 30 days. Custom builds in 90. Sustainable, precise, and turnkey — anywhere in Europe or North America.</p>
@@ -343,63 +357,68 @@
 <footer><div class="ft-grid">
   <div class="ft"><h4>instaBuild</h4><p>Global leader in modular and offsite construction. POP-UP communities, multi-family housing, commercial buildings, and custom projects — delivered faster, smarter, and more sustainably.</p></div>
   <div class="ft"><h4>Solutions</h4><a href="#services">POP-UP Communities</a><a href="#services">Multi-Family Housing</a><a href="#services">Commercial Buildings</a><a href="#services">Senior & Student Housing</a><a href="#services">Custom Projects</a></div>
-  <div class="ft"><h4>Company</h4><a href="#about">About Us</a><a href="#">Innovation Center</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Events</a></div>
-  <div class="ft"><h4>Contact</h4><a href="#">contact@instabuild.com</a><a href="#">+1 (555) 123-4567</a><p style="margin-top:8px">Europe: Prishtina, Kosovo<br>US: Dover, DE 19901</p></div>
+  <div class="ft"><h4>Company</h4><a href="#about">About Us</a><a href="#map">Global Reach</a><a href="#">Careers</a><a href="#">Blog</a></div>
+  <div class="ft"><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><a href="#">+1 (555) 123-4567</a><p style="margin-top:8px">Europe: Prishtina, Kosovo<br>US: Dover, DE 19901</p></div>
 </div>
 <div class="ft-bot"><span>&copy; 2026 instaBuild. All rights reserved.</span><span>Building the future, faster.</span></div></footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Nav scroll
+// Nav
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20));
-// Mobile menu
 const h=document.getElementById('ham'),n=document.getElementById('nr');
 h.addEventListener('click',()=>{h.classList.toggle('open');n.classList.toggle('open')});
 document.querySelectorAll('.nav-r a').forEach(a=>a.addEventListener('click',()=>{h.classList.remove('open');n.classList.remove('open')}));
-// Fade animations
-const o=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+// Fade
+const o=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.fade-in').forEach(e=>o.observe(e));
 setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('visible')}),100);
+// Start Project
+document.querySelectorAll('.start-project-btn').forEach(b=>b.addEventListener('click',function(e){e.preventDefault();const t=document.getElementById('contact');if(t){t.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{const ni=document.getElementById('name');if(ni)ni.focus()},600)}}));
+// Form
+document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button[type=submit]');s.className='form-status';s.textContent='';b.disabled=true;b.textContent='Sending...';try{const r=await fetch('/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'success':'error');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status error';s.textContent='✗ Network error. Please try again.'}b.disabled=false;b.textContent='Send Inquiry'});
 
-// Start Project buttons — smooth scroll + auto-focus
-document.querySelectorAll('.start-project-btn').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.getElementById('contact');
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => {
-        const nameInput = document.getElementById('name');
-        if (nameInput) nameInput.focus();
-      }, 600);
-    }
+// ── World Map ──
+(function(){
+  const c=document.getElementById('mapContainer');if(!c)return;
+  const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([42,12],4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+
+  const countries=[
+    {name:'Kosovo',lat:42.6,lng:21.0,status:'active',desc:'Global Headquarters & Innovation Center. Manufacturing hub for all European operations.',projects:['POP-UP Community — Prishtina (104 units)','Innovation Center — Prishtina-Mitrovica Highway','Multi-Family Complex — Prishtina (64 units)']},
+    {name:'United States',lat:39.5,lng:-98,status:'active',desc:'North American headquarters in Dover, Delaware. Active across 8 states with 120+ projects completed.',projects:['Workforce Housing — Dover, DE (200 units)','POP-UP Community — Austin, TX (52 units)','Senior Living — Phoenix, AZ (88 units)','Commercial Tower — Miami, FL']},
+    {name:'Austria',lat:47.5,lng:14.5,status:'active',desc:'First EU POP-UP Community deployed in under 30 days. Rapidly growing market with strong government partnerships.',projects:['POP-UP Community — Vienna Region (28 units)','Student Housing — Graz (42 units)']},
+    {name:'Switzerland',lat:46.8,lng:8.2,status:'active',desc:'Featured at House of Kosova — Davos. Active partnerships with Swiss developers for premium modular projects.',projects:['Signature Home — Davos Region','POP-UP Resort Concept — Swiss Alps']},
+    {name:'Germany',lat:51.0,lng:10.5,status:'expanding',desc:'Major expansion underway. First projects breaking ground in 2026 across Berlin and Munich.',projects:['Multi-Family — Berlin (planned, 86 units)','Commercial — Munich (planned)']},
+    {name:'United Kingdom',lat:54.5,lng:-3.5,status:'expanding',desc:'Post-Brexit market entry in progress. Active partnership discussions with London-based developers.',projects:['Multi-Family — London (planned, 120 units)']},
+    {name:'Netherlands',lat:52.1,lng:5.3,status:'expanding',desc:'Strong demand for sustainable modular housing. Pilot project in negotiation for Amsterdam region.',projects:['POP-UP Pilot — Amsterdam (planned)']},
+    {name:'France',lat:46.6,lng:2.2,status:'planned',desc:'Planning phase complete. Targeting Paris and Lyon for 2027 launch. Regulatory framework aligned.',projects:['Planning — Paris Region (2027)','Planning — Lyon (2027)']},
+    {name:'Italy',lat:42.0,lng:12.5,status:'planned',desc:'Market assessment underway. Modular construction regulatory approval in progress for Milan region.',projects:['Planning — Milan Region (2027)']},
+    {name:'Canada',lat:56.0,lng:-106,status:'planned',desc:'North American expansion. Exploring Toronto and Vancouver markets with local development partners.',projects:['Planning — Toronto (2027)','Planning — Vancouver (2027)']},
+    {name:'UAE',lat:24.0,lng:54.0,status:'planned',desc:'Middle East market exploration. Modular construction ideal for rapid urban development in Dubai.',projects:['Planning — Dubai (2027)']},
+    {name:'Belgium',lat:50.5,lng:4.5,status:'planned',desc:'EU expansion target aligned with EU Green Deal construction standards. Brussels region prioritized.',projects:['Planning — Brussels Region (2028)']}
+  ];
+
+  const colors={active:'#41ab5d',expanding:'#f59e0b',planned:'#6366f1'};
+  const labels={active:'✓ Active — Service Available',expanding:'↗ Expanding 2026',planned:'◉ Planned 2027+'};
+
+  countries.forEach(p=>{
+    const icon=L.divIcon({className:'',html:`<div style="width:14px;height:14px;background:${colors[p.status]};border-radius:50%;border:2.5px solid white;box-shadow:0 0 0 4px ${colors[p.status]}33,0 2px 8px rgba(0,0,0,.3)"></div>`,iconSize:[14,14],iconAnchor:[7,7]});
+    const m=L.marker([p.lat,p.lng],{icon}).addTo(map);
+    const projHtml=p.projects.map(pr=>`<div>• ${pr}</div>`).join('');
+    m.bindPopup(`<div class="map-popup"><h3>${p.name}</h3><span class="mp-status ${p.status}">${labels[p.status]}</span><p>${p.desc}</p><div class="mp-projects"><strong style="font-size:12px;color:#0a1628">Projects</strong>${projHtml}</div>${p.status!=='active'?`<p style="margin-top:10px;font-size:11px"><a href="#contact" style="color:#41ab5d;font-weight:500">Contact us →</a> for early access in ${p.name}.</p>`:''}</div>`,{maxWidth:300,className:''});
   });
-});
 
-// Contact form
-document.getElementById('contactForm').addEventListener('submit',async function(e){
-  e.preventDefault();
-  const status=document.getElementById('formStatus'),btn=this.querySelector('button[type=submit]');
-  status.className='form-status';status.textContent='';
-  btn.disabled=true;btn.textContent='Sending...';
+  // Click on map background opens nearest marker
+  map.on('click',function(e){
+    let best=null,bestD=Infinity;
+    countries.forEach(p=>{const d=map.distance(e.latlng,[p.lat,p.lng]);if(d<bestD){bestD=d;best=p;}});
+    if(bestD<1200000)map.eachLayer(l=>{if(l.getLatLng&&l.getLatLng().lat===best.lat&&l.getLatLng().lng===best.lng)l.openPopup();});
+  });
 
-  const formData=new FormData(this);
-  try{
-    const res=await fetch('/contact',{method:'POST',body:formData});
-    const data=await res.json();
-    if(data.success){
-      status.className='form-status success';
-      status.textContent='✓ '+data.message;
-      this.reset();
-    }else{
-      status.className='form-status error';
-      status.textContent='✗ '+data.error;
-    }
-  }catch(err){
-    status.className='form-status error';
-    status.textContent='✗ Network error. Please try again.';
-  }
-  btn.disabled=false;btn.textContent='Send Inquiry';
-});
+  const ro=new ResizeObserver(()=>map.invalidateSize());ro.observe(c);
+  const io=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){map.invalidateSize();io.disconnect();}});});io.observe(c);
+})();
 </script>
 </body>
 </html>
