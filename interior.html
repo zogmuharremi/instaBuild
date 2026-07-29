@@ -7,74 +7,90 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <style>
-    :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4;--card:#161b26}
+    :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',sans-serif;background:var(--n);color:#c4ccd8;overflow:hidden;height:100vh}
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
-    .topbar .logo{font-size:17px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:8px;text-decoration:none}.topbar .logo em{font-style:normal;color:var(--g)}
-    .topbar .logo-mark{width:28px;height:28px;background:var(--g);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:12px}
-    .topbar a{color:var(--s);font-size:13px;text-decoration:none;font-weight:500;transition:color .2s;display:flex;align-items:center;gap:6px}.topbar a:hover{color:var(--w)}
-    .topbar .btn{background:var(--g);color:var(--n);padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:.2s;text-decoration:none}.topbar .btn:hover{background:var(--gd)}
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:10px 20px;display:flex;align-items:center;justify-content:space-between}
+    .topbar .logo{font-size:16px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:8px;text-decoration:none}.topbar .logo em{font-style:normal;color:var(--g)}
+    .topbar .logo-mark{width:26px;height:26px;background:var(--g);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:11px}
+    .topbar a{color:var(--s);font-size:12px;text-decoration:none;font-weight:500;transition:color .2s;display:flex;align-items:center;gap:5px}.topbar a:hover{color:var(--w)}
+    .topbar .btn{background:var(--g);color:var(--n);padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:.2s;text-decoration:none}.topbar .btn:hover{background:var(--gd)}
     #canvas3d{display:block;width:100%;height:100vh;cursor:grab}#canvas3d:active{cursor:grabbing}
-    .panel{position:fixed;left:16px;top:80px;bottom:16px;z-index:50;background:rgba(17,22,32,.95);border:1px solid var(--b);border-radius:14px;padding:16px 14px;overflow-y:auto;width:280px;display:flex;flex-direction:column;gap:12px}
-    .panel h3{font-size:12px;font-weight:700;color:var(--w);margin-bottom:2px}
-    .group{margin-bottom:10px}
-    .glabel{font-size:8px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px}
-    .opts{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-    .opt{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:5px;cursor:pointer;text-align:center;transition:.2s}.opt:hover{border-color:rgba(255,255,255,.15)}.opt.active{border-color:var(--g);background:rgba(46,204,113,.06)}
-    .opt .sw{width:100%;height:16px;border-radius:3px;margin-bottom:2px}.opt .lb{font-size:8px;color:var(--s)}.opt.active .lb{color:var(--g)}
-    .opt.flex{display:flex;align-items:center;gap:5px;padding:5px 8px;text-align:left}
-    .price-box{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:12px;text-align:center;margin-top:8px}
-    .price-box .pv{font-size:24px;font-weight:700;color:var(--g)}.price-box .pl{font-size:8px;color:var(--s);margin-top:2px}
-    .hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:11px;pointer-events:none;z-index:40}
-    @media(max-width:900px){.panel{width:240px;left:8px;top:70px}.panel h3{font-size:11px}}
-    @media(max-width:600px){.panel{display:none}.topbar{padding:10px 14px}}
+    .panel{position:fixed;left:14px;top:72px;bottom:14px;z-index:50;background:rgba(17,22,32,.96);border:1px solid var(--b);border-radius:12px;padding:14px 12px;overflow-y:auto;width:290px;display:flex;flex-direction:column;gap:10px}
+    .panel h3{font-size:11px;font-weight:700;color:var(--w)}
+    .group{margin-bottom:8px}.glabel{font-size:8px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
+    .opts{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+    .opt{background:var(--n3);border:1.5px solid var(--b);border-radius:5px;padding:4px;cursor:pointer;text-align:center;transition:.2s}.opt:hover{border-color:rgba(255,255,255,.15)}.opt.active{border-color:var(--g);background:rgba(46,204,113,.06)}
+    .opt .sw{width:100%;height:14px;border-radius:2px;margin-bottom:1px}.opt .lb{font-size:7.5px;color:var(--s);line-height:1.2}.opt.active .lb{color:var(--g)}
+    .opt.flex{display:flex;align-items:center;gap:5px;padding:4px 7px;text-align:left}
+    .opt.flex .fi{font-size:14px;flex-shrink:0}
+    .price-box{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:10px;text-align:center;margin-top:6px}
+    .price-box .pv{font-size:22px;font-weight:700;color:var(--g)}.price-box .pl{font-size:7.5px;color:var(--s);margin-top:1px}
+    .hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.12);font-size:10px;pointer-events:none;z-index:40}
+    .room-tabs{display:flex;gap:6px;margin-bottom:8px}
+    .room-tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:6px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.2s}
+    .room-tab:hover{color:var(--w)}.room-tab.active{background:var(--g);border-color:var(--g);color:var(--n)}
+    @media(max-width:900px){.panel{width:240px;left:6px;top:64px}.panel h3{font-size:10px}}
+    @media(max-width:600px){.panel{display:none}.topbar{padding:8px 12px}}
   </style>
 </head>
 <body>
 
 <div class="topbar">
-  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em> — Interior Designer</a>
-  <div style="display:flex;gap:12px;align-items:center">
+  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em> — Interior</a>
+  <div style="display:flex;gap:8px;align-items:center">
     <button class="btn" id="resetBtn">↺ Reset</button>
-    <a href="index.html#builder" class="btn" style="background:transparent;border:1px solid var(--b);color:var(--w)">← Back to Exterior</a>
+    <a href="index.html#builder" class="btn" style="background:transparent;border:1px solid var(--b);color:var(--w)">← Exterior</a>
   </div>
 </div>
 
 <canvas id="canvas3d"></canvas>
-<div class="hint">🖱 Click + drag to look around · WASD to walk · Scroll to zoom · Space to go up</div>
+<div class="hint">Click to lock mouse · WASD to walk · Mouse to look · Space ↑ Shift ↓</div>
 
 <div class="panel">
-  <h3>🎨 Interior Design</h3>
-  <div class="group"><div class="glabel">Wall Color</div><div class="opts" id="wallColor">
+  <h3>🎨 Interior Studio</h3>
+  <div class="room-tabs">
+    <button class="room-tab active" data-room="living">Living</button>
+    <button class="room-tab" data-room="kitchen">Kitchen</button>
+    <button class="room-tab" data-room="bedroom">Bedroom</button>
+  </div>
+  <div class="group"><div class="glabel">Wall Color (7)</div><div class="opts" id="wallColor">
     <div class="opt active" data-wall="white" data-price="0"><div class="sw" style="background:#f5f5f0"></div><div class="lb">White</div></div>
+    <div class="opt" data-wall="cream" data-price="600"><div class="sw" style="background:#f0e8d8"></div><div class="lb">Cream</div></div>
     <div class="opt" data-wall="beige" data-price="800"><div class="sw" style="background:#ede0d0"></div><div class="lb">Beige</div></div>
     <div class="opt" data-wall="gray" data-price="600"><div class="sw" style="background:#d0d4d8"></div><div class="lb">Gray</div></div>
+    <div class="opt" data-wall="sage" data-price="1000"><div class="sw" style="background:#c8d8c0"></div><div class="lb">Sage</div></div>
     <div class="opt" data-wall="navy" data-price="1200"><div class="sw" style="background:#2a3a52"></div><div class="lb">Navy</div></div>
+    <div class="opt" data-wall="charcoal" data-price="900"><div class="sw" style="background:#3a3e44"></div><div class="lb">Charcoal</div></div>
   </div></div>
-  <div class="group"><div class="glabel">Flooring</div><div class="opts" id="floorColor">
+  <div class="group"><div class="glabel">Flooring (6)</div><div class="opts" id="floorOpts">
     <div class="opt active" data-floor="oak" data-price="0"><div class="sw" style="background:#c4a882"></div><div class="lb">Oak</div></div>
     <div class="opt" data-floor="walnut" data-price="1800"><div class="sw" style="background:#5c3d2e"></div><div class="lb">Walnut</div></div>
+    <div class="opt" data-floor="maple" data-price="1400"><div class="sw" style="background:#d4b896"></div><div class="lb">Maple</div></div>
     <div class="opt" data-floor="marble" data-price="4200"><div class="sw" style="background:#e8e0d8"></div><div class="lb">Marble</div></div>
     <div class="opt" data-floor="tile" data-price="2500"><div class="sw" style="background:#c8c4bc"></div><div class="lb">Tile</div></div>
+    <div class="opt" data-floor="cherry" data-price="2200"><div class="sw" style="background:#8b3a3a"></div><div class="lb">Cherry</div></div>
   </div></div>
-  <div class="group"><div class="glabel">Furniture Style</div><div class="opts" id="furniture" style="grid-template-columns:1fr">
-    <div class="opt flex active" data-furniture="modern" data-price="0"><span style="font-size:14px">⬜</span><div class="lb">Modern Minimal</div></div>
-    <div class="opt flex" data-furniture="classic" data-price="3000"><span style="font-size:14px">🟫</span><div class="lb">Classic Wood</div></div>
-    <div class="opt flex" data-furniture="luxury" data-price="8000"><span style="font-size:14px">✨</span><div class="lb">Luxury Italian</div></div>
+  <div class="group"><div class="glabel">Furniture (4)</div><div class="opts" id="furniture" style="grid-template-columns:1fr">
+    <div class="opt flex active" data-furniture="modern" data-price="0"><span class="fi">⬜</span><div class="lb">Modern</div></div>
+    <div class="opt flex" data-furniture="scandi" data-price="2000"><span class="fi">🪑</span><div class="lb">Scandi +$2k</div></div>
+    <div class="opt flex" data-furniture="classic" data-price="3500"><span class="fi">🟫</span><div class="lb">Classic +$3.5k</div></div>
+    <div class="opt flex" data-furniture="luxury" data-price="8000"><span class="fi">✨</span><div class="lb">Luxury +$8k</div></div>
   </div></div>
-  <div class="group"><div class="glabel">Lighting</div><div class="opts" id="lighting" style="grid-template-columns:1fr">
-    <div class="opt flex active" data-light="warm" data-price="0"><span style="font-size:14px">💡</span><div class="lb">Warm Glow</div></div>
-    <div class="opt flex" data-light="bright" data-price="500"><span style="font-size:14px">🔆</span><div class="lb">Bright White</div></div>
-    <div class="opt flex" data-light="mood" data-price="900"><span style="font-size:14px">🕯️</span><div class="lb">Mood Ambient</div></div>
+  <div class="group"><div class="glabel">Lighting (4)</div><div class="opts" id="lighting" style="grid-template-columns:1fr">
+    <div class="opt flex active" data-light="warm" data-price="0"><span class="fi">💡</span><div class="lb">Warm</div></div>
+    <div class="opt flex" data-light="bright" data-price="500"><span class="fi">🔆</span><div class="lb">Bright +$500</div></div>
+    <div class="opt flex" data-light="natural" data-price="700"><span class="fi">☀️</span><div class="lb">Natural +$700</div></div>
+    <div class="opt flex" data-light="mood" data-price="900"><span class="fi">🕯️</span><div class="lb">Mood +$900</div></div>
   </div></div>
-  <div class="group"><div class="glabel">Add Furniture</div><div class="opts" id="extras" style="grid-template-columns:1fr">
-    <div class="opt flex" data-extra="tv" data-price="1500"><span style="font-size:14px">📺</span><div class="lb">TV Unit +$1.5k</div></div>
-    <div class="opt flex" data-extra="bookshelf" data-price="800"><span style="font-size:14px">📚</span><div class="lb">Bookshelf +$0.8k</div></div>
-    <div class="opt flex" data-extra="rug" data-price="600"><span style="font-size:14px">🟫</span><div class="lb">Area Rug +$0.6k</div></div>
+  <div class="group"><div class="glabel">Extras (4)</div><div class="opts" id="extras">
+    <div class="opt flex" data-extra="tv" data-price="1500"><span class="fi">📺</span><div class="lb">TV +$1.5k</div></div>
+    <div class="opt flex" data-extra="shelf" data-price="800"><span class="fi">📚</span><div class="lb">Shelves +$0.8k</div></div>
+    <div class="opt flex" data-extra="plants" data-price="400"><span class="fi">🪴</span><div class="lb">Plants +$400</div></div>
+    <div class="opt flex" data-extra="art" data-price="600"><span class="fi">🖼️</span><div class="lb">Art +$600</div></div>
   </div></div>
   <div class="price-box"><div class="pv" id="priceTotal">$12,000</div><div class="pl">INTERIOR PACKAGE</div></div>
-  <a href="index.html#contact" style="width:100%;background:var(--g);border:none;color:var(--n);padding:10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;display:block">Get Full Quote →</a>
+  <a href="index.html#contact" style="width:100%;background:var(--g);border:none;color:var(--n);padding:10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;display:block">Get Full Quote →</a>
 </div>
 
 <script type="module">
@@ -82,107 +98,108 @@ import*as THREE from'three';
 const canvas=document.getElementById('canvas3d');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1117');
-
-const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,40);
-camera.position.set(0,1.6,0);
-const clock=new THREE.Clock();
-const keys={};let yaw=0,pitch=0;
+const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,40);camera.position.set(0,1.6,0);
+const clock=new THREE.Clock();const keys={};
 document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();keys.space=true}});
 document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys.space=false});
+let yaw=0,pitch=0;
 canvas.addEventListener('click',()=>canvas.requestPointerLock());
-document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===canvas){document.addEventListener('mousemove',onMouse)}else{document.removeEventListener('mousemove',onMouse)}});
+document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===canvas)document.addEventListener('mousemove',onMouse);else document.removeEventListener('mousemove',onMouse)});
 function onMouse(e){yaw-=e.movementX*.002;pitch-=e.movementY*.002;pitch=Math.max(-1.4,Math.min(1.4,pitch))}
 
-scene.add(new THREE.AmbientLight('#f5e8d0',.6));
-const ceilingLight=new THREE.PointLight('#fff8e8',2,8,2);ceilingLight.position.set(0,2.6,0);ceilingLight.castShadow=true;ceilingLight.shadow.mapSize.set(512,512);scene.add(ceilingLight);
-const winLight=new THREE.DirectionalLight('#dce8f8',.8);winLight.position.set(0,1.5,2.9);scene.add(winLight);
+scene.add(new THREE.AmbientLight('#f5e8d0',.5));
+const ceilingLight=new THREE.PointLight('#fff8e8',2,10,2);ceilingLight.position.set(0,2.7,0);ceilingLight.castShadow=true;ceilingLight.shadow.mapSize.set(512,512);scene.add(ceilingLight);
+const winLight=new THREE.DirectionalLight('#dce8f8',.7);winLight.position.set(0,1.5,2.9);scene.add(winLight);
 
-// Room dimensions
-const RW=6,RD=5,RH=2.8;
-const allFurniture=[],allWalls=[];
+const RW=6,RD=5,RH=2.8;let currentRoom='living';
+const allItems=[];
 
 const matCache={};
-function wallMat(){const v=document.querySelector('#wallColor .opt.active')?.dataset.wall||'white';if(!matCache['w_'+v]){const c={white:'#f5f5f0',beige:'#ede0d0',gray:'#d0d4d8',navy:'#2a3a52'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.6,side:THREE.BackSide})}return matCache['w_'+v]}
-function floorMat(){const v=document.querySelector('#floorColor .opt.active')?.dataset.floor||'oak';if(!matCache['f_'+v]){const c={oak:'#c4a882',walnut:'#5c3d2e',marble:'#e8e0d8',tile:'#c8c4bc'};matCache['f_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='marble'?.2:v==='tile'?.3:.4})}return matCache['f_'+v]}
-function furnMat(){const v=document.querySelector('#furniture .opt.active')?.dataset.furniture||'modern';if(!matCache['fu_'+v]){const c={modern:'#e8e8e4',classic:'#6b4226',luxury:'#d4c8b8'};matCache['fu_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='luxury'?.2:.4,metalness:v==='luxury'?.1:0})}return matCache['fu_'+v]}
+function wMat(){const v=document.querySelector('#wallColor .opt.active')?.dataset.wall||'white';if(!matCache['w_'+v]){const c={white:'#f5f5f0',cream:'#f0e8d8',beige:'#ede0d0',gray:'#d0d4d8',sage:'#c8d8c0',navy:'#2a3a52',charcoal:'#3a3e44'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.6,side:THREE.BackSide})}return matCache['w_'+v]}
+function fMat(){const v=document.querySelector('#floorOpts .opt.active')?.dataset.floor||'oak';if(!matCache['f_'+v]){const c={oak:'#c4a882',walnut:'#5c3d2e',maple:'#d4b896',marble:'#e8e0d8',tile:'#c8c4bc',cherry:'#8b3a3a'};matCache['f_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='marble'?.15:v==='tile'?.25:.35})}return matCache['f_'+v]}
+function fuMat(){const v=document.querySelector('#furniture .opt.active')?.dataset.furniture||'modern';if(!matCache['fu_'+v]){const c={modern:'#e8e8e4',scandi:'#e0d8c8',classic:'#6b4226',luxury:'#d4c8b8'};matCache['fu_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='luxury'?.15:v==='scandi'?.3:.4,metalness:v==='luxury'?.08:0})}return matCache['fu_'+v]}
 
-function addF(geo,pos,rot,mat){const m=new THREE.Mesh(geo,mat);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;allFurniture.push(m);scene.add(m);return m}
-function buildRoom(){
-  allFurniture.forEach(m=>scene.remove(m));allFurniture.length=0;allWalls.forEach(m=>scene.remove(m));allWalls.length=0;
+function add(geo,pos,rot,mat){const m=new THREE.Mesh(geo,mat||fuMat());m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=true;m.receiveShadow=true;allItems.push(m);scene.add(m);return m}
+
+function clearAll(){allItems.forEach(m=>scene.remove(m));allItems.length=0}
+
+function buildRoom(room){
+  clearAll();
+  const hw=RW/2,hd=RD/2,fm=fuMat();
   // Floor
-  const fl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),floorMat());fl.rotation.x=-Math.PI/2;fl.position.y=.01;fl.receiveShadow=true;scene.add(fl);allFurniture.push(fl);
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),fMat());fl.rotation.x=-Math.PI/2;fl.position.y=.01;fl.receiveShadow=true;allItems.push(fl);scene.add(fl);
   // Ceiling
-  const cl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),new THREE.MeshStandardMaterial({color:'#f0f0ee',roughness:.5,side:THREE.DoubleSide}));cl.rotation.x=-Math.PI/2;cl.position.y=RH;scene.add(cl);allFurniture.push(cl);
-
-  // Walls
-  const hw=RW/2,hd=RD/2;
-  function makeWall(w,h,px,py,pz,ry){const g=new THREE.PlaneGeometry(w,h);const m=new THREE.Mesh(g,wallMat());m.position.set(px,py,pz);if(ry)m.rotation.y=ry;m.receiveShadow=true;allWalls.push(m);scene.add(m);return m}
-  makeWall(RW,RH,0,RH/2,-hd,0); // back
-  makeWall(RW,RH,0,RH/2,hd,Math.PI); // front
-  makeWall(RD,RH,-hw,RH/2,0,Math.PI/2); // left
-  makeWall(RD,RH,hw,RH/2,0,-Math.PI/2); // right
-
-  // Windows (cutout illusion — bright panels)
-  const wMat=new THREE.MeshStandardMaterial({color:'#d8e8ff',roughness:.05,emissive:'#d8e8ff',emissiveIntensity:.3});
-  for(let wx=-1.5;wx<=1.5;wx+=3){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wMat);w.position.set(wx,1.8,hd-.02);allFurniture.push(w);scene.add(w);}
-  for(let x=-1.5;x<=1.5;x+=3){const w2=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wMat);w2.position.set(x,1.8,-hd+.02);w2.rotation.y=Math.PI;allFurniture.push(w2);scene.add(w2);}
-
+  const cl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),new THREE.MeshStandardMaterial({color:'#f0f0ee',roughness:.5}));cl.rotation.x=-Math.PI/2;cl.position.y=RH;allItems.push(cl);scene.add(cl);
+  // 4 walls
+  function wWall(w,h,px,py,pz,ry){const g=new THREE.PlaneGeometry(w,h);const m=new THREE.Mesh(g,wMat());m.position.set(px,py,pz);if(ry)m.rotation.y=ry;m.receiveShadow=true;allItems.push(m);scene.add(m)}
+  wWall(RW,RH,0,RH/2,-hd,0);wWall(RW,RH,0,RH/2,hd,Math.PI);wWall(RD,RH,-hw,RH/2,0,Math.PI/2);wWall(RD,RH,hw,RH/2,0,-Math.PI/2);
+  // Window panels
+  const wP=new THREE.MeshStandardMaterial({color:'#d8e8ff',roughness:.05,emissive:'#d8e8ff',emissiveIntensity:.35});
+  for(let wx=-1.5;wx<=1.5;wx+=3){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wP);w.position.set(wx,1.8,hd-.015);allItems.push(w);scene.add(w)}
+  for(let x=-1.5;x<=1.5;x+=3){const w2=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wP);w2.position.set(x,1.8,-hd+.015);w2.rotation.y=Math.PI;allItems.push(w2);scene.add(w2)}
+  // Window frames
+  const frMat=new THREE.MeshStandardMaterial({color:'#e8ecf0',roughness:.3});
+  for(let wx=-1.5;wx<=1.5;wx+=3){add(new THREE.BoxGeometry(1.25,.06,.04),new THREE.Vector3(wx,1.2,hd-.04),null,frMat);add(new THREE.BoxGeometry(1.25,.06,.04),new THREE.Vector3(wx,2.4,hd-.04),null,frMat);add(new THREE.BoxGeometry(.04,.06,1.25),new THREE.Vector3(wx-.6,1.8,hd-.04),null,frMat);add(new THREE.BoxGeometry(.04,.06,1.25),new THREE.Vector3(wx+.6,1.8,hd-.04),null,frMat)}
   // Baseboards
-  const bMat=new THREE.MeshStandardMaterial({color:'#3a3028',roughness:.4});
-  addF(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,-hd+.02),null,bMat);
-  addF(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,hd-.02),null,bMat);
-  addF(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(-hw+.02,.04,0),null,bMat);
-  addF(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(hw-.02,.04,0),null,bMat);
+  const bM=new THREE.MeshStandardMaterial({color:'#3a3028',roughness:.4});
+  add(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,-hd+.02),null,bM);add(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,hd-.02),null,bM);
+  add(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(-hw+.02,.04,0),null,bM);add(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(hw-.02,.04,0),null,bM);
 
-  // === FURNITURE ===
-  const fm=furnMat();
-  // Sofa
-  addF(new THREE.BoxGeometry(2.2,.4,.8),new THREE.Vector3(-1.5,.3,hd-1),null,fm);
-  addF(new THREE.BoxGeometry(2.2,.5,.15),new THREE.Vector3(-1.5,.75,hd-.6),null,fm);
-  // Coffee table
-  addF(new THREE.BoxGeometry(1.0,.04,.5),new THREE.Vector3(-1.5,.35,hd-2.2),null,fm);
-  // TV stand
-  addF(new THREE.BoxGeometry(1.6,.3,.4),new THREE.Vector3(1.5,.25,hd-1.5),null,fm);
-  // Dining table
-  addF(new THREE.BoxGeometry(1.4,.04,.9),new THREE.Vector3(1.5,.65,-hd+1.5),null,fm);
-  for(let i=0;i<4;i++){const lx=1.1+(i%2)*.8,lz=-hd+1.1+(i>1?1.2:0);addF(new THREE.BoxGeometry(.06,.4,.06),new THREE.Vector3(lx,.45,lz),null,fm)}
-  // Bed
-  addF(new THREE.BoxGeometry(1.6,.3,2.0),new THREE.Vector3(-1.5,.25,-hd+1.5),null,fm);
-  addF(new THREE.BoxGeometry(1.6,.3,.15),new THREE.Vector3(-1.5,.55,-hd+.55),null,fm);
-  // Kitchen counter
-  addF(new THREE.BoxGeometry(2.4,.4,.6),new THREE.Vector3(hw-1.4,.5,-hd+1.2),null,fm);
-  // Rug
-  addF(new THREE.BoxGeometry(2.5,.01,1.8),new THREE.Vector3(-1.5,.02,hd-2.5),null,new THREE.MeshStandardMaterial({color:'#8b7355',roughness:.8}));
-
-  // Check extras
-  const extraState={tv:false,bookshelf:false,rug:false};
-  document.querySelectorAll('#extras .opt').forEach(o=>{const k=o.dataset.extra;if(o.classList.contains('active'))extraState[k]=true});
-  if(extraState.tv)addF(new THREE.BoxGeometry(1.2,.02,.7),new THREE.Vector3(1.5,1.0,hd-1.5),null,new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.1,emissive:'#2a2a2a',emissiveIntensity:.2}));
-  if(extraState.bookshelf){for(let i=0;i<4;i++){addF(new THREE.BoxGeometry(1.0,.02,.3),new THREE.Vector3(-hw+1.0,.6+i*.45,-hd+2),null,fm);addF(new THREE.BoxGeometry(.08,.08,.1),new THREE.Vector3(-hw+1.0+.2,.7+i*.45,-hd+2),null,new THREE.MeshStandardMaterial({color:'#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0'),roughness:.3}))}}
-  if(extraState.rug){scene.children.filter(c=>c.material?.color?.getHex()===0x8b7355&&c.position.y<.03).forEach(m=>scene.remove(m));addF(new THREE.BoxGeometry(3,.01,2.2),new THREE.Vector3(-1.5,.015,hd-2.5),null,new THREE.MeshStandardMaterial({color:'#c04040',roughness:.85}))}
+  if(room==='living'){
+    add(new THREE.BoxGeometry(2.4,.4,.9),new THREE.Vector3(-1.5,.3,hd-1),null,fm); // sofa
+    add(new THREE.BoxGeometry(2.4,.4,.12),new THREE.Vector3(-1.5,.7,hd-.5),null,fm); // sofa back
+    add(new THREE.BoxGeometry(.06,.3,.9),new THREE.Vector3(-2.7,.3,hd-1),null,fm);add(new THREE.BoxGeometry(.06,.3,.9),new THREE.Vector3(-.3,.3,hd-1),null,fm); // sofa arms
+    add(new THREE.BoxGeometry(1.0,.04,.5),new THREE.Vector3(-1.5,.35,hd-2.2),null,fm); // coffee table
+    add(new THREE.BoxGeometry(.06,.35,.06),new THREE.Vector3(-1.2,.35,hd-2.1),null,fm);add(new THREE.BoxGeometry(.06,.35,.06),new THREE.Vector3(-1.8,.35,hd-2.1),null,fm);add(new THREE.BoxGeometry(.06,.35,.06),new THREE.Vector3(-1.2,.35,hd-2.3),null,fm);add(new THREE.BoxGeometry(.06,.35,.06),new THREE.Vector3(-1.8,.35,hd-2.3),null,fm);
+    add(new THREE.BoxGeometry(1.6,.35,.4),new THREE.Vector3(1.8,.25,hd-1.5),null,fm); // TV stand
+    add(new THREE.BoxGeometry(1.5,.02,.8),new THREE.Vector3(1.8,1.0,hd-1.5),null,new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.1,emissive:'#1a1a1a',emissiveIntensity:.3})); // TV screen
+    add(new THREE.BoxGeometry(2.5,.02,1.8),new THREE.Vector3(-1.5,.02,hd-2.5),null,new THREE.MeshStandardMaterial({color:'#8b7355',roughness:.8})); // rug
+  }else if(room==='kitchen'){
+    add(new THREE.BoxGeometry(2.8,.4,.6),new THREE.Vector3(hw-1.6,.45,-hd+1.2),null,fm); // counter
+    add(new THREE.BoxGeometry(2.8,.04,.65),new THREE.Vector3(hw-1.6,.85,-hd+1.2),null,fm); // countertop
+    add(new THREE.BoxGeometry(.6,.4,.6),new THREE.Vector3(hw-2.8,.5,-hd+1.2),null,fm); // cabinet
+    add(new THREE.BoxGeometry(.6,.7,.6),new THREE.Vector3(hw-.5,.55,-hd+1.2),null,new THREE.MeshStandardMaterial({color:'#c0c0c0',roughness:.2,metalness:.7})); // fridge
+    add(new THREE.BoxGeometry(1.4,.04,.9),new THREE.Vector3(0,.65,-hd+2.2),null,fm); // table
+    for(let i=0;i<4;i++){const lx=(i%2===0?-1:1)*.4,lz=-hd+1.7+(i>1?1:0);add(new THREE.BoxGeometry(.06,.4,.06),new THREE.Vector3(lx,.45,lz),null,fm)} // chairs
+    add(new THREE.BoxGeometry(.8,.04,.5),new THREE.Vector3(-hw+1.5,.6,hd-2),null,new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.15,metalness:.6})); // sink
+  }else if(room==='bedroom'){
+    add(new THREE.BoxGeometry(1.8,.3,2.0),new THREE.Vector3(-1.5,.25,-hd+1.5),null,fm); // bed
+    add(new THREE.BoxGeometry(1.8,.2,.1),new THREE.Vector3(-1.5,.5,-hd+.5),null,fm); // headboard
+    add(new THREE.BoxGeometry(1.8,.05,1.9),new THREE.Vector3(-1.5,.37,-hd+1.5),null,new THREE.MeshStandardMaterial({color:'#f5f5f5',roughness:.8})); // mattress
+    add(new THREE.BoxGeometry(.4,.04,.4),new THREE.Vector3(-.6,.04,-hd+1),null,fm);add(new THREE.BoxGeometry(.4,.04,.4),new THREE.Vector3(-2.4,.04,-hd+1),null,fm); // nightstands
+    add(new THREE.BoxGeometry(1.2,.3,.5),new THREE.Vector3(1.5,.55,hd-1.5),null,fm); // dresser
+    add(new THREE.BoxGeometry(2.5,.02,1.5),new THREE.Vector3(-1.5,.02,-hd+1.2),null,new THREE.MeshStandardMaterial({color:'#705030',roughness:.8})); // rug
+  }
+  // Extras
+  const ex={};document.querySelectorAll('#extras .opt.active').forEach(o=>ex[o.dataset.extra]=true);
+  if(ex.tv&&room==='living')add(new THREE.BoxGeometry(1.5,.02,.8),new THREE.Vector3(1.8,1.0,hd-1.5),null,new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.1}));
+  if(ex.shelf){for(let i=0;i<4;i++){const sy=.5+i*.5;add(new THREE.BoxGeometry(1.2,.02,.25),new THREE.Vector3(-hw+1.2,sy,-hd+2),null,fm);for(let j=0;j<3;j++){const c='#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0');add(new THREE.BoxGeometry(.06,.15,.08),new THREE.Vector3(-hw+1.2+.3-j*.35,sy+.1,-hd+2.12),null,new THREE.MeshStandardMaterial({color:c,roughness:.3}))}}}
+  if(ex.plants){add(new THREE.CylinderGeometry(.15,.2,.8,8),new THREE.Vector3(hw-.5,.4,hd-1),null,new THREE.MeshStandardMaterial({color:'#8b6914',roughness:.5}));add(new THREE.SphereGeometry(.35,8,6),new THREE.Vector3(hw-.5,.9,hd-1),null,new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}))}
+  if(ex.art){add(new THREE.BoxGeometry(.8,.02,.6),new THREE.Vector3(-hw+1.0,1.8,-hd+.015),null,new THREE.MeshStandardMaterial({color:'#c04040',roughness:.3}))}
+  updatePrice();
 }
-buildRoom();
 
-function updateLighting(){const v=document.querySelector('#lighting .opt.active')?.dataset.light||'warm';const t={warm:{color:'#fff8e8',intensity:2},bright:{color:'#ffffff',intensity:3},mood:{color:'#f5d0a0',intensity:1.2}};ceilingLight.color.set(t[v].color);ceilingLight.intensity=t[v].intensity;winLight.intensity=v==='bright'?1.2:v==='mood'?.4:.8}
-
-// Config
-document.querySelectorAll('.opt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));this.classList.add('active');if(this.closest('#lighting')){updateLighting();updatePrice()}else{buildRoom();updatePrice()}})});
-document.getElementById('resetBtn').addEventListener('click',()=>{['wallColor','floorColor','furniture','lighting','extras'].forEach(id=>{document.getElementById(id).querySelectorAll('.opt').forEach((o,i)=>o.classList.toggle('active',i===0))});buildRoom();updateLighting();updatePrice()});
-
+function updateLighting(){const v=document.querySelector('#lighting .opt.active')?.dataset.light||'warm';const t={warm:{c:'#fff8e8',i:2},bright:{c:'#ffffff',i:3.2},natural:{c:'#fffef0',i:2.5},mood:{c:'#f5d0a0',i:1.1}};ceilingLight.color.set(t[v].c);ceilingLight.intensity=t[v].i;winLight.intensity=v==='bright'?1.2:v==='mood'?.35:.7}
 function updatePrice(){let up=0;document.querySelectorAll('.opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(12000+up).toLocaleString()}
 
-// First-person movement
+buildRoom('living');updateLighting();
+
+// Room tabs
+document.querySelectorAll('.room-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.room-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');currentRoom=this.dataset.room;buildRoom(currentRoom);updateLighting()}));
+// Options
+document.querySelectorAll('.opt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));this.classList.add('active');if(this.closest('#lighting')){updateLighting();updatePrice()}else{buildRoom(currentRoom);updateLighting()}})});
+// Reset
+document.getElementById('resetBtn').addEventListener('click',()=>{['wallColor','floorOpts','furniture','lighting','extras'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.opt').forEach((o,i)=>o.classList.toggle('active',i===0))});document.querySelectorAll('.room-tab').forEach((t,i)=>t.classList.toggle('active',i===0));currentRoom='living';buildRoom('living');updateLighting();updatePrice()});
+
 function animate(){
   requestAnimationFrame(animate);
-  const dt=Math.min(clock.getDelta(),.1);
-  const spd=3*dt;
-  const dir=new THREE.Vector3();
-  camera.getWorldDirection(dir);dir.y=0;dir.normalize();
+  const dt=Math.min(clock.getDelta(),.1),spd=3.5*dt;
+  const dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.y=0;dir.normalize();
   const right=new THREE.Vector3();right.crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();
-  if(keys.w||keys.arrowup){camera.position.addScaledVector(dir,spd)}
-  if(keys.s||keys.arrowdown){camera.position.addScaledVector(dir,-spd)}
-  if(keys.a||keys.arrowleft){camera.position.addScaledVector(right,-spd)}
-  if(keys.d||keys.arrowright){camera.position.addScaledVector(right,spd)}
+  if(keys.w||keys.arrowup)camera.position.addScaledVector(dir,spd);
+  if(keys.s||keys.arrowdown)camera.position.addScaledVector(dir,-spd);
+  if(keys.a||keys.arrowleft)camera.position.addScaledVector(right,-spd);
+  if(keys.d||keys.arrowright)camera.position.addScaledVector(right,spd);
   if(keys.space)camera.position.y+=spd;
   if(keys.shift)camera.position.y-=spd;
   camera.position.x=Math.max(-RW/2+.3,Math.min(RW/2-.3,camera.position.x));
