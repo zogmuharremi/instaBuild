@@ -191,14 +191,29 @@
         <div class="bopt" data-window="wood" data-price="2200"><div class="lb">Wood</div></div>
       </div></div>
       <div class="bgroup"><div class="blabel">Add-Ons</div><div class="bopts" id="addonOpts" style="grid-template-columns:1fr">
-        <div class="bopt flex" data-addon="none" data-price="0"><span class="fi">—</span><div class="lb">None</div></div>
-        <div class="bopt flex active" data-addon="porch" data-price="6000"><span class="fi">☰</span><div class="lb">Covered Porch +$6k</div></div>
+        <div class="bopt flex active" data-addon="none" data-price="0"><span class="fi">—</span><div class="lb">None</div></div>
+        <div class="bopt flex" data-addon="porch" data-price="6000"><span class="fi">☰</span><div class="lb">Covered Porch +$6k</div></div>
         <div class="bopt flex" data-addon="garage" data-price="12000"><span class="fi">▣</span><div class="lb">Garage +$12k</div></div>
+      </div></div>
+      <div class="bgroup"><div class="blabel">Front Door</div><div class="bopts" id="doorOpts">
+        <div class="bopt flex active" data-door="steel" data-price="0"><span class="fi">🚪</span><div class="lb">Steel</div></div>
+        <div class="bopt flex" data-door="woodgrain" data-price="900"><span class="fi">🪵</span><div class="lb">Wood +$0.9k</div></div>
+        <div class="bopt flex" data-door="glass" data-price="1800"><span class="fi">🪟</span><div class="lb">Glass +$1.8k</div></div>
+      </div></div>
+      <div class="bgroup"><div class="blabel">Window Count</div><div class="bopts" id="winCountOpts" style="grid-template-columns:1fr">
+        <div class="bopt flex active" data-wincount="standard" data-price="0"><span class="fi">⊞</span><div class="lb">Standard (10)</div></div>
+        <div class="bopt flex" data-wincount="more" data-price="2500"><span class="fi">⊞⊞</span><div class="lb">Extra Light (16)</div></div>
+        <div class="bopt flex" data-wincount="max" data-price="4500"><span class="fi">🪟</span><div class="lb">Panoramic (22)</div></div>
+      </div></div>
+      <div class="bgroup"><div class="blabel">Interior Style</div><div class="bopts" id="interiorOpts" style="grid-template-columns:1fr">
+        <div class="bopt flex active" data-interior="modern" data-price="0"><span class="fi">⬜</span><div class="lb">Modern White</div></div>
+        <div class="bopt flex" data-interior="warm" data-price="2000"><span class="fi">🟫</span><div class="lb">Warm Oak +$2k</div></div>
+        <div class="bopt flex" data-interior="luxury" data-price="5500"><span class="fi">✨</span><div class="lb">Luxury +$5.5k</div></div>
       </div></div>
       <div class="bgroup"><div class="blabel">Landscaping</div><div class="bopts" id="landOpts" style="grid-template-columns:1fr">
         <div class="bopt flex active" data-land="basic" data-price="0"><span class="fi">🌿</span><div class="lb">Basic Grass</div></div>
         <div class="bopt flex" data-land="garden" data-price="3500"><span class="fi">🌳</span><div class="lb">Garden +$3.5k</div></div>
-        <div class="bopt flex" data-land="patio" data-price="5500"><span class="fi">🏡</span><div class="lb">Patio + Deck +$5.5k</div></div>
+        <div class="bopt flex" data-land="luxury" data-price="8000"><span class="fi">⛲</span><div class="lb">Luxury +$8k</div></div>
       </div></div>
       <button id="resetCfg" style="width:100%;background:transparent;border:1px solid var(--b);color:var(--s);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit">↺ Reset All</button>
     </div>
@@ -364,33 +379,36 @@ window.updatePrice=updatePrice;
 function buildLandscaping(){
   const land=dataset('landOpts','land','basic');
   if(land==='garden'){
-    // Trees
     for(let i=0;i<6;i++){const tx=(Math.random()*12-6),tz=(Math.random()*6+4);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.6,8),mWood);trunk.position.set(tx,.8,tz);trunk.castShadow=true;extras.push(trunk);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.7,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));crown.position.set(tx,1.5,tz);crown.castShadow=true;extras.push(crown);scene.add(crown)}
-    // Bushes near house
     for(let i=0;i<4;i++){const bx=(i-1.5)*1.2,bz=3.2;const bush=new THREE.Mesh(new THREE.SphereGeometry(.35,6,4),new THREE.MeshStandardMaterial({color:'#4a7a4e',roughness:.6}));bush.position.set(bx,.35,bz);extras.push(bush);scene.add(bush)}
-  }else if(land==='patio'){
-    // Deck
-    const deck=new THREE.Mesh(new THREE.BoxGeometry(4,0.06,2.5),new THREE.MeshStandardMaterial({color:'#8b6914',roughness:.45}));deck.position.set(0,.05,3.6);deck.receiveShadow=true;extras.push(deck);scene.add(deck);
-    // Trees
-    for(let i=0;i<4;i++){const tx=(Math.random()*10-5),tz=(Math.random()*5+5);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.5,8),mWood);trunk.position.set(tx,.75,tz);extras.push(trunk);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.6,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));crown.position.set(tx,1.4,tz);extras.push(crown);scene.add(crown)}
-    // Pathway
-    for(let i=0;i<6;i++){const p=new THREE.Mesh(new THREE.BoxGeometry(.6,.02,1.2),new THREE.MeshStandardMaterial({color:'#a09888',roughness:.6}));p.position.set(0,.01,2.4+i*.55);extras.push(p);scene.add(p)}
+  }else if(land==='luxury'){
+    // Driveway
+    const dr=new THREE.Mesh(new THREE.BoxGeometry(3,.03,6),new THREE.MeshStandardMaterial({color:'#888890',roughness:.4}));dr.position.set(hw+2,0,-hd+1);dr.receiveShadow=true;extras.push(dr);scene.add(dr);
+    // Pool
+    const pool=new THREE.Mesh(new THREE.BoxGeometry(3,.08,2),new THREE.MeshStandardMaterial({color:'#4080c0',roughness:.15,metalness:.2}));pool.position.set(-hw-2.5,.02,-hd+2);pool.receiveShadow=true;extras.push(pool);scene.add(pool);
+    // Trees with better placement
+    for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2,r=6+Math.random()*3;const tx=Math.cos(a)*r,tz=Math.sin(a)*r+1;const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.1,.15,2,8),mWood);trunk.position.set(tx,1,tz);trunk.castShadow=true;extras.push(trunk);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.9,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));crown.position.set(tx,2,tz);crown.castShadow=true;extras.push(crown);scene.add(crown)}
+    // Fountain
+    const fBase=new THREE.Mesh(new THREE.CylinderGeometry(.4,.5,.3,12),new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.3}));fBase.position.set(0,.15,hd+2.5);fBase.castShadow=true;extras.push(fBase);scene.add(fBase);
+    const fPillar=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,.8,12),new THREE.MeshStandardMaterial({color:'#b0b0b0',roughness:.3}));fPillar.position.set(0,.55,hd+2.5);extras.push(fPillar);scene.add(fPillar);
   }
 }
 
 function buildAddons(W,D,hd){
-  const addon=dataset('addonOpts','addon','porch');const frontZ=hd-.03;
+  const addon=dataset('addonOpts','addon','none');const frontZ=hd-.03;
   if(addon==='porch'){
     addX(new THREE.BoxGeometry(3.5,.06,2),new THREE.Vector3(0,.15,frontZ+1.1),null,mWood);
     const pr=new THREE.Mesh(new THREE.BoxGeometry(4,.06,2.2),new THREE.MeshStandardMaterial({color:'#3b4452',roughness:.35}));pr.position.set(0,2.4,frontZ+1.1);pr.castShadow=true;extras.push(pr);scene.add(pr);
     for(let x=-1.5;x<=1.5;x+=3)addX(new THREE.BoxGeometry(.08,2.2,.08),new THREE.Vector3(x,1.2,frontZ+2.0),null,mWood);
     addX(new THREE.BoxGeometry(2,.1,.4),new THREE.Vector3(0,.05,frontZ+2.1),null,mWood);
   }else if(addon==='garage'){
-    addX(new THREE.BoxGeometry(4,.2,3.5),new THREE.Vector3(W/2+2.2,.1,0),null,wM());
-    const garRoof=new THREE.Mesh(new THREE.BoxGeometry(4.2,.1,2),rM2());garRoof.position.set(W/2+2.2,2.4,-.75);garRoof.rotation.x=-.4;garRoof.castShadow=true;extras.push(garRoof);scene.add(garRoof);
-    addX(new THREE.BoxGeometry(3,.06,.06),new THREE.Vector3(W/2+2.2,1.15,1.72),null,mDoor);
+    const gx=-(W/2+2.4); // left side of house, visible
+    addX(new THREE.BoxGeometry(4,.2,3.5),new THREE.Vector3(gx,.1,0),null,wM());
+    const gr=new THREE.Mesh(new THREE.BoxGeometry(4.2,.1,2),rM2());gr.position.set(gx,2.4,-.75);gr.rotation.x=-.4;gr.castShadow=true;extras.push(gr);scene.add(gr);
+    addX(new THREE.BoxGeometry(3,.06,.06),new THREE.Vector3(gx,1.15,1.72),null,doorMat());
   }
 }
+function doorMat(){const v=dataset('doorOpts','door','steel');return v==='steel'?mDoor:v==='woodgrain'?mWood:mGlass}
 
 function rebuild(){
   dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;
@@ -445,21 +463,36 @@ function rebuild(){
   ad(new THREE.BoxGeometry(.06,H,D),new THREE.Vector3(hw-.03,wallY,0),null,'w');
 
   // === WINDOWS (on wall surfaces, slightly offset for visibility) ===
-  const ws=.7, wh=.85, wd=.04, winOff=.035;
-  // Rear wall — 4 windows in a grid
-  for(let x=-1;x<=1;x+=2)for(let wy=-.6;wy<=.6;wy+=1.2){
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(x,wallY+wy,-hd+.06),null,'wi');
+  const ws=.7, wh=.85, wd=.04;
+  const wc=dataset('winCountOpts','wincount','standard');
+  // Rear wall windows
+  const rearCols=wc==='max'?4:wc==='more'?3:2;
+  for(let i=0;i<rearCols;i++){
+    const wx=-1.5+i*(3/(rearCols-1||1));
+    for(let wy=-.6;wy<=.6;wy+=1.2){
+      ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(wx,wallY+wy,-hd+.06),null,'wi');
+    }
   }
-  // Front wall — 2 windows flanking door
-  ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY,frontZ+.06),null,'wi');
-  ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY,frontZ+.06),null,'wi');
-  // Side walls — 1 window each
-  ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+.09,wallY,0),null,'wi');
-  ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-.09,wallY,0),null,'wi');
+  // Front wall windows
+  if(wc==='max'){
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY-.3,frontZ+.06),null,'wi');
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY+.3,frontZ+.06),null,'wi');
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY-.3,frontZ+.06),null,'wi');
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY+.3,frontZ+.06),null,'wi');
+  }else{
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY,frontZ+.06),null,'wi');
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY,frontZ+.06),null,'wi');
+  }
+  // Side wall windows
+  const sideCount=wc==='max'?3:wc==='more'?2:1;
+  for(let i=0;i<sideCount;i++){
+    const sz=-.9+i*(1.8/(sideCount-1||1));
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+.09,wallY,sz),null,'wi');
+    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-.09,wallY,sz),null,'wi');
+  }
 
   // === DOOR ===
-  addX(new THREE.BoxGeometry(1.0,2.1,.06),new THREE.Vector3(0,1.15,frontZ+.03),null,mDoor);
-  // Door frame
+  addX(new THREE.BoxGeometry(1.0,2.1,.06),new THREE.Vector3(0,1.15,frontZ+.03),null,doorMat());
   addX(new THREE.BoxGeometry(1.1,.06,.08),new THREE.Vector3(0,2.2,frontZ+.02),null,mWood);
 
   // === ROOF ===
@@ -506,8 +539,8 @@ rebuild();
 window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dt;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
 
 // Config handlers
-document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const needsRebuild=!!(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts'));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
-document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
+document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const needsRebuild=!!(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts')||this.closest('#winCountOpts'));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
+document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts','doorOpts','winCountOpts','interiorOpts'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
 
 // View buttons
 document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){
