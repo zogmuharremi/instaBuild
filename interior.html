@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>instaBuild — Interior Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+  <style>
+    :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4;--card:#161b26}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--n);color:#c4ccd8;overflow:hidden;height:100vh}
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+    .topbar .logo{font-size:17px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:8px;text-decoration:none}.topbar .logo em{font-style:normal;color:var(--g)}
+    .topbar .logo-mark{width:28px;height:28px;background:var(--g);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:12px}
+    .topbar a{color:var(--s);font-size:13px;text-decoration:none;font-weight:500;transition:color .2s;display:flex;align-items:center;gap:6px}.topbar a:hover{color:var(--w)}
+    .topbar .btn{background:var(--g);color:var(--n);padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:.2s;text-decoration:none}.topbar .btn:hover{background:var(--gd)}
+    #canvas3d{display:block;width:100%;height:100vh;cursor:grab}#canvas3d:active{cursor:grabbing}
+    .panel{position:fixed;left:16px;top:80px;bottom:16px;z-index:50;background:rgba(17,22,32,.95);border:1px solid var(--b);border-radius:14px;padding:16px 14px;overflow-y:auto;width:280px;display:flex;flex-direction:column;gap:12px}
+    .panel h3{font-size:12px;font-weight:700;color:var(--w);margin-bottom:2px}
+    .group{margin-bottom:10px}
+    .glabel{font-size:8px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px}
+    .opts{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .opt{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:5px;cursor:pointer;text-align:center;transition:.2s}.opt:hover{border-color:rgba(255,255,255,.15)}.opt.active{border-color:var(--g);background:rgba(46,204,113,.06)}
+    .opt .sw{width:100%;height:16px;border-radius:3px;margin-bottom:2px}.opt .lb{font-size:8px;color:var(--s)}.opt.active .lb{color:var(--g)}
+    .opt.flex{display:flex;align-items:center;gap:5px;padding:5px 8px;text-align:left}
+    .price-box{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:12px;text-align:center;margin-top:8px}
+    .price-box .pv{font-size:24px;font-weight:700;color:var(--g)}.price-box .pl{font-size:8px;color:var(--s);margin-top:2px}
+    .hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:11px;pointer-events:none;z-index:40}
+    @media(max-width:900px){.panel{width:240px;left:8px;top:70px}.panel h3{font-size:11px}}
+    @media(max-width:600px){.panel{display:none}.topbar{padding:10px 14px}}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em> — Interior Designer</a>
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="btn" id="resetBtn">↺ Reset</button>
+    <a href="index.html#builder" class="btn" style="background:transparent;border:1px solid var(--b);color:var(--w)">← Back to Exterior</a>
+  </div>
+</div>
+
+<canvas id="canvas3d"></canvas>
+<div class="hint">🖱 Click + drag to look around · WASD to walk · Scroll to zoom · Space to go up</div>
+
+<div class="panel">
+  <h3>🎨 Interior Design</h3>
+  <div class="group"><div class="glabel">Wall Color</div><div class="opts" id="wallColor">
+    <div class="opt active" data-wall="white" data-price="0"><div class="sw" style="background:#f5f5f0"></div><div class="lb">White</div></div>
+    <div class="opt" data-wall="beige" data-price="800"><div class="sw" style="background:#ede0d0"></div><div class="lb">Beige</div></div>
+    <div class="opt" data-wall="gray" data-price="600"><div class="sw" style="background:#d0d4d8"></div><div class="lb">Gray</div></div>
+    <div class="opt" data-wall="navy" data-price="1200"><div class="sw" style="background:#2a3a52"></div><div class="lb">Navy</div></div>
+  </div></div>
+  <div class="group"><div class="glabel">Flooring</div><div class="opts" id="floorColor">
+    <div class="opt active" data-floor="oak" data-price="0"><div class="sw" style="background:#c4a882"></div><div class="lb">Oak</div></div>
+    <div class="opt" data-floor="walnut" data-price="1800"><div class="sw" style="background:#5c3d2e"></div><div class="lb">Walnut</div></div>
+    <div class="opt" data-floor="marble" data-price="4200"><div class="sw" style="background:#e8e0d8"></div><div class="lb">Marble</div></div>
+    <div class="opt" data-floor="tile" data-price="2500"><div class="sw" style="background:#c8c4bc"></div><div class="lb">Tile</div></div>
+  </div></div>
+  <div class="group"><div class="glabel">Furniture Style</div><div class="opts" id="furniture" style="grid-template-columns:1fr">
+    <div class="opt flex active" data-furniture="modern" data-price="0"><span style="font-size:14px">⬜</span><div class="lb">Modern Minimal</div></div>
+    <div class="opt flex" data-furniture="classic" data-price="3000"><span style="font-size:14px">🟫</span><div class="lb">Classic Wood</div></div>
+    <div class="opt flex" data-furniture="luxury" data-price="8000"><span style="font-size:14px">✨</span><div class="lb">Luxury Italian</div></div>
+  </div></div>
+  <div class="group"><div class="glabel">Lighting</div><div class="opts" id="lighting" style="grid-template-columns:1fr">
+    <div class="opt flex active" data-light="warm" data-price="0"><span style="font-size:14px">💡</span><div class="lb">Warm Glow</div></div>
+    <div class="opt flex" data-light="bright" data-price="500"><span style="font-size:14px">🔆</span><div class="lb">Bright White</div></div>
+    <div class="opt flex" data-light="mood" data-price="900"><span style="font-size:14px">🕯️</span><div class="lb">Mood Ambient</div></div>
+  </div></div>
+  <div class="group"><div class="glabel">Add Furniture</div><div class="opts" id="extras" style="grid-template-columns:1fr">
+    <div class="opt flex" data-extra="tv" data-price="1500"><span style="font-size:14px">📺</span><div class="lb">TV Unit +$1.5k</div></div>
+    <div class="opt flex" data-extra="bookshelf" data-price="800"><span style="font-size:14px">📚</span><div class="lb">Bookshelf +$0.8k</div></div>
+    <div class="opt flex" data-extra="rug" data-price="600"><span style="font-size:14px">🟫</span><div class="lb">Area Rug +$0.6k</div></div>
+  </div></div>
+  <div class="price-box"><div class="pv" id="priceTotal">$12,000</div><div class="pl">INTERIOR PACKAGE</div></div>
+  <a href="index.html#contact" style="width:100%;background:var(--g);border:none;color:var(--n);padding:10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;display:block">Get Full Quote →</a>
+</div>
+
+<script type="module">
+import*as THREE from'three';
+const canvas=document.getElementById('canvas3d');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1117');
+
+const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,40);
+camera.position.set(0,1.6,0);
+const clock=new THREE.Clock();
+const keys={};let yaw=0,pitch=0;
+document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();keys.space=true}});
+document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys.space=false});
+canvas.addEventListener('click',()=>canvas.requestPointerLock());
+document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===canvas){document.addEventListener('mousemove',onMouse)}else{document.removeEventListener('mousemove',onMouse)}});
+function onMouse(e){yaw-=e.movementX*.002;pitch-=e.movementY*.002;pitch=Math.max(-1.4,Math.min(1.4,pitch))}
+
+scene.add(new THREE.AmbientLight('#f5e8d0',.6));
+const ceilingLight=new THREE.PointLight('#fff8e8',2,8,2);ceilingLight.position.set(0,2.6,0);ceilingLight.castShadow=true;ceilingLight.shadow.mapSize.set(512,512);scene.add(ceilingLight);
+const winLight=new THREE.DirectionalLight('#dce8f8',.8);winLight.position.set(0,1.5,2.9);scene.add(winLight);
+
+// Room dimensions
+const RW=6,RD=5,RH=2.8;
+const allFurniture=[],allWalls=[];
+
+const matCache={};
+function wallMat(){const v=document.querySelector('#wallColor .opt.active')?.dataset.wall||'white';if(!matCache['w_'+v]){const c={white:'#f5f5f0',beige:'#ede0d0',gray:'#d0d4d8',navy:'#2a3a52'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.6,side:THREE.BackSide})}return matCache['w_'+v]}
+function floorMat(){const v=document.querySelector('#floorColor .opt.active')?.dataset.floor||'oak';if(!matCache['f_'+v]){const c={oak:'#c4a882',walnut:'#5c3d2e',marble:'#e8e0d8',tile:'#c8c4bc'};matCache['f_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='marble'?.2:v==='tile'?.3:.4})}return matCache['f_'+v]}
+function furnMat(){const v=document.querySelector('#furniture .opt.active')?.dataset.furniture||'modern';if(!matCache['fu_'+v]){const c={modern:'#e8e8e4',classic:'#6b4226',luxury:'#d4c8b8'};matCache['fu_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='luxury'?.2:.4,metalness:v==='luxury'?.1:0})}return matCache['fu_'+v]}
+
+function addF(geo,pos,rot,mat){const m=new THREE.Mesh(geo,mat);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;allFurniture.push(m);scene.add(m);return m}
+function buildRoom(){
+  allFurniture.forEach(m=>scene.remove(m));allFurniture.length=0;allWalls.forEach(m=>scene.remove(m));allWalls.length=0;
+  // Floor
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),floorMat());fl.rotation.x=-Math.PI/2;fl.position.y=.01;fl.receiveShadow=true;scene.add(fl);allFurniture.push(fl);
+  // Ceiling
+  const cl=new THREE.Mesh(new THREE.PlaneGeometry(RW,RD),new THREE.MeshStandardMaterial({color:'#f0f0ee',roughness:.5,side:THREE.DoubleSide}));cl.rotation.x=-Math.PI/2;cl.position.y=RH;scene.add(cl);allFurniture.push(cl);
+
+  // Walls
+  const hw=RW/2,hd=RD/2;
+  function makeWall(w,h,px,py,pz,ry){const g=new THREE.PlaneGeometry(w,h);const m=new THREE.Mesh(g,wallMat());m.position.set(px,py,pz);if(ry)m.rotation.y=ry;m.receiveShadow=true;allWalls.push(m);scene.add(m);return m}
+  makeWall(RW,RH,0,RH/2,-hd,0); // back
+  makeWall(RW,RH,0,RH/2,hd,Math.PI); // front
+  makeWall(RD,RH,-hw,RH/2,0,Math.PI/2); // left
+  makeWall(RD,RH,hw,RH/2,0,-Math.PI/2); // right
+
+  // Windows (cutout illusion — bright panels)
+  const wMat=new THREE.MeshStandardMaterial({color:'#d8e8ff',roughness:.05,emissive:'#d8e8ff',emissiveIntensity:.3});
+  for(let wx=-1.5;wx<=1.5;wx+=3){const w=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wMat);w.position.set(wx,1.8,hd-.02);allFurniture.push(w);scene.add(w);}
+  for(let x=-1.5;x<=1.5;x+=3){const w2=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),wMat);w2.position.set(x,1.8,-hd+.02);w2.rotation.y=Math.PI;allFurniture.push(w2);scene.add(w2);}
+
+  // Baseboards
+  const bMat=new THREE.MeshStandardMaterial({color:'#3a3028',roughness:.4});
+  addF(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,-hd+.02),null,bMat);
+  addF(new THREE.BoxGeometry(RW,.08,.04),new THREE.Vector3(0,.04,hd-.02),null,bMat);
+  addF(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(-hw+.02,.04,0),null,bMat);
+  addF(new THREE.BoxGeometry(.04,.08,RD),new THREE.Vector3(hw-.02,.04,0),null,bMat);
+
+  // === FURNITURE ===
+  const fm=furnMat();
+  // Sofa
+  addF(new THREE.BoxGeometry(2.2,.4,.8),new THREE.Vector3(-1.5,.3,hd-1),null,fm);
+  addF(new THREE.BoxGeometry(2.2,.5,.15),new THREE.Vector3(-1.5,.75,hd-.6),null,fm);
+  // Coffee table
+  addF(new THREE.BoxGeometry(1.0,.04,.5),new THREE.Vector3(-1.5,.35,hd-2.2),null,fm);
+  // TV stand
+  addF(new THREE.BoxGeometry(1.6,.3,.4),new THREE.Vector3(1.5,.25,hd-1.5),null,fm);
+  // Dining table
+  addF(new THREE.BoxGeometry(1.4,.04,.9),new THREE.Vector3(1.5,.65,-hd+1.5),null,fm);
+  for(let i=0;i<4;i++){const lx=1.1+(i%2)*.8,lz=-hd+1.1+(i>1?1.2:0);addF(new THREE.BoxGeometry(.06,.4,.06),new THREE.Vector3(lx,.45,lz),null,fm)}
+  // Bed
+  addF(new THREE.BoxGeometry(1.6,.3,2.0),new THREE.Vector3(-1.5,.25,-hd+1.5),null,fm);
+  addF(new THREE.BoxGeometry(1.6,.3,.15),new THREE.Vector3(-1.5,.55,-hd+.55),null,fm);
+  // Kitchen counter
+  addF(new THREE.BoxGeometry(2.4,.4,.6),new THREE.Vector3(hw-1.4,.5,-hd+1.2),null,fm);
+  // Rug
+  addF(new THREE.BoxGeometry(2.5,.01,1.8),new THREE.Vector3(-1.5,.02,hd-2.5),null,new THREE.MeshStandardMaterial({color:'#8b7355',roughness:.8}));
+
+  // Check extras
+  const extraState={tv:false,bookshelf:false,rug:false};
+  document.querySelectorAll('#extras .opt').forEach(o=>{const k=o.dataset.extra;if(o.classList.contains('active'))extraState[k]=true});
+  if(extraState.tv)addF(new THREE.BoxGeometry(1.2,.02,.7),new THREE.Vector3(1.5,1.0,hd-1.5),null,new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.1,emissive:'#2a2a2a',emissiveIntensity:.2}));
+  if(extraState.bookshelf){for(let i=0;i<4;i++){addF(new THREE.BoxGeometry(1.0,.02,.3),new THREE.Vector3(-hw+1.0,.6+i*.45,-hd+2),null,fm);addF(new THREE.BoxGeometry(.08,.08,.1),new THREE.Vector3(-hw+1.0+.2,.7+i*.45,-hd+2),null,new THREE.MeshStandardMaterial({color:'#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0'),roughness:.3}))}}
+  if(extraState.rug){scene.children.filter(c=>c.material?.color?.getHex()===0x8b7355&&c.position.y<.03).forEach(m=>scene.remove(m));addF(new THREE.BoxGeometry(3,.01,2.2),new THREE.Vector3(-1.5,.015,hd-2.5),null,new THREE.MeshStandardMaterial({color:'#c04040',roughness:.85}))}
+}
+buildRoom();
+
+function updateLighting(){const v=document.querySelector('#lighting .opt.active')?.dataset.light||'warm';const t={warm:{color:'#fff8e8',intensity:2},bright:{color:'#ffffff',intensity:3},mood:{color:'#f5d0a0',intensity:1.2}};ceilingLight.color.set(t[v].color);ceilingLight.intensity=t[v].intensity;winLight.intensity=v==='bright'?1.2:v==='mood'?.4:.8}
+
+// Config
+document.querySelectorAll('.opt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));this.classList.add('active');if(this.closest('#lighting')){updateLighting();updatePrice()}else{buildRoom();updatePrice()}})});
+document.getElementById('resetBtn').addEventListener('click',()=>{['wallColor','floorColor','furniture','lighting','extras'].forEach(id=>{document.getElementById(id).querySelectorAll('.opt').forEach((o,i)=>o.classList.toggle('active',i===0))});buildRoom();updateLighting();updatePrice()});
+
+function updatePrice(){let up=0;document.querySelectorAll('.opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(12000+up).toLocaleString()}
+
+// First-person movement
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),.1);
+  const spd=3*dt;
+  const dir=new THREE.Vector3();
+  camera.getWorldDirection(dir);dir.y=0;dir.normalize();
+  const right=new THREE.Vector3();right.crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();
+  if(keys.w||keys.arrowup){camera.position.addScaledVector(dir,spd)}
+  if(keys.s||keys.arrowdown){camera.position.addScaledVector(dir,-spd)}
+  if(keys.a||keys.arrowleft){camera.position.addScaledVector(right,-spd)}
+  if(keys.d||keys.arrowright){camera.position.addScaledVector(right,spd)}
+  if(keys.space)camera.position.y+=spd;
+  if(keys.shift)camera.position.y-=spd;
+  camera.position.x=Math.max(-RW/2+.3,Math.min(RW/2-.3,camera.position.x));
+  camera.position.z=Math.max(-RD/2+.3,Math.min(RD/2-.3,camera.position.z));
+  camera.position.y=Math.max(.3,Math.min(RH-.3,camera.position.y));
+  camera.rotation.order='YXZ';camera.rotation.y=yaw;camera.rotation.x=pitch;
+  renderer.render(scene,camera);
+}
+animate();
+window.addEventListener('resize',()=>{renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix()});
+renderer.setSize(window.innerWidth,window.innerHeight);
+</script>
+</body>
+</html>
