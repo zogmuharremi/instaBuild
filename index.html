@@ -26,11 +26,9 @@
     .btn-ghost{background:transparent;color:var(--w);border:1.5px solid rgba(255,255,255,.15)}.btn-ghost:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.3)}
     .btn-lg{padding:14px 30px;font-size:15px;border-radius:10px}
     .menu-toggle{display:none;background:none;border:none;color:var(--w);font-size:24px;cursor:pointer}
-
     .lang-switch{position:fixed;top:14px;right:14px;z-index:9999;display:flex;gap:4px}
     .lang-switch button{background:var(--n3);border:1px solid var(--b);color:var(--s);font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.2s}
-    .lang-switch button:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.lang-switch button.active{background:var(--g);border-color:var(--g);color:var(--n)}
-
+    .lang-switch button:hover{color:var(--w)}.lang-switch button.active{background:var(--g);border-color:var(--g);color:var(--n)}
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
     .hero-bg{position:absolute;inset:0;z-index:0}.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.35)}
     .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 40% 55%,rgba(46,204,113,.12) 0%,transparent 50%),linear-gradient(180deg,rgba(10,14,20,.15) 0%,rgba(10,14,20,.88) 80%,var(--n) 100%)}
@@ -41,7 +39,6 @@
     .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
     .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);border-radius:12px;overflow:hidden;margin-top:60px;max-width:680px}
     .hero-stat{background:rgba(255,255,255,.03);padding:24px 18px;text-align:center}.hero-stat .val{font-size:30px;font-weight:700;color:var(--w)}.hero-stat .lbl{font-size:9.5px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-
     section{padding:120px 0}section.alt{background:var(--n2)}
     .sec-label{display:inline-block;font-size:10px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:18px}
     .sec-title{font-size:clamp(28px,4vw,44px);font-weight:700;color:var(--w);letter-spacing:-.8px;line-height:1.14;margin-bottom:18px}
@@ -76,24 +73,22 @@
     footer{background:var(--n2);border-top:1px solid var(--b);padding:72px 0 32px;font-size:13px;color:var(--s)}.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px}
     footer h4{color:var(--w);font-size:12px;font-weight:700;margin-bottom:18px;text-transform:uppercase;letter-spacing:.8px}footer a{display:block;color:var(--s);font-size:13px;margin-bottom:10px;text-decoration:none}footer a:hover{color:var(--w)}.ft-bottom{display:flex;justify-content:space-between;border-top:1px solid var(--b);padding-top:28px;flex-wrap:wrap;gap:14px}
     .fade-in{opacity:0;transform:translateY(40px);transition:opacity .9s,transform .9s}.fade-in.v{opacity:1;transform:translateY(0)}
-
-    /* ── 3D BUILDER V2 ── */
+    /* Builder */
     .builder-section{background:var(--n2);padding:100px 0}
-    .builder-wrap{display:grid;grid-template-columns:300px 1fr 250px;gap:0;background:var(--n);border:1px solid var(--b);border-radius:16px;overflow:hidden}
-    .bpanel{padding:18px 14px;overflow-y:auto;max-height:620px;border-right:1px solid var(--b)}
-    .bpanel h3{font-size:13px;font-weight:700;color:var(--w);margin-bottom:14px;display:flex;align-items:center;gap:6px}
-    .bgroup{margin-bottom:14px}.blabel{font-size:8.5px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+    .builder-wrap{display:grid;grid-template-columns:320px 1fr 250px;gap:0;background:var(--n);border:1px solid var(--b);border-radius:16px;overflow:hidden}
+    .bpanel{padding:18px 14px;overflow-y:auto;max-height:640px;border-right:1px solid var(--b)}
+    .bpanel h3{font-size:13px;font-weight:700;color:var(--w);margin-bottom:14px}
+    .bgroup{margin-bottom:13px}.blabel{font-size:8.5px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
     .bopts{display:grid;grid-template-columns:1fr 1fr;gap:4px}
     .bopt{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:5px;cursor:pointer;text-align:center;transition:.2s}.bopt:hover{border-color:rgba(255,255,255,.15)}.bopt.active{border-color:var(--g);background:rgba(46,204,113,.06)}
     .bopt .sw{width:100%;height:16px;border-radius:3px;margin-bottom:2px}.bopt .lb{font-size:8.5px;color:var(--s);line-height:1.2}.bopt.active .lb{color:var(--g)}
-    .bopt.flex{display:flex;align-items:center;gap:6px;padding:6px 8px;text-align:left}.bopt.flex .fi{font-size:16px;flex-shrink:0}
-    .bviewer{position:relative;background:#0d1117}.bviewer canvas{display:block;width:100%;height:620px;cursor:grab}.bviewer canvas:active{cursor:grabbing}
+    .bopt.flex{display:flex;align-items:center;gap:6px;padding:6px 8px;text-align:left}.bopt.flex .fi{font-size:15px;flex-shrink:0}
+    .bviewer{position:relative;background:#0d1117}.bviewer canvas{display:block;width:100%;height:640px;cursor:grab}.bviewer canvas:active{cursor:grabbing}
     .bviewer .vui{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
-    .bviewer .vui button{background:rgba(10,14,20,.9);border:1px solid var(--b);color:var(--s);padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}.bviewer .vui button:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.bviewer .vui button.active{background:var(--g);border-color:var(--g);color:var(--n)}
+    .bviewer .vui button{background:rgba(10,14,20,.9);border:1px solid var(--b);color:var(--s);padding:6px 12px;border-radius:6px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}.bviewer .vui button:hover{color:var(--w)}.bviewer .vui button.active{background:var(--g);border-color:var(--g);color:var(--n)}
     .bprice{padding:18px 14px;display:flex;flex-direction:column;gap:10px;border-left:1px solid var(--b)}
-    .bprice h3{font-size:13px;font-weight:700;color:var(--w);display:flex;align-items:center;gap:6px}.pbox{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:14px;text-align:center}.pbox .pv{font-size:28px;font-weight:700;color:var(--g)}.pbox .pl{font-size:8.5px;color:var(--s);margin-top:3px}
+    .bprice h3{font-size:13px;font-weight:700;color:var(--w)}.pbox{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:14px;text-align:center}.pbox .pv{font-size:28px;font-weight:700;color:var(--g)}.pbox .pl{font-size:8.5px;color:var(--s);margin-top:3px}
     .prow{display:flex;justify-content:space-between;font-size:11px;color:var(--s);padding:2px 0}.prow span:last-child{color:#c4ccd8}
-
     @media(max-width:1050px){.builder-wrap{grid-template-columns:1fr}.bpanel{max-height:none;border-right:none;border-bottom:1px solid var(--b)}.bprice{border-left:none;border-top:1px solid var(--b)}.bviewer canvas{height:450px}}
     @media(max-width:950px){nav{display:none}nav.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--n2);border-bottom:1px solid var(--b);padding:24px 32px;gap:16px}.menu-toggle{display:block}.split{grid-template-columns:1fr}.process-steps{grid-template-columns:1fr}.ps-line{display:none}.hero h1{font-size:38px}.ft-grid{grid-template-columns:1fr 1fr}.form-row{grid-template-columns:1fr}.faq-grid{grid-template-columns:1fr}.container{padding:0 24px}section{padding:80px 0}}
     @media(max-width:540px){.hero h1{font-size:32px}.hero-stats{grid-template-columns:repeat(2,1fr)}.ft-grid{grid-template-columns:1fr}.map-container{height:360px}}
@@ -102,9 +97,7 @@
 <body>
 
 <div class="lang-switch" id="langSwitch">
-  <button class="active" data-lang="en">EN</button>
-  <button data-lang="es">ES</button><button data-lang="fr">FR</button><button data-lang="de">DE</button>
-  <button data-lang="it">IT</button><button data-lang="zh-CN">中文</button><button data-lang="ar">عربي</button>
+  <button class="active" data-lang="en">EN</button><button data-lang="es">ES</button><button data-lang="fr">FR</button><button data-lang="de">DE</button><button data-lang="it">IT</button><button data-lang="zh-CN">中文</button><button data-lang="ar">عربي</button>
 </div>
 
 <header id="header"><div class="container">
@@ -134,12 +127,12 @@
 <section class="alt"><div class="container">
   <div class="center fade-in"><div class="sec-label">Our Principles</div><h2 class="sec-title">What drives everything<br>we build</h2></div>
   <div style="margin-top:60px" class="grid3">
-    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Velocity. Without Sacrifice.</h3><p>3–4× faster than traditional construction through offsite manufacturing — no compromise on quality or safety.</p></div>
-    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability. Engineered In.</h3><p>60% less waste. LEED Gold. Passive heating and cooling. Net-positive from day one.</p></div>
-    <div class="card fade-in"><div class="card-icon">🔍</div><h3>Transparency. Absolute.</h3><p>Fixed pricing. Real-time dashboards. Open books. Zero hidden costs. No fine print.</p></div>
-    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Craftsmanship. Obsessive.</h3><p>Master artisans + advanced tools. Technology amplifies skill — never replaces it.</p></div>
-    <div class="card fade-in"><div class="card-icon">🤝</div><h3>Partnership. Genuine.</h3><p>One team with developers, architects, and communities — from vision to completion.</p></div>
-    <div class="card fade-in"><div class="card-icon">🔬</div><h3>Innovation. Relentless.</h3><p>Our Innovation Center pushes construction forward — new materials, systems, processes.</p></div>
+    <div class="card fade-in"><div class="card-icon">⚡</div><h3>Velocity</h3><p>3–4× faster than traditional construction through offsite manufacturing — no compromise on quality or safety.</p></div>
+    <div class="card fade-in"><div class="card-icon">🌍</div><h3>Sustainability</h3><p>60% less waste. LEED Gold. Passive heating and cooling. Net-positive from day one.</p></div>
+    <div class="card fade-in"><div class="card-icon">🔍</div><h3>Transparency</h3><p>Fixed pricing. Real-time dashboards. Open books. Zero hidden costs. No fine print.</p></div>
+    <div class="card fade-in"><div class="card-icon">🏆</div><h3>Craftsmanship</h3><p>Master artisans + advanced tools. Technology amplifies skill — never replaces it.</p></div>
+    <div class="card fade-in"><div class="card-icon">🤝</div><h3>Partnership</h3><p>One team with developers, architects, and communities — from vision to completion.</p></div>
+    <div class="card fade-in"><div class="card-icon">🔬</div><h3>Innovation</h3><p>Our Innovation Center pushes construction forward — new materials, systems, processes.</p></div>
   </div>
 </div></section>
 
@@ -155,9 +148,9 @@
   </div>
 </div></section>
 
-<!-- ═══ 3D BUILDER V2 ═══ -->
+<!-- 3D BUILDER -->
 <div class="builder-section" id="builder"><div class="container">
-  <div class="center fade-in"><div class="sec-label">Interactive Home Designer</div><h2 class="sec-title">Build, decorate, explore.<br><span class="gradient-text">Your dream home in 3D.</span></h2><p class="sec-sub">Drag to rotate. Scroll to zoom. Click parts to learn about them. Every choice updates the price in real time.</p></div>
+  <div class="center fade-in"><div class="sec-label">Interactive Home Designer</div><h2 class="sec-title">Build, decorate, explore.<br><span class="gradient-text">Your dream home in 3D.</span></h2><p class="sec-sub">Drag to rotate. Scroll to zoom. Every choice updates the price in real time.</p></div>
   <div style="margin-top:40px" class="builder-wrap fade-in">
     <div class="bpanel"><h3>⚙️ Architecture</h3>
       <div class="bgroup"><div class="blabel">Shape</div><div class="bopts" id="shapeOpts" style="grid-template-columns:1fr">
@@ -190,22 +183,17 @@
         <div class="bopt" data-window="bronze" data-price="1600"><div class="lb">Bronze</div></div>
         <div class="bopt" data-window="wood" data-price="2200"><div class="lb">Wood</div></div>
       </div></div>
-      <div class="bgroup"><div class="blabel">Add-Ons</div><div class="bopts" id="addonOpts" style="grid-template-columns:1fr">
-        <div class="bopt flex active" data-addon="none" data-price="0"><span class="fi">—</span><div class="lb">None</div></div>
-        <div class="bopt flex" data-addon="porch" data-price="6000"><span class="fi">☰</span><div class="lb">Covered Porch +$6k</div></div>
-        <div class="bopt flex" data-addon="garage" data-price="12000"><span class="fi">▣</span><div class="lb">Garage +$12k</div></div>
-      </div></div>
-      <div class="bgroup"><div class="blabel">Front Door</div><div class="bopts" id="doorOpts">
-        <div class="bopt flex active" data-door="steel" data-price="0"><span class="fi">🚪</span><div class="lb">Steel</div></div>
-        <div class="bopt flex" data-door="woodgrain" data-price="900"><span class="fi">🪵</span><div class="lb">Wood +$0.9k</div></div>
-        <div class="bopt flex" data-door="glass" data-price="1800"><span class="fi">🪟</span><div class="lb">Glass +$1.8k</div></div>
-      </div></div>
       <div class="bgroup"><div class="blabel">Window Count</div><div class="bopts" id="winCountOpts" style="grid-template-columns:1fr">
         <div class="bopt flex active" data-wincount="standard" data-price="0"><span class="fi">⊞</span><div class="lb">Standard (10)</div></div>
         <div class="bopt flex" data-wincount="more" data-price="2500"><span class="fi">⊞⊞</span><div class="lb">Extra Light (16)</div></div>
         <div class="bopt flex" data-wincount="max" data-price="4500"><span class="fi">🪟</span><div class="lb">Panoramic (22)</div></div>
       </div></div>
-      <div class="bgroup"><div class="blabel">Interior Style</div><div class="bopts" id="interiorOpts" style="grid-template-columns:1fr">
+      <div class="bgroup"><div class="blabel">Add-Ons</div><div class="bopts" id="addonOpts" style="grid-template-columns:1fr">
+        <div class="bopt flex active" data-addon="none" data-price="0"><span class="fi">—</span><div class="lb">None</div></div>
+        <div class="bopt flex" data-addon="porch" data-price="6000"><span class="fi">☰</span><div class="lb">Covered Porch +$6k</div></div>
+        <div class="bopt flex" data-addon="garage" data-price="12000"><span class="fi">▣</span><div class="lb">Garage +$12k</div></div>
+      </div></div>
+      <div class="bgroup"><div class="blabel">Interior</div><div class="bopts" id="interiorOpts" style="grid-template-columns:1fr">
         <div class="bopt flex active" data-interior="modern" data-price="0"><span class="fi">⬜</span><div class="lb">Modern White</div></div>
         <div class="bopt flex" data-interior="warm" data-price="2000"><span class="fi">🟫</span><div class="lb">Warm Oak +$2k</div></div>
         <div class="bopt flex" data-interior="luxury" data-price="5500"><span class="fi">✨</span><div class="lb">Luxury +$5.5k</div></div>
@@ -217,22 +205,20 @@
       </div></div>
       <button id="resetCfg" style="width:100%;background:transparent;border:1px solid var(--b);color:var(--s);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit">↺ Reset All</button>
     </div>
-    <div class="bviewer" id="vframe"><canvas id="vcanvas" width="620" height="620"></canvas>
+    <div class="bviewer" id="vframe"><canvas id="vcanvas" width="640" height="640"></canvas>
       <div class="vui">
-        <button class="active" data-view="orbit">🎥 Orbit</button>
-        <button data-view="top">📐 Top</button>
-        <button data-view="front">🏠 Front</button>
-        <button data-view="side">📏 Side</button>
+        <button class="active" data-view="orbit">🎥 Orbit</button><button data-view="top">📐 Top</button><button data-view="front">🏠 Front</button><button data-view="side">📏 Side</button>
       </div>
     </div>
-    <div class="bprice"><h3>💰 Estimate</h3><div class="pbox"><div class="pv" id="priceTotal">$130,500</div><div class="pl">ESTIMATED TOTAL</div></div>
-      <div class="prow"><span>Base Module</span><span>$98,000</span></div><div class="prow"><span>Foundation</span><span>$14,500</span></div><div class="prow"><span>Interior</span><span id="priceInt">$12,000</span></div><div class="prow"><span>Upgrades</span><span id="priceUpgrades" style="color:var(--g)">$6,000</span></div>
+    <div class="bprice"><h3>💰 Estimate</h3><div class="pbox"><div class="pv" id="priceTotal">$124,500</div><div class="pl">ESTIMATED TOTAL</div></div>
+      <div class="prow"><span>Base</span><span>$98,000</span></div><div class="prow"><span>Foundation</span><span>$14,500</span></div><div class="prow"><span>Interior</span><span id="priceInt">$12,000</span></div><div class="prow"><span>Upgrades</span><span id="priceUpgrades" style="color:var(--g)">$0</span></div>
       <div style="font-size:10px;color:var(--s);text-align:center;margin-top:4px">Build: <strong style="color:var(--g)">90</strong> days</div>
       <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})" style="width:100%;background:var(--g);border:none;color:var(--n);padding:10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Get Exact Quote →</button>
     </div>
   </div>
 </div></div>
 
+<!-- Rest of site: Technology, Process, Timeline, Map, Testimonials, FAQ, Contact, CTA, Footer -->
 <section class="alt" id="technology"><div class="container">
   <div class="center fade-in"><div class="sec-label">Our Technology</div><h2 class="sec-title">The science behind<br>the speed</h2></div>
   <div style="margin-top:60px" class="grid3">
@@ -248,13 +234,7 @@
 <section id="process"><div class="container">
   <div class="center fade-in"><div class="sec-label">Our Process</div><h2 class="sec-title">Vision to keys<br>in five steps</h2></div>
   <div style="margin-top:60px;position:relative;max-width:950px;margin:60px auto 0"><div class="ps-line"></div>
-    <div class="process-steps">
-      <div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>Vision, budget, timeline. Designs in days.</p></div>
-      <div class="ps fade-in"><div class="ps-num">2</div><h3>Engineering</h3><p>Full structural and energy modeling.</p></div>
-      <div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacturing</h3><p>Precision-built in indoor factories.</p></div>
-      <div class="ps fade-in"><div class="ps-num">4</div><h3>Assembly</h3><p>Modules arrive. We connect and finish.</p></div>
-      <div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Walkthrough. Sign-off. You're home.</p></div>
-    </div>
+    <div class="process-steps"><div class="ps fade-in"><div class="ps-num">1</div><h3>Discovery</h3><p>Vision, budget, timeline. Designs in days.</p></div><div class="ps fade-in"><div class="ps-num">2</div><h3>Engineering</h3><p>Full structural and energy modeling.</p></div><div class="ps fade-in"><div class="ps-num">3</div><h3>Manufacturing</h3><p>Precision-built in indoor factories.</p></div><div class="ps fade-in"><div class="ps-num">4</div><h3>Assembly</h3><p>Modules arrive. We connect and finish.</p></div><div class="ps fade-in"><div class="ps-num">5</div><h3>Handover</h3><p>Walkthrough. Sign-off. You're home.</p></div></div>
   </div>
 </div></section>
 
@@ -281,10 +261,10 @@
 <section class="alt"><div class="container">
   <div class="center fade-in"><div class="sec-label">Client Voices</div><h2 class="sec-title">What our partners say</h2></div>
   <div style="margin-top:60px" class="testimonial-grid">
-    <div class="testimonial fade-in"><p>"200-unit complex in under three months. Traditional builders quoted 18 months. We came in 12% under budget with better quality."</p><div class="author">Marcus Chen</div><div class="role">Horizon Properties · Dover, DE</div></div>
-    <div class="testimonial fade-in"><p>"52 POP-UP units operational in 28 days after a flood emergency. Residents went from shelters to homes in under a month."</p><div class="author">Dr. Elena Vasquez</div><div class="role">Emergency Response · Vienna</div></div>
-    <div class="testimonial fade-in"><p>"I toured their factory. The precision is extraordinary — tolerances you can't achieve on-site. I now specify instaBuild for every project."</p><div class="author">James Harrington, AIA</div><div class="role">Studio Nine · London</div></div>
-    <div class="testimonial fade-in"><p>"Fixed-price guarantee changed everything. No change orders. Every penny accounted for. In 20 years, I've never experienced that."</p><div class="author">Sarah Okonkwo</div><div class="role">Atlas Development · Austin, TX</div></div>
+    <div class="testimonial fade-in"><p>"200-unit complex in under three months. Traditional builders quoted 18 months. We came in 12% under budget."</p><div class="author">Marcus Chen</div><div class="role">Horizon Properties · Dover, DE</div></div>
+    <div class="testimonial fade-in"><p>"52 POP-UP units operational in 28 days after a flood. Residents from shelters to homes in under a month."</p><div class="author">Dr. Elena Vasquez</div><div class="role">Emergency Response · Vienna</div></div>
+    <div class="testimonial fade-in"><p>"I toured their factory. Tolerances you can't achieve on-site. I now specify instaBuild for every project."</p><div class="author">James Harrington, AIA</div><div class="role">Studio Nine · London</div></div>
+    <div class="testimonial fade-in"><p>"Fixed-price guarantee changed everything. No change orders. In 20 years, I've never experienced that."</p><div class="author">Sarah Okonkwo</div><div class="role">Atlas Development · Austin, TX</div></div>
   </div>
 </div></section>
 
@@ -292,11 +272,11 @@
   <div class="center fade-in"><div class="sec-label">FAQ</div><h2 class="sec-title">Questions you might have</h2></div>
   <div style="margin-top:48px" class="faq-grid fade-in">
     <div class="faq-item"><h3>How is modular different from prefab?</h3><p>Prefab = individual components built offsite. Modular = entire room-sized modules manufactured complete with finishes and systems. It's the difference between ingredients and a finished meal.</p></div>
-    <div class="faq-item"><h3>What does a POP-UP community cost?</h3><p>POP-UP units start at approximately $45,000 for 28m², fully finished. Pricing scales with size and quantity. Contact us for a detailed project quote.</p></div>
-    <div class="faq-item"><h3>Can buildings be customized?</h3><p>Absolutely. Panelized system = engineered foundation, but every project gets custom exterior finishes, interior layouts, and window configurations. Our custom division handles bespoke luxury.</p></div>
-    <div class="faq-item"><h3>How do permits and zoning work?</h3><p>Full regulatory compliance verification before manufacturing. Our engineers ensure your building meets all codes — automatically. We handle the complexity.</p></div>
-    <div class="faq-item"><h3>What warranty is included?</h3><p>10-year structural warranty + 2-year comprehensive finish warranty. IoT-tracked manufacturing history means we trace every component to its batch and inspection record.</p></div>
-    <div class="faq-item"><h3>How do I get started?</h3><p>Fill out the form below or email contact@instabuild.com. Tell us about your project. We respond within 24 hours with a detailed proposal.</p></div>
+    <div class="faq-item"><h3>What does a POP-UP community cost?</h3><p>POP-UP units start at approximately $45,000 for 28m², fully finished. Pricing scales with size and quantity.</p></div>
+    <div class="faq-item"><h3>Can buildings be customized?</h3><p>Absolutely. Panelized system = engineered foundation, but every project gets custom exterior finishes, interior layouts, and window configurations.</p></div>
+    <div class="faq-item"><h3>How do permits and zoning work?</h3><p>Full regulatory compliance verification before manufacturing. Our engineers ensure your building meets all codes — automatically.</p></div>
+    <div class="faq-item"><h3>What warranty is included?</h3><p>10-year structural warranty + 2-year comprehensive finish warranty. IoT-tracked manufacturing history included.</p></div>
+    <div class="faq-item"><h3>How do I get started?</h3><p>Fill out the form below or email contact@instabuild.com. We respond within 24 hours with a detailed proposal.</p></div>
   </div>
 </div></section>
 
@@ -321,8 +301,8 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Language
-document.getElementById('langSwitch').addEventListener('click',function(e){const b=e.target.closest('button');if(!b)return;this.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const l=b.dataset.lang;if(l==='en'){window.location=window.location.pathname}else{const u=new URL(window.location);u.searchParams.set('lang',l);window.location=u.toString()}});
+// Language switcher
+document.getElementById('langSwitch').addEventListener('click',function(e){const b=e.target.closest('button');if(!b)return;this.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const l=b.dataset.lang;if(l==='en')window.location=window.location.pathname;else{const u=new URL(window.location);u.searchParams.set('lang',l);window.location=u.toString()}});
 (function(){var s=document.createElement('script');s.src='https://translate.google.com/translate_a/element.js?cb=gtInit';s.async=true;document.head.appendChild(s)})();
 function gtInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,fr,de,it,pt,ru,zh-CN,zh-TW,ja,ko,ar,hi,tr,nl,pl,sv,da,fi,no,cs,ro,hu,el,he,th,vi,id,ms,uk,bg,hr,sr,sk,sl,et,lv,lt,fa,sw,ta,bn,ur,fil,am,km,my,ne,si,te,gu,pa,ml',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element')}
 var gtEl=document.createElement('div');gtEl.id='google_translate_element';gtEl.style.display='none';document.body.appendChild(gtEl);
@@ -331,7 +311,7 @@ window.addEventListener('scroll',()=>document.getElementById('header').classList
 document.getElementById('menuToggle').addEventListener('click',()=>document.getElementById('nav').classList.toggle('open'));
 const io=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.06});document.querySelectorAll('.fade-in').forEach(e=>io.observe(e));setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('v')}),150);
 // Form
-document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.className='form-status';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'s':'e');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status e';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry — We\'ll Respond Within 24 Hours'});
+document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.className='form-status';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'s':'e');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status e';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry'});
 // Map
 (function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([35,10],3);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
 const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ. Manufacturing hub.',c:104},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects.',c:340},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP.',c:70},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos premium.',c:15},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich.',c:0},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London.',c:0},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam.',c:0},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon.',c:0},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan.',c:0},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto.',c:0},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai.',c:0},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green Deal.',c:0}];
@@ -348,212 +328,133 @@ new ResizeObserver(()=>map.invalidateSize()).observe(c)})();
 import*as THREE from'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
 const frame=document.getElementById('vframe'),canvas=document.getElementById('vcanvas');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1117');scene.fog=new THREE.Fog('#0d1117',12,40);
-const camera=new THREE.PerspectiveCamera(36,620/620,.5,55);camera.position.set(6,4.5,8);
-const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.5,0);controls.enableDamping=true;controls.dampingFactor=.07;controls.minDistance=2.5;controls.maxDistance=15;controls.maxPolarAngle=1.35;controls.update();
+const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1117');scene.fog=new THREE.Fog('#0d1117',14,42);
+const camera=new THREE.PerspectiveCamera(36,640/640,.5,60);camera.position.set(7,5,9);
+const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,2,0);controls.enableDamping=true;controls.dampingFactor=.07;controls.minDistance=3;controls.maxDistance=18;controls.maxPolarAngle=1.35;controls.update();
 scene.add(new THREE.AmbientLight('#c0d8f0',.85));
-const sun=new THREE.DirectionalLight('#fffef8',3.0);sun.position.set(15,11,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=.3;sun.shadow.camera.far=40;sun.shadow.camera.left=-10;sun.shadow.camera.right=10;sun.shadow.camera.top=10;sun.shadow.camera.bottom=-5;scene.add(sun);
+const sun=new THREE.DirectionalLight('#fffef8',3.0);sun.position.set(16,12,9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.near=.3;sun.shadow.camera.far=45;scene.add(sun);
 scene.add(new THREE.DirectionalLight('#a0b8d0',.25).translateX(-5).translateZ(-5));
 
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(36,36),new THREE.MeshStandardMaterial({color:'#2a3a2e',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;ground.receiveShadow=true;scene.add(ground);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#2a3a2e',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;ground.receiveShadow=true;scene.add(ground);
 const mSteel=new THREE.MeshStandardMaterial({color:'#5a6878',roughness:.3,metalness:.85});
 const mDoor=new THREE.MeshStandardMaterial({color:'#1a2535',roughness:.2,metalness:.6});
-const mAccent=new THREE.MeshStandardMaterial({color:'#2ecc71',roughness:.2,metalness:.4,emissive:'#2ecc71',emissiveIntensity:.06});
 const mWood=new THREE.MeshStandardMaterial({color:'#8b6914',roughness:.5,metalness:.05});
 const mGlass=new THREE.MeshStandardMaterial({color:'#c8ddf4',roughness:.03,metalness:.03,transparent:true,opacity:.75});
+const mIntWhite=new THREE.MeshStandardMaterial({color:'#f5f5f0',roughness:.4});
+const mIntWood=new THREE.MeshStandardMaterial({color:'#c4a882',roughness:.35});
+const mIntLux=new THREE.MeshStandardMaterial({color:'#e8e0d8',roughness:.15,metalness:.1});
 
 const matCache={};
-function wM(){const v=dataset('wallOpts','wall','white');if(!matCache['w_'+v]){const c={white:'#e8ecf2',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52',brick:'#b05040'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return matCache['w_'+v]}
-function wAM(){const v=dataset('wallOpts','wall','white');if(!matCache['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042',brick:'#a0483a'};matCache['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35,metalness:.04})}return matCache['wa_'+v]}
-function rM2(){const v=dataset('roofOpts','roof','dark');if(!matCache['r_'+v]){const c={dark:'#3b4452',terra:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};matCache['r_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.25:.35,metalness:v==='metal'?.4:.2})}return matCache['r_'+v]}
-function wiM(){const v=dataset('winOpts','window','clear');if(!matCache['wi_'+v]){const o={clear:{c:'#c8ddf4',o:.78},black:{c:'#7090b0',o:.58},bronze:{c:'#c0a888',o:.58},wood:{c:'#b8a888',o:.6}};matCache['wi_'+v]=new THREE.MeshStandardMaterial({color:o[v].c,roughness:.03,metalness:.03,transparent:true,opacity:o[v].o})}return matCache['wi_'+v]}
-function dataset(id,key,dflt){return document.querySelector('#'+id+' .bopt.active')?.dataset[key]||dflt}
+function ds(id,k,d){return document.querySelector('#'+id+' .bopt.active')?.dataset[k]||d}
+function wM(){const v=ds('wallOpts','wall','white');if(!matCache['w_'+v]){const c={white:'#e8ecf2',cream:'#e8dfd2',gray:'#8894a2',timber:'#b89068',charcoal:'#3a404a',navy:'#2a3a52',brick:'#b05040'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35})}return matCache['w_'+v]}
+function wAM(){const v=ds('wallOpts','wall','white');if(!matCache['wa_'+v]){const c={white:'#dde4ee',cream:'#dcd4c6',gray:'#788494',timber:'#a8805c',charcoal:'#30363e',navy:'#223042',brick:'#a0483a'};matCache['wa_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.35})}return matCache['wa_'+v]}
+function rM2(){const v=ds('roofOpts','roof','dark');if(!matCache['r_'+v]){const c={dark:'#3b4452',terra:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};matCache['r_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.25:.35})}return matCache['r_'+v]}
+function wiM(){const v=ds('winOpts','window','clear');if(!matCache['wi_'+v]){const o={clear:{c:'#c8ddf4',o:.78},black:{c:'#7090b0',o:.58},bronze:{c:'#c0a888',o:.58},wood:{c:'#b8a888',o:.6}};matCache['wi_'+v]=new THREE.MeshStandardMaterial({color:o[v].c,roughness:.03,metalness:.03,transparent:true,opacity:o[v].o})}return matCache['wi_'+v]}
+function intM(){const v=ds('interiorOpts','interior','modern');return v==='modern'?mIntWhite:v==='warm'?mIntWood:mIntLux}
 
-const dyn=[];const extras=[];
-function ad(geo,pos,rot,tp){const m=new THREE.Mesh(geo,tp==='w'?wM():tp==='wa'?wAM():tp==='wi'?wiM():tp==='r'?rM2():tp==='wd'?mWood:tp==='gl'?mGlass:null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dt:tp};dyn.push(m);scene.add(m);return m}
+const dyn=[],extras=[];
+function ad(geo,pos,rot,tp){const m=new THREE.Mesh(geo,tp==='w'?wM():tp==='wa'?wAM():tp==='wi'?wiM():tp==='r'?rM2():tp==='int'?intM():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dt:tp};dyn.push(m);scene.add(m);return m}
 function addX(geo,pos,rot,mat){const m=new THREE.Mesh(geo,mat);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;extras.push(m);scene.add(m);return m}
 
-function updatePrice(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(130500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+(6000+up).toLocaleString()}
-window.updatePrice=updatePrice;
-
-function buildLandscaping(){
-  const land=dataset('landOpts','land','basic');
-  if(land==='garden'){
-    for(let i=0;i<6;i++){const tx=(Math.random()*12-6),tz=(Math.random()*6+4);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.6,8),mWood);trunk.position.set(tx,.8,tz);trunk.castShadow=true;extras.push(trunk);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.7,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));crown.position.set(tx,1.5,tz);crown.castShadow=true;extras.push(crown);scene.add(crown)}
-    for(let i=0;i<4;i++){const bx=(i-1.5)*1.2,bz=3.2;const bush=new THREE.Mesh(new THREE.SphereGeometry(.35,6,4),new THREE.MeshStandardMaterial({color:'#4a7a4e',roughness:.6}));bush.position.set(bx,.35,bz);extras.push(bush);scene.add(bush)}
-  }else if(land==='luxury'){
-    // Driveway
-    const dr=new THREE.Mesh(new THREE.BoxGeometry(3,.03,6),new THREE.MeshStandardMaterial({color:'#888890',roughness:.4}));dr.position.set(hw+2,0,-hd+1);dr.receiveShadow=true;extras.push(dr);scene.add(dr);
-    // Pool
-    const pool=new THREE.Mesh(new THREE.BoxGeometry(3,.08,2),new THREE.MeshStandardMaterial({color:'#4080c0',roughness:.15,metalness:.2}));pool.position.set(-hw-2.5,.02,-hd+2);pool.receiveShadow=true;extras.push(pool);scene.add(pool);
-    // Trees with better placement
-    for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2,r=6+Math.random()*3;const tx=Math.cos(a)*r,tz=Math.sin(a)*r+1;const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.1,.15,2,8),mWood);trunk.position.set(tx,1,tz);trunk.castShadow=true;extras.push(trunk);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.9,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));crown.position.set(tx,2,tz);crown.castShadow=true;extras.push(crown);scene.add(crown)}
-    // Fountain
-    const fBase=new THREE.Mesh(new THREE.CylinderGeometry(.4,.5,.3,12),new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.3}));fBase.position.set(0,.15,hd+2.5);fBase.castShadow=true;extras.push(fBase);scene.add(fBase);
-    const fPillar=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,.8,12),new THREE.MeshStandardMaterial({color:'#b0b0b0',roughness:.3}));fPillar.position.set(0,.55,hd+2.5);extras.push(fPillar);scene.add(fPillar);
-  }
+function buildLandscaping(W,D,hw,hd){
+  const land=ds('landOpts','land','basic');
+  if(land==='garden'){for(let i=0;i<6;i++){const tx=(Math.random()*14-7),tz=(Math.random()*7+5);const t=new THREE.Mesh(new THREE.CylinderGeometry(.08,.12,1.6,8),mWood);t.position.set(tx,.8,tz);t.castShadow=true;extras.push(t);scene.add(t);const cr=new THREE.Mesh(new THREE.SphereGeometry(.7,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));cr.position.set(tx,1.5,tz);cr.castShadow=true;extras.push(cr);scene.add(cr)}}
+  else if(land==='luxury'){const dr=new THREE.Mesh(new THREE.BoxGeometry(3,.03,6),new THREE.MeshStandardMaterial({color:'#888890',roughness:.4}));dr.position.set(hw+2.5,0,-hd+1);dr.receiveShadow=true;extras.push(dr);scene.add(dr);const pool=new THREE.Mesh(new THREE.BoxGeometry(3.5,.08,2.5),new THREE.MeshStandardMaterial({color:'#4080c0',roughness:.15,metalness:.2}));pool.position.set(-hw-2.5,.02,-hd+1.5);pool.receiveShadow=true;extras.push(pool);scene.add(pool);for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2,r=7+Math.random()*2;const tx=Math.cos(a)*r,tz=Math.sin(a)*r+1;const t=new THREE.Mesh(new THREE.CylinderGeometry(.1,.15,2,8),mWood);t.position.set(tx,1,tz);t.castShadow=true;extras.push(t);scene.add(t);const cr=new THREE.Mesh(new THREE.SphereGeometry(.9,8,6),new THREE.MeshStandardMaterial({color:'#3a6a3e',roughness:.7}));cr.position.set(tx,2,tz);cr.castShadow=true;extras.push(cr);scene.add(cr)}const fb=new THREE.Mesh(new THREE.CylinderGeometry(.4,.5,.3,12),new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.3}));fb.position.set(0,.15,hd+3);fb.castShadow=true;extras.push(fb);scene.add(fb);const fp=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,.8,12),new THREE.MeshStandardMaterial({color:'#b0b0b0',roughness:.3}));fp.position.set(0,.55,hd+3);extras.push(fp);scene.add(fp)}
 }
 
-function buildAddons(W,D,hd){
-  const addon=dataset('addonOpts','addon','none');const frontZ=hd-.03;
-  if(addon==='porch'){
-    addX(new THREE.BoxGeometry(3.5,.06,2),new THREE.Vector3(0,.15,frontZ+1.1),null,mWood);
-    const pr=new THREE.Mesh(new THREE.BoxGeometry(4,.06,2.2),new THREE.MeshStandardMaterial({color:'#3b4452',roughness:.35}));pr.position.set(0,2.4,frontZ+1.1);pr.castShadow=true;extras.push(pr);scene.add(pr);
-    for(let x=-1.5;x<=1.5;x+=3)addX(new THREE.BoxGeometry(.08,2.2,.08),new THREE.Vector3(x,1.2,frontZ+2.0),null,mWood);
-    addX(new THREE.BoxGeometry(2,.1,.4),new THREE.Vector3(0,.05,frontZ+2.1),null,mWood);
-  }else if(addon==='garage'){
-    const gx=-(W/2+2.4); // left side of house, visible
-    addX(new THREE.BoxGeometry(4,.2,3.5),new THREE.Vector3(gx,.1,0),null,wM());
-    const gr=new THREE.Mesh(new THREE.BoxGeometry(4.2,.1,2),rM2());gr.position.set(gx,2.4,-.75);gr.rotation.x=-.4;gr.castShadow=true;extras.push(gr);scene.add(gr);
-    addX(new THREE.BoxGeometry(3,.06,.06),new THREE.Vector3(gx,1.15,1.72),null,doorMat());
-  }
+function buildInterior(W,D,hw,hd,wallY){
+  const intv=ds('interiorOpts','interior','modern');
+  // Floor
+  addX(new THREE.BoxGeometry(W-1.2,D-1.2,.04),new THREE.Vector3(0,.22,0),null,intM());
+  // Interior walls (room divider)
+  addX(new THREE.BoxGeometry(.06,2.6,W*.35),new THREE.Vector3(-hw*.35,wallY-.1,-hd*.3),null,intM());
+  addX(new THREE.BoxGeometry(W*.35,2.6,.06),new THREE.Vector3(-hw*.35,wallY-.1,-hd*.6),null,intM());
+  // Kitchen counter
+  addX(new THREE.BoxGeometry(2,.04,.6),new THREE.Vector3(hw*.6,.55,-hd*.5),null,intM());
+  addX(new THREE.BoxGeometry(.6,.7,.6),new THREE.Vector3(hw*.85,.55,-hd*.5),null,intM()); // fridge
+  // Table
+  addX(new THREE.BoxGeometry(1.2,.04,.8),new THREE.Vector3(hw*.3,.6,hd*.5),null,intM());
+  // Bed
+  addX(new THREE.BoxGeometry(1.8,.3,1.4),new THREE.Vector3(-hw*.4,.35,-hd*.5),null,intM());
+  // Sofa
+  addX(new THREE.BoxGeometry(2,.3,.7),new THREE.Vector3(0,.35,hd*.6),null,intM());
 }
-function doorMat(){const v=dataset('doorOpts','door','steel');return v==='steel'?mDoor:v==='woodgrain'?mWood:mGlass}
+
+function buildAddons(W,D,hd,hw){
+  const addon=ds('addonOpts','addon','none');const fZ=hd-.03;
+  if(addon==='porch'){addX(new THREE.BoxGeometry(3.5,.06,2.2),new THREE.Vector3(0,.15,fZ+1.2),null,mWood);const pr=new THREE.Mesh(new THREE.BoxGeometry(4,.06,2.4),new THREE.MeshStandardMaterial({color:'#3b4452',roughness:.35}));pr.position.set(0,2.5,fZ+1.2);pr.castShadow=true;extras.push(pr);scene.add(pr);for(let x=-1.5;x<=1.5;x+=3)addX(new THREE.BoxGeometry(.08,2.4,.08),new THREE.Vector3(x,1.3,fZ+2.2),null,mWood);addX(new THREE.BoxGeometry(2,.1,.5),new THREE.Vector3(0,.05,fZ+2.3),null,mWood)}
+  else if(addon==='garage'){const gx=-(hw+2.5);addX(new THREE.BoxGeometry(4.5,.2,3.8),new THREE.Vector3(gx,.1,0),null,wM());const gr=new THREE.Mesh(new THREE.BoxGeometry(4.7,.1,2.2),rM2());gr.position.set(gx,2.5,-.8);gr.rotation.x=-.4;gr.castShadow=true;extras.push(gr);scene.add(gr);addX(new THREE.BoxGeometry(3.5,.06,.06),new THREE.Vector3(gx,1.15,1.85),null,mDoor)}
+}
 
 function rebuild(){
   dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;
-  const shape=dataset('shapeOpts','shape','rect'),roofStyle=dataset('roofStyleOpts','roofstyle','pitched');
-  // All measurements in meters. Module is a precise box: foundation → columns → beams → walls → roof.
-  let W=5.8,D=4.4,cols=[],B=0.2; // B = beam/column base Y (top of foundation)
+  const shape=ds('shapeOpts','shape','rect'),roofStyle=ds('roofStyleOpts','roofstyle','pitched');
+  let W=7.0,D=5.5,B=0.2,cols=[];
+  // Bigger house — 7m x 5.5m
+  if(shape==='rect'){W=7.0;D=5.5;cols=[[-3.4,-2.7,B],[-3.4,2.7,B],[3.4,-2.7,B],[3.4,2.7,B]]}
+  else if(shape==='lshape'){W=8.5;D=8.0;cols=[[-4.2,-3.9,B],[-4.2,3.9,B],[4.2,-3.9,B],[4.2,3.9,B],[4.2,0,B],[2.0,3.9,B]]}
+  else if(shape==='wide'){W=10.5;D=5.0;cols=[[-5.2,-2.4,B],[-5.2,2.4,B],[5.2,-2.4,B],[5.2,2.4,B],[-1.7,-2.4,B],[-1.7,2.4,B],[1.7,-2.4,B],[1.7,2.4,B]]}
 
-  if(shape==='rect'){W=5.8;D=4.4;cols=[[-2.8,-2.1,B],[-2.8,2.1,B],[2.8,-2.1,B],[2.8,2.1,B]]}
-  else if(shape==='lshape'){W=7.0;D=7.0;cols=[[-3.4,-3.3,B],[-3.4,3.3,B],[3.4,-3.3,B],[3.4,3.3,B],[3.4,0,B],[1.7,3.3,B],[1.7,0,B]]}
-  else if(shape==='wide'){W=9.0;D=4.0;cols=[[-4.4,-1.9,B],[-4.4,1.9,B],[4.4,-1.9,B],[4.4,1.9,B],[-1.5,-1.9,B],[-1.5,1.9,B],[1.5,-1.9,B],[1.5,1.9,B]]}
-
-  const H=3.0; // wall/column height from beam to roof
-  const hw=W/2, hd=D/2; // half-width, half-depth
-  const wallY=B+H/2; // wall center Y = 0.2 + 1.5 = 1.7
-
-  // === FOUNDATION ===
+  const H=3.2,hw=W/2,hd=D/2,wallY=B+H/2;
   ad(new THREE.BoxGeometry(W,.2,D),new THREE.Vector3(0,.1,0),null,'w');
-
-  // === STEEL COLUMNS ===
-  cols.forEach(([cx,cz,cy])=>{
-    const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),mSteel);
-    c.position.set(cx,cy+H/2,cz);c.castShadow=c.receiveShadow=true;extras.push(c);scene.add(c);
-  });
-
-  // === FLOOR BEAMS (at y=B=0.2) ===
-  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,-hd+.05),null,'w');
-  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,hd-.05),null,'w');
-  // Inner cross beams
-  const stepX=shape==='wide'?W/4:W/2;
-  for(let x=-hw+stepX;x<=hw-stepX;x+=stepX){
-    ad(new THREE.BoxGeometry(.1,.06,D-.1),new THREE.Vector3(x,B,0),null,'w');
-  }
-
-  // === CEILING BEAMS (at y=B+H=3.2) ===
+  cols.forEach(([cx,cz,cy])=>{const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),mSteel);c.position.set(cx,cy+H/2,cz);c.castShadow=c.receiveShadow=true;extras.push(c);scene.add(c)});
+  // Beams
+  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,-hd+.05),null,'w');ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,hd-.05),null,'w');
   const ceilY=B+H;
-  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,ceilY,-hd+.05),null,'w');
-  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,ceilY,hd-.05),null,'w');
-
-  // === WALLS (centered at wallY=1.7, height=H=3.0) ===
-  // Rear wall — full width
+  ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,ceilY,-hd+.05),null,'w');ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,ceilY,hd-.05),null,'w');
+  // Walls
   ad(new THREE.BoxGeometry(W-.1,H,.06),new THREE.Vector3(0,wallY,-hd+.03),null,'w');
-  // Front wall — 3 panel sections with door gap
-  const frontZ=hd-.03;
-  const gapW=1.2; // door width
-  const panelW=(W-.1-gapW)/2;
-  ad(new THREE.BoxGeometry(panelW,H,.06),new THREE.Vector3(-hw+panelW/2+.05,wallY,frontZ),null,'wa');
-  ad(new THREE.BoxGeometry(panelW,H,.06),new THREE.Vector3(hw-panelW/2-.05,wallY,frontZ),null,'wa');
-  // Above door
-  ad(new THREE.BoxGeometry(gapW,H-2.1,.06),new THREE.Vector3(0,wallY+1.05,frontZ),null,'wa');
-  // Side walls
+  const fZ=hd-.03,gapW=1.3,fPW=(W-.1-gapW)/2;
+  ad(new THREE.BoxGeometry(fPW,H,.06),new THREE.Vector3(-hw+fPW/2+.05,wallY,fZ),null,'wa');
+  ad(new THREE.BoxGeometry(fPW,H,.06),new THREE.Vector3(hw-fPW/2-.05,wallY,fZ),null,'wa');
+  ad(new THREE.BoxGeometry(gapW,H-2.2,.06),new THREE.Vector3(0,wallY+1.1,fZ),null,'wa');
   ad(new THREE.BoxGeometry(.06,H,D),new THREE.Vector3(-hw+.03,wallY,0),null,'w');
   ad(new THREE.BoxGeometry(.06,H,D),new THREE.Vector3(hw-.03,wallY,0),null,'w');
-
-  // === WINDOWS (on wall surfaces, slightly offset for visibility) ===
-  const ws=.7, wh=.85, wd=.04;
-  const wc=dataset('winCountOpts','wincount','standard');
-  // Rear wall windows
-  const rearCols=wc==='max'?4:wc==='more'?3:2;
-  for(let i=0;i<rearCols;i++){
-    const wx=-1.5+i*(3/(rearCols-1||1));
-    for(let wy=-.6;wy<=.6;wy+=1.2){
-      ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(wx,wallY+wy,-hd+.06),null,'wi');
-    }
-  }
-  // Front wall windows
-  if(wc==='max'){
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY-.3,frontZ+.06),null,'wi');
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY+.3,frontZ+.06),null,'wi');
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY-.3,frontZ+.06),null,'wi');
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY+.3,frontZ+.06),null,'wi');
+  // Windows
+  const wc=ds('winCountOpts','wincount','standard'),ws=.75,wh=.9,ww=.04;
+  const rearCols=wc==='max'?5:wc==='more'?3:2;
+  for(let i=0;i<rearCols;i++){const wx=-2+i*(4/(rearCols-1||1));for(let wy=-.6;wy<=.6;wy+=1.2)ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(wx,wallY+wy,-hd+.06),null,'wi')}
+  const fwc=wc==='max'?2:1;
+  for(let s=0;s<fwc;s++){const wy2=s===0?-.35:.35;ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(-hw+fPW/2+.2,wallY+wy2,fZ+.06),null,'wi');ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(hw-fPW/2-.2,wallY+wy2,fZ+.06),null,'wi')}
+  const swc=wc==='max'?3:wc==='more'?2:1;
+  for(let i=0;i<swc;i++){const sz=-1.2+i*(2.4/(swc-1||1));ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(-hw+.09,wallY,sz),null,'wi');ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(hw-.09,wallY,sz),null,'wi')}
+  // Door
+  addX(new THREE.BoxGeometry(1.1,2.2,.06),new THREE.Vector3(0,1.2,fZ+.03),null,mDoor);
+  addX(new THREE.BoxGeometry(1.25,.06,.08),new THREE.Vector3(0,2.35,fZ+.02),null,mWood);
+  // Roof
+  const rBase=B+H;
+  if(roofStyle==='flat'){ad(new THREE.BoxGeometry(W+.5,.1,D+.5),new THREE.Vector3(0,rBase+.2,0),null,'r')}
+  else if(roofStyle==='hip'){
+    const rpG=new THREE.BoxGeometry(W+.5,.1,D*.65);
+    const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rBase+.4,-D/4);rf.rotation.x=-.35;rf.castShadow=rf.receiveShadow=true;rf.userData={dt:'r'};dyn.push(rf);scene.add(rf);
+    const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rBase+.4,D/4);rr.rotation.x=.35;rr.castShadow=rr.receiveShadow=true;rr.userData={dt:'r'};dyn.push(rr);scene.add(rr);
+    ad(new THREE.BoxGeometry(W+.5,.06,D*.35),new THREE.Vector3(0,rBase+.3,-hd+.15),null,'r');ad(new THREE.BoxGeometry(W+.5,.06,D*.35),new THREE.Vector3(0,rBase+.3,hd-.15),null,'r');
   }else{
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+panelW/2+.2,wallY,frontZ+.06),null,'wi');
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-panelW/2-.2,wallY,frontZ+.06),null,'wi');
+    const rpG=new THREE.BoxGeometry(W+.5,.1,D/2+.5);
+    const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rBase+.4,-D/4-.2);rf.rotation.x=-.38;rf.castShadow=rf.receiveShadow=true;rf.userData={dt:'r'};dyn.push(rf);scene.add(rf);
+    const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rBase+.4,D/4+.2);rr.rotation.x=.38;rr.castShadow=rr.receiveShadow=true;rr.userData={dt:'r'};dyn.push(rr);scene.add(rr);
+    ad(new THREE.BoxGeometry(W+.5,.1,D*.3),new THREE.Vector3(0,rBase+.35,-hd+.3),null,'r');ad(new THREE.BoxGeometry(W+.5,.1,D*.3),new THREE.Vector3(0,rBase+.35,hd-.3),null,'r');
   }
-  // Side wall windows
-  const sideCount=wc==='max'?3:wc==='more'?2:1;
-  for(let i=0;i<sideCount;i++){
-    const sz=-.9+i*(1.8/(sideCount-1||1));
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(-hw+.09,wallY,sz),null,'wi');
-    ad(new THREE.BoxGeometry(ws,wh,wd),new THREE.Vector3(hw-.09,wallY,sz),null,'wi');
-  }
+  // Chimney
+  const ch=new THREE.Mesh(new THREE.BoxGeometry(.4,2.5,.4),new THREE.MeshStandardMaterial({color:'#8b4513',roughness:.6}));ch.position.set(hw-1.2,rBase+1.2,-hd+1.0);ch.castShadow=true;extras.push(ch);scene.add(ch);
 
-  // === DOOR ===
-  addX(new THREE.BoxGeometry(1.0,2.1,.06),new THREE.Vector3(0,1.15,frontZ+.03),null,doorMat());
-  addX(new THREE.BoxGeometry(1.1,.06,.08),new THREE.Vector3(0,2.2,frontZ+.02),null,mWood);
-
-  // === ROOF ===
-  const rBase=B+H; // 3.2 — top of walls
-  if(roofStyle==='flat'){
-    ad(new THREE.BoxGeometry(W+.4,.08,D+.4),new THREE.Vector3(0,rBase+.2,0),null,'r');
-  }else if(roofStyle==='hip'){
-    // 4-sided hip: 2 main panels + 2 triangular ends + 4 hips
-    const rx=D*.35, paneL=D*.65;
-    const rpG=new THREE.BoxGeometry(W+.4,.1,paneL);
-    const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rBase+.35,-D/4);rf.rotation.x=-.35;rf.castShadow=rf.receiveShadow=true;rf.userData={dt:'r'};dyn.push(rf);scene.add(rf);
-    const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rBase+.35,D/4);rr.rotation.x=.35;rr.castShadow=rr.receiveShadow=true;rr.userData={dt:'r'};dyn.push(rr);scene.add(rr);
-    // Hip end panels
-    ad(new THREE.BoxGeometry(W+.4,.06,rx),new THREE.Vector3(0,rBase+.25,-hd+.1),null,'r');
-    ad(new THREE.BoxGeometry(W+.4,.06,rx),new THREE.Vector3(0,rBase+.25,hd-.1),null,'r');
-    // Eaves all around
-    ad(new THREE.BoxGeometry(W+.4,.04,.1),new THREE.Vector3(0,rBase+.55,-hd),null,'r');
-    ad(new THREE.BoxGeometry(W+.4,.04,.1),new THREE.Vector3(0,rBase+.55,hd),null,'r');
-    ad(new THREE.BoxGeometry(.04,.04,D+.2),new THREE.Vector3(-hw-.1,rBase+.5,0),null,'r');
-    ad(new THREE.BoxGeometry(.04,.04,D+.2),new THREE.Vector3(hw+.1,rBase+.5,0),null,'r');
-  }else{
-    // Standard gable
-    const rpG=new THREE.BoxGeometry(W+.4,.1,D/2+.5);
-    const rf=new THREE.Mesh(rpG,rM2());rf.position.set(0,rBase+.35,-D/4-.2);rf.rotation.x=-.38;rf.castShadow=rf.receiveShadow=true;rf.userData={dt:'r'};dyn.push(rf);scene.add(rf);
-    const rr=new THREE.Mesh(rpG,rM2());rr.position.set(0,rBase+.35,D/4+.2);rr.rotation.x=.38;rr.castShadow=rr.receiveShadow=true;rr.userData={dt:'r'};dyn.push(rr);scene.add(rr);
-    // Gable triangle fill
-    ad(new THREE.BoxGeometry(W+.4,.1,D*.3),new THREE.Vector3(0,rBase+.35,-hd+.25),null,'r');
-    ad(new THREE.BoxGeometry(W+.4,.1,D*.3),new THREE.Vector3(0,rBase+.35,hd-.25),null,'r');
-    // Eaves
-    ad(new THREE.BoxGeometry(W+.4,.04,.1),new THREE.Vector3(0,rBase+.55,-hd),null,'r');
-    ad(new THREE.BoxGeometry(W+.4,.04,.1),new THREE.Vector3(0,rBase+.55,hd),null,'r');
-  }
-
-  // === CHIMNEY ===
-  const ch=new THREE.Mesh(new THREE.BoxGeometry(.35,2.0,.35),new THREE.MeshStandardMaterial({color:'#8b4513',roughness:.6}));
-  ch.position.set(hw-1.0,rBase+1.0,-hd+1.0);ch.castShadow=true;extras.push(ch);scene.add(ch);
-
-  buildAddons(W,D,hd);
-  buildLandscaping();
+  buildInterior(W,D,hw,hd,wallY);
+  buildAddons(W,D,hd,hw);
+  buildLandscaping(W,D,hw,hd);
   updatePrice();
 }
+function updatePrice(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(124500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+up.toLocaleString()}
 rebuild();
 
-window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dt;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
+window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dt;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2();else if(t==='int')m.material=intM()})};
+window.updatePrice=updatePrice;
 
-// Config handlers
-document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const needsRebuild=!!(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts')||this.closest('#winCountOpts'));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
-document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts','doorOpts','winCountOpts','interiorOpts'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
-
-// View buttons
-document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');
-  const v=this.dataset.view;
-  if(v==='orbit'){camera.position.set(6,4.5,8);controls.target.set(0,1.5,0)}
-  else if(v==='top'){camera.position.set(0,8,0.5);controls.target.set(0,1.5,0)}
-  else if(v==='front'){camera.position.set(0,2,8);controls.target.set(0,1.5,0)}
-  else if(v==='side'){camera.position.set(8,2,0);controls.target.set(0,1.5,0)}
-  controls.update();
-}));
-
-function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,620);camera.aspect=w/620;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,250);
+// Config
+document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const rebuildGroups=['shapeOpts','roofStyleOpts','addonOpts','landOpts','winCountOpts','interiorOpts'];const needsRebuild=!!rebuildGroups.find(id=>this.closest('#'+id));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
+document.getElementById('resetCfg').addEventListener('click',()=>{const groups=['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts','winCountOpts','interiorOpts'];groups.forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
+// Views
+document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');const v=this.dataset.view;if(v==='orbit'){camera.position.set(7,5,9);controls.target.set(0,2,0)}else if(v==='top'){camera.position.set(0,10,0.5);controls.target.set(0,2,0)}else if(v==='front'){camera.position.set(0,2,10);controls.target.set(0,2,0)}else if(v==='side'){camera.position.set(10,2,0);controls.target.set(0,2,0)}controls.update()}));
+function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,640);camera.aspect=w/640;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,250);
 function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
 </script>
 </body>
