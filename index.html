@@ -358,6 +358,9 @@ const dyn=[];const extras=[];
 function ad(geo,pos,rot,tp){const m=new THREE.Mesh(geo,tp==='w'?wM():tp==='wa'?wAM():tp==='wi'?wiM():tp==='r'?rM2():tp==='wd'?mWood:tp==='gl'?mGlass:null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dt:tp};dyn.push(m);scene.add(m);return m}
 function addX(geo,pos,rot,mat){const m=new THREE.Mesh(geo,mat);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;extras.push(m);scene.add(m);return m}
 
+function updatePrice(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(130500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+(6000+up).toLocaleString()}
+window.updatePrice=updatePrice;
+
 function buildLandscaping(){
   const land=dataset('landOpts','land','basic');
   if(land==='garden'){
@@ -461,21 +464,9 @@ function rebuild(){
 }
 rebuild();
 
-// View buttons
-document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');
-  const v=this.dataset.view;
-  if(v==='orbit'){camera.position.set(6,4.5,8);controls.target.set(0,1.5,0)}
-  else if(v==='top'){camera.position.set(0,8,0.5);controls.target.set(0,1.5,0)}
-  else if(v==='front'){camera.position.set(0,2,8);controls.target.set(0,1.5,0)}
-  else if(v==='side'){camera.position.set(8,2,0);controls.target.set(0,1.5,0)}
-  controls.update();
-}));
-
 window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dt;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
-window.updatePrice=function(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(130500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+(6000+up).toLocaleString()}
 
-// Config handlers — inside module so they can access scene/dyn
+// Config handlers
 document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const needsRebuild=!!(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts'));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
 document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
 
