@@ -219,7 +219,7 @@
     </div>
     <div class="bviewer" id="vframe"><canvas id="vcanvas" width="640" height="640"></canvas>
       <div class="vui">
-        <button class="active" data-view="orbit">🎥 Orbit</button><button data-view="top">📐 Top</button><button data-view="front">🏠 Front</button><button data-view="side">📏 Side</button>
+        <button class="active" data-view="orbit">🎥 Orbit</button><button data-view="free">🕹️ Free</button><button data-view="top">📐 Top</button><button data-view="front">🏠 Front</button><button data-view="side">📏 Side</button>
       </div>
     </div>
     <div class="bprice"><h3>💰 Estimate</h3><div class="pbox"><div class="pv" id="priceTotal">$124,500</div><div class="pl">ESTIMATED TOTAL</div></div>
@@ -364,6 +364,8 @@ function wAM(){const v=ds('wallOpts','wall','white');if(!matCache['wa_'+v]){cons
 function rM2(){const v=ds('roofOpts','roof','dark');if(!matCache['r_'+v]){const c={dark:'#3b4452',terra:'#a0523b',metal:'#8899aa',green:'#4a6a3e'};matCache['r_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='metal'?.25:.35})}return matCache['r_'+v]}
 function wiM(){const v=ds('winOpts','window','clear');if(!matCache['wi_'+v]){const o={clear:{c:'#c8ddf4',o:.78},black:{c:'#7090b0',o:.58},bronze:{c:'#c0a888',o:.58},wood:{c:'#b8a888',o:.6}};matCache['wi_'+v]=new THREE.MeshStandardMaterial({color:o[v].c,roughness:.03,metalness:.03,transparent:true,opacity:o[v].o})}return matCache['wi_'+v]}
 function intM(){const v=ds('interiorOpts','interior','modern');return v==='modern'?mIntWhite:v==='warm'?mIntWood:mIntLux}
+function foundM(){const v=ds('foundOpts','found','concrete');return v==='stone'?new THREE.MeshStandardMaterial({color:'#8a8078',roughness:.5}):v==='brick'?new THREE.MeshStandardMaterial({color:'#9b6040',roughness:.4}):new THREE.MeshStandardMaterial({color:'#bcc4cc',roughness:.65})}
+function trimM(){const v=ds('trimOpts','trim','white');if(!matCache['t_'+v]){const c={white:'#e8ecf0',black:'#2a2a2a',wood:'#8b6914'};matCache['t_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:v==='wood'?.4:.2})}return matCache['t_'+v]}
 
 const dyn=[],extras=[];
 function ad(geo,pos,rot,tp){const m=new THREE.Mesh(geo,tp==='w'?wM():tp==='wa'?wAM():tp==='wi'?wiM():tp==='r'?rM2():tp==='int'?intM():null);m.position.copy(pos);if(rot)m.rotation.set(rot.x,rot.y,rot.z);m.castShadow=m.receiveShadow=true;m.userData={dt:tp};dyn.push(m);scene.add(m);return m}
@@ -413,7 +415,7 @@ function rebuild(){
   else if(shape==='wide'){W=10.5;D=5.0;cols=[[-5.2,-2.4,B],[-5.2,2.4,B],[5.2,-2.4,B],[5.2,2.4,B],[-1.7,-2.4,B],[-1.7,2.4,B],[1.7,-2.4,B],[1.7,2.4,B]]}
 
   const H=3.2,hw=W/2,hd=D/2,wallY=B+H/2;
-  ad(new THREE.BoxGeometry(W,.2,D),new THREE.Vector3(0,.1,0),null,'w');
+  addX(new THREE.BoxGeometry(W,.2,D),new THREE.Vector3(0,.1,0),null,foundM());
   cols.forEach(([cx,cz,cy])=>{const c=new THREE.Mesh(new THREE.BoxGeometry(.1,H,.1),mSteel);c.position.set(cx,cy+H/2,cz);c.castShadow=c.receiveShadow=true;extras.push(c);scene.add(c)});
   // Beams
   ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,-hd+.05),null,'w');ad(new THREE.BoxGeometry(W-.1,.06,.1),new THREE.Vector3(0,B,hd-.05),null,'w');
@@ -437,7 +439,10 @@ function rebuild(){
   for(let i=0;i<swc;i++){const sz=-1.2+i*(2.4/(swc-1||1));ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(-hw+.09,wallY,sz),null,'wi');ad(new THREE.BoxGeometry(ws,wh,ww),new THREE.Vector3(hw-.09,wallY,sz),null,'wi')}
   // Door
   addX(new THREE.BoxGeometry(1.1,2.2,.06),new THREE.Vector3(0,1.2,fZ+.03),null,mDoor);
-  addX(new THREE.BoxGeometry(1.25,.06,.08),new THREE.Vector3(0,2.35,fZ+.02),null,mWood);
+  addX(new THREE.BoxGeometry(1.25,.06,.08),new THREE.Vector3(0,2.35,fZ+.02),null,trimM());
+  // Window frames
+  const tM=trimM();
+  for(let wx=-2;wx<=2;wx+=4/3)for(let wy=-.6;wy<=.6;wy+=1.2){addX(new THREE.BoxGeometry(.8,.04,.06),new THREE.Vector3(wx,wallY+wy-.4,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.8,.04,.06),new THREE.Vector3(wx,wallY+wy+.4,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.04,.04,.9),new THREE.Vector3(wx-.37,wallY+wy,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.04,.04,.9),new THREE.Vector3(wx+.37,wallY+wy,-hd+.09),null,tM)}
   // Roof
   const rBase=B+H;
   if(roofStyle==='flat'){ad(new THREE.BoxGeometry(W+.5,.1,D+.5),new THREE.Vector3(0,rBase+.2,0),null,'r')}
@@ -470,9 +475,15 @@ window.updatePrice=updatePrice;
 document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const rebuildGroups=['shapeOpts','roofStyleOpts','addonOpts','landOpts','winCountOpts','interiorOpts','foundOpts'];const needsRebuild=!!rebuildGroups.find(id=>this.closest('#'+id));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
 document.getElementById('resetCfg').addEventListener('click',()=>{const groups=['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts','winCountOpts','interiorOpts','foundOpts','trimOpts'];groups.forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
 // Views
-document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');const v=this.dataset.view;if(v==='orbit'){camera.position.set(7,5,9);controls.target.set(0,2,0)}else if(v==='top'){camera.position.set(0,10,0.5);controls.target.set(0,2,0)}else if(v==='front'){camera.position.set(0,2,10);controls.target.set(0,2,0)}else if(v==='side'){camera.position.set(10,2,0);controls.target.set(0,2,0)}controls.update()}));
+let camMode='orbit';
+document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');camMode=this.dataset.view;const v=this.dataset.view;if(v==='orbit'){camera.position.set(7,5,9);controls.target.set(0,2,0);controls.enabled=true}else if(v==='free'){camera.position.set(3,2,hd+3);controls.enabled=false}else if(v==='top'){camera.position.set(0,10,0.5);controls.target.set(0,2,0);controls.enabled=true}else if(v==='front'){camera.position.set(0,2,10);controls.target.set(0,2,0);controls.enabled=true}else if(v==='side'){camera.position.set(10,2,0);controls.target.set(0,2,0);controls.enabled=true}controls.update()}));
 function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,640);camera.aspect=w/640;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,250);
-function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
+// WASD freecam
+const keys={};document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true});document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+function anim(){requestAnimationFrame(anim);
+  if(camMode==='free'){const spd=.12;const dir=new THREE.Vector3();camera.getWorldDirection(dir);const right=new THREE.Vector3().crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();if(keys.w)camera.position.addScaledVector(dir,spd);if(keys.s)camera.position.addScaledVector(dir,-spd);if(keys.a)camera.position.addScaledVector(right,-spd);if(keys.d)camera.position.addScaledVector(right,spd);if(keys.q)camera.position.y-=spd;if(keys.e)camera.position.y+=spd}
+  else controls.update();
+  renderer.render(scene,camera)}anim();
 </script>
 </body>
 </html>
