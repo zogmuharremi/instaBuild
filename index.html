@@ -440,9 +440,6 @@ function rebuild(){
   // Door
   addX(new THREE.BoxGeometry(1.1,2.2,.06),new THREE.Vector3(0,1.2,fZ+.03),null,mDoor);
   addX(new THREE.BoxGeometry(1.25,.06,.08),new THREE.Vector3(0,2.35,fZ+.02),null,trimM());
-  // Window frames
-  const tM=trimM();
-  for(let wx=-2;wx<=2;wx+=4/3)for(let wy=-.6;wy<=.6;wy+=1.2){addX(new THREE.BoxGeometry(.8,.04,.06),new THREE.Vector3(wx,wallY+wy-.4,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.8,.04,.06),new THREE.Vector3(wx,wallY+wy+.4,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.04,.04,.9),new THREE.Vector3(wx-.37,wallY+wy,-hd+.09),null,tM);addX(new THREE.BoxGeometry(.04,.04,.9),new THREE.Vector3(wx+.37,wallY+wy,-hd+.09),null,tM)}
   // Roof
   const rBase=B+H;
   if(roofStyle==='flat'){ad(new THREE.BoxGeometry(W+.5,.1,D+.5),new THREE.Vector3(0,rBase+.2,0),null,'r')}
@@ -476,7 +473,7 @@ document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',functi
 document.getElementById('resetCfg').addEventListener('click',()=>{const groups=['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts','winCountOpts','interiorOpts','foundOpts','trimOpts'];groups.forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
 // Views
 let camMode='orbit';
-document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');camMode=this.dataset.view;const v=this.dataset.view;if(v==='orbit'){camera.position.set(7,5,9);controls.target.set(0,2,0);controls.enabled=true}else if(v==='free'){camera.position.set(3,2,hd+3);controls.enabled=false}else if(v==='top'){camera.position.set(0,10,0.5);controls.target.set(0,2,0);controls.enabled=true}else if(v==='front'){camera.position.set(0,2,10);controls.target.set(0,2,0);controls.enabled=true}else if(v==='side'){camera.position.set(10,2,0);controls.target.set(0,2,0);controls.enabled=true}controls.update()}));
+document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');camMode=this.dataset.view;const v=this.dataset.view;if(v==='orbit'){camera.position.set(7,5,9);controls.target.set(0,2,0);controls.enabled=true}else if(v==='free'){camera.position.set(3,2,5);controls.enabled=false}else if(v==='top'){camera.position.set(0,10,0.5);controls.target.set(0,2,0);controls.enabled=true}else if(v==='front'){camera.position.set(0,2,10);controls.target.set(0,2,0);controls.enabled=true}else if(v==='side'){camera.position.set(10,2,0);controls.target.set(0,2,0);controls.enabled=true}controls.update()}));
 function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,640);camera.aspect=w/640;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,250);
 // WASD freecam
 const keys={};document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true});document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
