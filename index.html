@@ -317,10 +317,6 @@ document.getElementById('menuToggle').addEventListener('click',()=>document.getE
 const io=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.06});document.querySelectorAll('.fade-in').forEach(e=>io.observe(e));setTimeout(()=>document.querySelectorAll('.fade-in').forEach(e=>{if(e.getBoundingClientRect().top<window.innerHeight)e.classList.add('v')}),150);
 // Form
 document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.className='form-status';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();s.className='form-status '+(d.success?'s':'e');s.textContent=(d.success?'✓ ':'✗ ')+(d.success?d.message:d.error);if(d.success)this.reset()}catch(err){s.className='form-status e';s.textContent='✗ Network error.'}b.disabled=false;b.textContent='Send Inquiry — We\'ll Respond Within 24 Hours'});
-// Config + Price
-document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');if(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts')){dyn.forEach(m=>scene.remove(m));dyn.length=0;rebuild()}else refresh3D();updatePrice()})});
-document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts'].forEach(id=>{document.getElementById(id).querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;rebuild();updatePrice()});
-function updatePrice(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(130500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+(6000+up).toLocaleString()}
 // Map
 (function(){const c=document.getElementById('mapContainer');if(!c)return;const map=L.map(c,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([35,10],3);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
 const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',d:'HQ. Manufacturing hub.',c:104},{n:'USA',t:39.5,o:-98,s:'active',d:'NA HQ. 120+ projects.',c:340},{n:'Austria',t:47.5,o:14.5,s:'active',d:'First EU POP-UP.',c:70},{n:'Switzerland',t:46.8,o:8.2,s:'active',d:'Davos premium.',c:15},{n:'Germany',t:51,o:10.5,s:'expanding',d:'Berlin & Munich.',c:0},{n:'UK',t:54.5,o:-3.5,s:'expanding',d:'London.',c:0},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',d:'Amsterdam.',c:0},{n:'France',t:46.6,o:2.2,s:'expanding',d:'Paris & Lyon.',c:0},{n:'Italy',t:42,o:12.5,s:'expanding',d:'Milan.',c:0},{n:'Canada',t:56,o:-106,s:'expanding',d:'Toronto.',c:0},{n:'UAE',t:24,o:54,s:'expanding',d:'Dubai.',c:0},{n:'Belgium',t:50.5,o:4.5,s:'expanding',d:'EU Green Deal.',c:0}];
@@ -477,6 +473,23 @@ document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',f
 }));
 
 window.refresh3D=function(){dyn.forEach(m=>{const t=m.userData.dt;if(t==='w')m.material=wM();else if(t==='wa')m.material=wAM();else if(t==='wi')m.material=wiM();else if(t==='r')m.material=rM2()})};
+window.updatePrice=function(){let up=0;document.querySelectorAll('.bopt.active').forEach(o=>up+=parseInt(o.dataset.price||0));document.getElementById('priceTotal').textContent='$'+(130500+up).toLocaleString();document.getElementById('priceUpgrades').textContent='$'+(6000+up).toLocaleString()}
+
+// Config handlers — inside module so they can access scene/dyn
+document.querySelectorAll('.bopt').forEach(o=>{o.addEventListener('click',function(){try{const g=this.parentElement;g.querySelectorAll('.bopt').forEach(x=>x.classList.remove('active'));this.classList.add('active');const needsRebuild=!!(this.closest('#shapeOpts')||this.closest('#roofStyleOpts')||this.closest('#addonOpts')||this.closest('#landOpts'));if(needsRebuild){dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild()}else window.refresh3D();window.updatePrice()}catch(e){console.error(e)}})});
+document.getElementById('resetCfg').addEventListener('click',()=>{['wallOpts','roofOpts','winOpts','shapeOpts','roofStyleOpts','addonOpts','landOpts'].forEach(id=>{const g=document.getElementById(id);if(!g)return;g.querySelectorAll('.bopt').forEach((o,i)=>o.classList.toggle('active',i===0))});dyn.forEach(m=>scene.remove(m));dyn.length=0;extras.forEach(m=>scene.remove(m));extras.length=0;rebuild();window.updatePrice()});
+
+// View buttons
+document.querySelectorAll('.vui button').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.vui button').forEach(x=>x.classList.remove('active'));this.classList.add('active');
+  const v=this.dataset.view;
+  if(v==='orbit'){camera.position.set(6,4.5,8);controls.target.set(0,1.5,0)}
+  else if(v==='top'){camera.position.set(0,8,0.5);controls.target.set(0,1.5,0)}
+  else if(v==='front'){camera.position.set(0,2,8);controls.target.set(0,1.5,0)}
+  else if(v==='side'){camera.position.set(8,2,0);controls.target.set(0,1.5,0)}
+  controls.update();
+}));
+
 function resize(){const w=frame.clientWidth;if(w>100){renderer.setSize(w,620);camera.aspect=w/620;camera.updateProjectionMatrix()}}window.addEventListener('resize',resize);setTimeout(resize,250);
 function anim(){requestAnimationFrame(anim);controls.update();renderer.render(scene,camera)}anim();
 </script>
