@@ -3,157 +3,231 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>instaBuild — Design Your Home</title>
+  <title>instaBuild — Build Mode</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <style>
     :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',sans-serif;background:var(--n);color:#c4ccd8;overflow:hidden;height:100vh}
-    #canvas3d{display:block;width:100%;height:100vh;cursor:grab}#canvas3d:active{cursor:grabbing}
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    #canvas3d{display:block;width:100%;height:100vh;cursor:crosshair}
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
     .topbar .logo{font-size:15px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:6px;text-decoration:none}.topbar .logo em{font-style:normal;color:var(--g)}
     .topbar .logo-mark{width:24px;height:24px;background:var(--g);border-radius:5px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:11px}
-    .tbtn{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s;display:flex;align-items:center;gap:5px}.tbtn:hover{color:var(--w);border-color:rgba(255,255,255,.15)}.tbtn.active{background:var(--g);border-color:var(--g);color:var(--n)}.tbtn.green{background:var(--g);border-color:var(--g);color:var(--n)}.tbtn.green:hover{background:var(--gd)}
-    .panel{position:fixed;right:12px;top:64px;bottom:12px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:12px;padding:12px;overflow-y:auto;width:260px;display:flex;flex-direction:column;gap:8px;transition:transform .3s}
-    .panel.hidden{transform:translateX(300px)}
-    .panel h3{font-size:11px;font-weight:700;color:var(--w)}
-    .group{margin-bottom:8px}.glabel{font-size:7.5px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
-    .opts{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-    .opt{background:var(--n3);border:1.5px solid var(--b);border-radius:5px;padding:4px;cursor:pointer;text-align:center;transition:.2s}.opt:hover{border-color:rgba(255,255,255,.15)}.opt.active{border-color:var(--g);background:rgba(46,204,113,.06)}
-    .opt .sw{width:100%;height:14px;border-radius:2px;margin-bottom:1px}.opt .lb{font-size:7.5px;color:var(--s);line-height:1.2}.opt.active .lb{color:var(--g)}
-    .opt.row{display:flex;align-items:center;gap:5px;padding:4px 7px;text-align:left}.opt.row .fi{font-size:13px;flex-shrink:0}
-    .price-box{background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;padding:10px;text-align:center;margin-top:6px}.price-box .pv{font-size:22px;font-weight:700;color:var(--g)}.price-box .pl{font-size:7.5px;color:var(--s)}
-    .hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;pointer-events:none;z-index:40}
-    .mode-indicator{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);color:var(--g);padding:4px 14px;border-radius:20px;font-size:10px;font-weight:600;z-index:60;pointer-events:none}
-    @media(max-width:700px){.panel{width:220px;right:6px}}
+    .tbtn{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}.tbtn:hover{color:var(--w);border-color:rgba(255,255,255,.15)}.tbtn.active{background:var(--g);border-color:var(--g);color:var(--n)}.tbtn.danger{background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.3);color:#f85149}.tbtn.danger:hover{background:rgba(248,81,73,.2)}
+    .catalog{position:fixed;left:8px;top:60px;bottom:8px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:12px;padding:10px;overflow-y:auto;width:240px;display:flex;flex-direction:column;gap:8px}
+    .catalog h3{font-size:11px;font-weight:700;color:var(--w)}
+    .cat-tabs{display:flex;gap:4px;flex-wrap:wrap}
+    .cat-tab{flex:1;min-width:50px;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:5px;border-radius:5px;font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.2s}.cat-tab:hover{color:var(--w)}.cat-tab.active{background:var(--g);border-color:var(--g);color:var(--n)}
+    .cat-items{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .cat-item{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:5px;cursor:pointer;text-align:center;transition:.2s}.cat-item:hover{border-color:rgba(255,255,255,.2)}.cat-item.active{border-color:var(--g);background:rgba(46,204,113,.06)}
+    .cat-item .ci{width:100%;height:30px;border-radius:3px;background-size:cover;background-position:center;margin-bottom:3px;display:flex;align-items:center;justify-content:center;font-size:16px}
+    .cat-item .cn{font-size:8px;color:var(--s);line-height:1.1}.cat-item.active .cn{color:var(--g)}
+    .cat-item .cp{font-size:7px;color:rgba(46,204,113,.6)}
+    .toolbar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:60}
+    .toolbar button{background:rgba(17,22,32,.95);border:1px solid var(--b);color:var(--s);padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}.toolbar button:hover{color:var(--w)}.toolbar button.active{background:var(--g);border-color:var(--g);color:var(--n)}
+    .hint{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.18);font-size:10px;pointer-events:none;z-index:40}
+    .ghost-preview{position:fixed;pointer-events:none;z-index:30;color:var(--g);font-size:12px;font-weight:600;text-shadow:0 0 10px rgba(46,204,113,.5);display:none}
+    @media(max-width:800px){.catalog{width:200px;left:4px}}
+    @media(max-width:600px){.catalog{display:none}}
   </style>
 </head>
 <body>
 
 <canvas id="canvas3d"></canvas>
-<div class="hint" id="hint"></div>
-<div class="mode-indicator" id="modeLabel" style="display:none"></div>
+<div class="hint" id="hint">Click to lock mouse · WASD walk · Mouse look · Space↑ Shift↓ · Click catalog item, then click world to place</div>
 
 <div class="topbar">
-  <a href="#" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em></a>
-  <div style="display:flex;gap:6px;flex-wrap:wrap">
-    <button class="tbtn active" data-mode="orbit" id="btnOrbit">🎥 Orbit</button>
-    <button class="tbtn" data-mode="free" id="btnFree">🕹️ Free Walk</button>
-    <button class="tbtn" data-mode="build" id="btnBuild">🔨 Build Mode</button>
-    <button class="tbtn" id="btnPanel">☰ Options</button>
-    <button class="tbtn" id="btnFull">⛶ Full</button>
-    <a href="index.html" class="tbtn" style="text-decoration:none">🏠 Site</a>
+  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em></a>
+  <div style="display:flex;gap:6px">
+    <button class="tbtn active" id="btnPlace">🔨 Place</button>
+    <button class="tbtn" id="btnDelete">🗑️ Delete</button>
+    <button class="tbtn" id="btnRotate">↻ Rotate</button>
+    <button class="tbtn" id="btnGrid">📐 Grid: 0.5m</button>
+    <span style="color:var(--g);font-size:12px;font-weight:600;display:flex;align-items:center;margin-left:8px" id="priceTag">$0</span>
+    <button class="tbtn danger" id="btnClear">Clear All</button>
+    <a href="index.html" class="tbtn" style="text-decoration:none">← Site</a>
   </div>
 </div>
 
-<div class="panel" id="panel">
-  <h3>🎨 Customize</h3>
-  <div class="group"><div class="glabel">Style</div><div class="opts" id="styleOpts" style="grid-template-columns:1fr">
-    <div class="opt row active" data-style="signature" data-price="0"><span class="fi">✨</span><div class="lb">Signature</div></div>
-    <div class="opt row" data-style="modern" data-price="0"><span class="fi">🏡</span><div class="lb">Modern</div></div>
-    <div class="opt row" data-style="twostory" data-price="42000"><span class="fi">🏢</span><div class="lb">Two-Story</div></div>
-    <div class="opt row" data-style="popup" data-price="0"><span class="fi">🏠</span><div class="lb">POP-UP</div></div>
-  </div></div>
-  <div class="group"><div class="glabel">Wall Finish</div><div class="opts" id="wallOpts">
-    <div class="opt active" data-wall="white" data-price="0"><div class="sw" style="background:#f0f3f7"></div><div class="lb">White</div></div>
-    <div class="opt" data-wall="cream" data-price="1800"><div class="sw" style="background:#e8dfd2"></div><div class="lb">Cream</div></div>
-    <div class="opt" data-wall="gray" data-price="2200"><div class="sw" style="background:#9ca8b4"></div><div class="lb">Gray</div></div>
-    <div class="opt" data-wall="timber" data-price="4500"><div class="sw" style="background:#c09870"></div><div class="lb">Timber</div></div>
-    <div class="opt" data-wall="charcoal" data-price="2800"><div class="sw" style="background:#3e4650"></div><div class="lb">Charcoal</div></div>
-    <div class="opt" data-wall="navy" data-price="3000"><div class="sw" style="background:#2a3a55"></div><div class="lb">Navy</div></div>
-  </div></div>
-  <div class="group"><div class="glabel">Roof Style</div><div class="opts" id="roofStyleOpts" style="grid-template-columns:1fr">
-    <div class="opt row active" data-roofstyle="flat" data-price="0"><span class="fi">▬</span><div class="lb">Flat</div></div>
-    <div class="opt row" data-roofstyle="pitched" data-price="5000"><span class="fi">△</span><div class="lb">Pitched</div></div>
-  </div></div>
-  <div class="group"><div class="glabel">Roof Color</div><div class="opts" id="roofOpts">
-    <div class="opt active" data-roof="slate" data-price="0"><div class="sw" style="background:#3d4855"></div><div class="lb">Slate</div></div>
-    <div class="opt" data-roof="terra" data-price="3200"><div class="sw" style="background:#b55a3a"></div><div class="lb">Terracotta</div></div>
-    <div class="opt" data-roof="metal" data-price="4000"><div class="sw" style="background:#8899aa"></div><div class="lb">Metal</div></div>
-    <div class="opt" data-roof="green" data-price="3500"><div class="sw" style="background:#4a6e3e"></div><div class="lb">Green</div></div>
-  </div></div>
-  <div class="group"><div class="glabel">Windows</div><div class="opts" id="winOpts">
-    <div class="opt active" data-window="black" data-price="0"><div class="sw" style="background:#1a1c20"></div><div class="lb">Black</div></div>
-    <div class="opt" data-window="white" data-price="0"><div class="sw" style="background:#eef0f4"></div><div class="lb">White</div></div>
-    <div class="opt" data-window="bronze" data-price="1800"><div class="sw" style="background:#b8966a"></div><div class="lb">Bronze</div></div>
-    <div class="opt" data-window="wood" data-price="2500"><div class="sw" style="background:#a07850"></div><div class="lb">Wood</div></div>
-  </div></div>
-  <div class="group"><div class="glabel">Extras</div><div class="opts" id="extraOpts" style="grid-template-columns:1fr">
-    <div class="opt row" data-extra="garage" data-price="22000"><span class="fi">🚗</span><div class="lb">Garage</div></div>
-    <div class="opt row" data-extra="porch" data-price="8000"><span class="fi">🏡</span><div class="lb">Porch</div></div>
-  </div></div>
-  <button id="resetBtn" style="width:100%;background:transparent;border:1px solid var(--b);color:var(--s);padding:8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit">↺ Reset</button>
-  <div class="price-box"><div class="pv" id="priceTotal">$168,000</div><div class="pl">ESTIMATE</div></div>
+<div class="catalog" id="catalog">
+  <h3>📦 Catalog</h3>
+  <div class="cat-tabs" id="catTabs">
+    <button class="cat-tab active" data-cat="walls">🧱 Walls</button>
+    <button class="cat-tab" data-cat="windows">🪟 Windows</button>
+    <button class="cat-tab" data-cat="doors">🚪 Doors</button>
+    <button class="cat-tab" data-cat="furniture">🛋️ Furniture</button>
+    <button class="cat-tab" data-cat="outdoor">🌳 Outdoor</button>
+    <button class="cat-tab" data-cat="roofs">🏠 Roofs</button>
+  </div>
+  <div class="cat-items" id="catItems"></div>
 </div>
 
 <script type="module">
 import*as THREE from'three';
+
 const canvas=document.getElementById('canvas3d');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1a2d');scene.fog=new THREE.Fog('#0d1a2d',14,52);
-const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.3,40);camera.position.set(8,5,10);
-const clock=new THREE.Clock();const keys={};let mode='orbit',yaw=0,pitch=0,pointerLocked=false;
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(2);renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#0d1a2d');scene.fog=new THREE.Fog('#0d1a2d',20,50);
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,40);camera.position.set(0,1.6,0);
+const clock=new THREE.Clock();const keys={};let yaw=0,pitch=0,pointerLocked=false;
 document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true});
 document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
-canvas.addEventListener('click',()=>{if(mode==='free'||mode==='build')canvas.requestPointerLock()});
+canvas.addEventListener('click',e=>{if(!pointerLocked)canvas.requestPointerLock();else handleWorldClick(e)});
 document.addEventListener('pointerlockchange',()=>{pointerLocked=document.pointerLockElement===canvas;if(pointerLocked)document.addEventListener('mousemove',onMouse);else document.removeEventListener('mousemove',onMouse)});
 function onMouse(e){yaw-=e.movementX*.002;pitch-=e.movementY*.002;pitch=Math.max(-1.4,Math.min(1.4,pitch))}
-scene.add(new THREE.AmbientLight('#c8ddf8',.55));const sun=new THREE.DirectionalLight('#fffef5',3.0);sun.position.set(14,10,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
-const fill=new THREE.DirectionalLight('#a0c0e0',.3);fill.position.set(-4,3,-2);scene.add(fill);
 
-let style='signature',wallColor='white',roofStyle='flat',roofColor='slate',windowColor='black';
-let extras={garage:false,porch:false};
-const houseGroup=new THREE.Group(),envGroup=new THREE.Group();scene.add(envGroup);scene.add(houseGroup);
+// Lights
+scene.add(new THREE.AmbientLight('#c8ddf8',.6));
+const sun=new THREE.DirectionalLight('#fffef5',3.0);sun.position.set(14,10,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+scene.add(new THREE.HemisphereLight('#c8ddf8','#3a5030',.3));
 
-const mGlass=new THREE.MeshStandardMaterial({color:'#c8ddf8',roughness:.03,metalness:.05,transparent:true,opacity:.45});
-const mConcrete=new THREE.MeshStandardMaterial({color:'#c4c8ce',roughness:.7});
+// Ground grid
+const gridHelper=new THREE.GridHelper(30,30,'#2ecc71','#1a2a1e');gridHelper.position.y=.005;scene.add(gridHelper);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:'#3a5a2a',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;ground.receiveShadow=true;scene.add(ground);
+
+// Materials
 const mSteel=new THREE.MeshStandardMaterial({color:'#5a6878',roughness:.3,metalness:.85});
-const mSoffit=new THREE.MeshStandardMaterial({color:'#eef0f4',roughness:.35});
-const mFascia=new THREE.MeshStandardMaterial({color:'#e8eaee',roughness:.3});
-const mDarkFascia=new THREE.MeshStandardMaterial({color:'#2a303a',roughness:.3,metalness:.3});
-const mDoorFrame=new THREE.MeshStandardMaterial({color:'#2a3545',roughness:.2,metalness:.55});
-const mBrick=new THREE.MeshStandardMaterial({color:'#8a7a6a',roughness:.65});
-const matCache={};
+const mGlass=new THREE.MeshStandardMaterial({color:'#c8ddf8',roughness:.03,metalness:.05,transparent:true,opacity:.5});
+const mWood=new THREE.MeshStandardMaterial({color:'#c09870',roughness:.5});
+const mBrick=new THREE.MeshStandardMaterial({color:'#b05040',roughness:.55});
+const mWhite=new THREE.MeshStandardMaterial({color:'#f0f3f7',roughness:.45});
+const mDoor=new THREE.MeshStandardMaterial({color:'#2a3545',roughness:.2,metalness:.55});
+const mConcrete=new THREE.MeshStandardMaterial({color:'#c4c8ce',roughness:.7});
 
-function wM(){const v=wallColor;if(!matCache['w_'+v]){const c={white:'#f0f3f7',cream:'#e8dfd2',gray:'#9ca8b4',timber:'#c09870',charcoal:'#3e4650',navy:'#2a3a55'};matCache['w_'+v]=new THREE.MeshStandardMaterial({color:c[v],roughness:.45})}return matCache['w_'+v]}
-function rM(){const k='r_'+roofColor;if(!matCache[k]){const c={slate:'#3d4855',terra:'#b55a3a',metal:'#8a9aaa',green:'#4a6e3e'};matCache[k]=new THREE.MeshStandardMaterial({color:c[roofColor],roughness:roofColor==='metal'?.22:.42,metalness:roofColor==='metal'?.55:.12})}return matCache[k]}
-function fM(){const k='wf_'+windowColor;if(!matCache[k]){const c={black:'#1a1c20',white:'#eef0f4',bronze:'#b8966a',wood:'#9a7048'};matCache[k]=new THREE.MeshStandardMaterial({color:c[windowColor],roughness:.3,metalness:windowColor==='black'?.45:.06})}return matCache[k]}
+let selectedItem=null,placeMode='place',gridSize=0.5,totalCost=0;
+const placedObjects=[];
 
-function box(w,h,d,mat){const g=new THREE.BoxGeometry(w,h,d);const m=new THREE.Mesh(g,mat);m.castShadow=true;m.receiveShadow=true;return m}
-function add(grp,mesh,x,y,z,rx,ry,rz){mesh.position.set(x,y,z);if(rx||ry||rz)mesh.rotation.set(rx||0,ry||0,rz||0);grp.add(mesh)}
+// Catalog
+const catalog={
+  walls:[
+    {id:'wall_white',name:'White Wall',icon:'⬜',price:200,geo:()=>new THREE.BoxGeometry(2,.1,2.8),mat:()=>mWhite,rot:!0},
+    {id:'wall_brick',name:'Brick Wall',icon:'🧱',price:350,geo:()=>new THREE.BoxGeometry(2,.1,2.8),mat:()=>mBrick,rot:!0},
+    {id:'wall_wood',name:'Wood Wall',icon:'🪵',price:400,geo:()=>new THREE.BoxGeometry(2,.1,2.8),mat:()=>mWood,rot:!0},
+    {id:'floor_wood',name:'Wood Floor',icon:'🟫',price:150,geo:()=>new THREE.BoxGeometry(2,.05,2),mat:()=>mWood,rot:!1},
+    {id:'floor_tile',name:'Tile Floor',icon:'⬜',price:200,geo:()=>new THREE.BoxGeometry(2,.05,2),mat:()=>new THREE.MeshStandardMaterial({color:'#d0d0d0',roughness:.3}),rot:!1},
+    {id:'column',name:'Steel Column',icon:'▯',price:300,geo:()=>new THREE.BoxGeometry(.15,.15,3),mat:()=>mSteel,rot:!1},
+  ],
+  windows:[
+    {id:'win_small',name:'Small Window',icon:'🪟',price:500,geo:()=>new THREE.BoxGeometry(1,.9,.05),mat:()=>mGlass,rot:!0},
+    {id:'win_large',name:'Large Window',icon:'🪟',price:800,geo:()=>new THREE.BoxGeometry(1.4,1.3,.05),mat:()=>mGlass,rot:!0},
+    {id:'win_round',name:'Round Window',icon:'⭕',price:600,geo:()=>new THREE.CylinderGeometry(.4,.4,.05,16),mat:()=>mGlass,rot:!1},
+  ],
+  doors:[
+    {id:'door_front',name:'Front Door',icon:'🚪',price:1200,geo:()=>new THREE.BoxGeometry(.9,2.2,.06),mat:()=>mDoor,rot:!0},
+    {id:'door_garage',name:'Garage Door',icon:'🚗',price:2500,geo:()=>new THREE.BoxGeometry(2.5,2.2,.06),mat:()=>new THREE.MeshStandardMaterial({color:'#d8dce3',roughness:.28,metalness:.65}),rot:!0},
+    {id:'door_double',name:'Double Door',icon:'🚪🚪',price:2000,geo:()=>new THREE.BoxGeometry(1.6,2.2,.06),mat:()=>mDoor,rot:!0},
+  ],
+  furniture:[
+    {id:'sofa',name:'Sofa',icon:'🛋️',price:1500,geo:()=>new THREE.BoxGeometry(2,.6,.8),mat:()=>new THREE.MeshStandardMaterial({color:'#e8e8e4',roughness:.4}),rot:!0},
+    {id:'table',name:'Dining Table',icon:'🍽️',price:800,geo:()=>new THREE.BoxGeometry(1.4,.04,.9),mat:()=>mWood,rot:!0},
+    {id:'bed',name:'Bed',icon:'🛏️',price:1200,geo:()=>new THREE.BoxGeometry(1.6,.3,2),mat:()=>mWood,rot:!0},
+    {id:'chair',name:'Chair',icon:'🪑',price:300,geo:()=>new THREE.BoxGeometry(.4,.4,.4),mat:()=>mWood,rot:!1},
+    {id:'counter',name:'Kitchen Counter',icon:'🍳',price:1000,geo:()=>new THREE.BoxGeometry(2,.4,.6),mat:()=>mWhite,rot:!0},
+    {id:'fridge',name:'Fridge',icon:'🧊',price:1800,geo:()=>new THREE.BoxGeometry(.7,.7,.7),mat:()=>new THREE.MeshStandardMaterial({color:'#c0c0c0',roughness:.2,metalness:.7}),rot:!1},
+    {id:'tv',name:'TV Unit',icon:'📺',price:900,geo:()=>new THREE.BoxGeometry(1.2,.3,.15),mat:()=>new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.2}),rot:!0},
+    {id:'bookshelf',name:'Bookshelf',icon:'📚',price:600,geo:()=>new THREE.BoxGeometry(1,.3,1.5),mat:()=>mWood,rot:!0},
+    {id:'rug',name:'Rug',icon:'🟫',price:400,geo:()=>new THREE.BoxGeometry(2,.02,1.5),mat:()=>new THREE.MeshStandardMaterial({color:'#8b7355',roughness:.8}),rot:!1},
+  ],
+  outdoor:[
+    {id:'tree_small',name:'Small Tree',icon:'🌳',price:300,tree:!0,geo:()=>new THREE.CylinderGeometry(.08,.12,1.5,8),mat:()=>new THREE.MeshStandardMaterial({color:'#6b4d3a',roughness:.8}),rot:!1},
+    {id:'tree_tall',name:'Tall Tree',icon:'🌲',price:500,tree:!0,geo:()=>new THREE.CylinderGeometry(.1,.16,2.2,8),mat:()=>new THREE.MeshStandardMaterial({color:'#6b4d3a',roughness:.8}),rot:!1},
+    {id:'bush',name:'Bush',icon:'🪴',price:150,geo:()=>new THREE.SphereGeometry(.4,6,4),mat:()=>new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.6}),rot:!1},
+    {id:'fountain',name:'Fountain',icon:'⛲',price:3000,geo:()=>new THREE.CylinderGeometry(.5,.6,.3,12),mat:()=>new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.3}),rot:!1},
+    {id:'fence',name:'Fence Panel',icon:'🚧',price:200,geo:()=>new THREE.BoxGeometry(1,.8,.04),mat:()=>mWood,rot:!0},
+    {id:'path_stone',name:'Stone Path',icon:'🪨',price:100,geo:()=>new THREE.BoxGeometry(.6,.03,.8),mat:()=>new THREE.MeshStandardMaterial({color:'#c0b8a8',roughness:.6}),rot:!1},
+  ],
+  roofs:[
+    {id:'roof_flat',name:'Flat Roof',icon:'▬',price:2000,geo:()=>new THREE.BoxGeometry(3,.08,3),mat:()=>new THREE.MeshStandardMaterial({color:'#3d4855',roughness:.4}),rot:!1},
+    {id:'roof_pitched',name:'Pitched Roof',icon:'△',price:3500,geo:()=>new THREE.BoxGeometry(3,.08,3),mat:()=>new THREE.MeshStandardMaterial({color:'#3d4855',roughness:.4}),rot:!1,pitched:!0},
+    {id:'roof_metal',name:'Metal Roof',icon:'🔩',price:4000,geo:()=>new THREE.BoxGeometry(3,.08,3),mat:()=>new THREE.MeshStandardMaterial({color:'#8899aa',roughness:.22,metalness:.55}),rot:!1},
+  ]
+};
+let currentCat='walls';
 
-function createWindow(grp,w,h,x,y,z,ry){const fm=fM(),fw=.04;add(grp,box(w+fw*2,h+fw*2,.07,fm),x,y,z,0,ry||0,0);add(grp,box(w-.08,h-.08,.02,mGlass),x,y,z+.03*(ry>0?1:-1),0,ry||0,0);add(grp,box(.025,h-.1,.06,fm),x,y,z+.025,0,ry||0,0);add(grp,box(w-.1,.025,.06,fm),x,y,z+.025,0,ry||0,0);add(grp,box(w+fw*2+.06,.04,.08,fm),x,y-h/2-fw+.015,z,0,ry||0,0);add(grp,box(w+fw*2+.06,.04,.08,fm),x,y+h/2+fw-.015,z,0,ry||0,0)}
+function renderCatalog(){
+  const items=catalog[currentCat],grid=document.getElementById('catItems');grid.innerHTML='';
+  items.forEach(item=>{
+    const div=document.createElement('div');div.className='cat-item';if(selectedItem&&selectedItem.id===item.id)div.classList.add('active');
+    div.innerHTML=`<div class="ci">${item.icon}</div><div class="cn">${item.name}</div><div class="cp">$${item.price.toLocaleString()}</div>`;
+    div.onclick=()=>{document.querySelectorAll('.cat-item').forEach(x=>x.classList.remove('active'));div.classList.add('active');selectedItem=item;document.getElementById('hint').textContent=`Selected: ${item.name} ($${item.price}) — Click in world to place`};
+    grid.appendChild(div);
+  });
+}
+renderCatalog();
 
-function buildSignature(g,wM,rM){const H=2.8,W=10.0,D=7.0,hw=W/2,hd=D/2;add(g,box(W+.3,.35,D+.3,mConcrete),0,.175,0);add(g,box(W+.38,.06,D+.38,new THREE.MeshStandardMaterial({color:'#b0b5ba',roughness:.55})),0,.38);const fY=.4;add(g,box(W,.1,D,mConcrete),0,fY+.05);add(g,box(W-.1,H,.12,wM),0,fY+H/2,-hd+.06);add(g,box(3.8,H,.12,wM),-3,fY+H/2,hd-.06);add(g,box(3.5,H,.12,wM),3.2,fY+H/2,hd-.06);add(g,box(1.8,.7,.12,wM),.1,fY+H-.35,hd-.06);add(g,box(.12,H,D-.1,wM),-hw+.06,fY+H/2);add(g,box(.12,H,D-.1,wM),hw-.06,fY+H/2);if(roofStyle==='flat'){const ow=W+1.4,od=D+1.4;add(g,box(ow,.1,od,rM),0,fY+H+.1);const sof=windowColor==='black'?mDarkFascia:mSoffit;add(g,box(ow,.02,.7,sof),0,fY+H-.01,D/2+.35);add(g,box(ow,.02,.7,sof),0,fY+H-.01,-D/2-.35);add(g,box(.04,.12,od+.06,windowColor==='black'?mDarkFascia:mFascia),W/2+.7,fY+H+.1);add(g,box(.04,.12,od+.06,windowColor==='black'?mDarkFascia:mFascia),-W/2-.7,fY+H+.1)}else{const phw=W/2+.7,phd=D/2+.7,rise=phd*.55,diag=Math.sqrt(phd*phd+rise*rise),ang=Math.atan2(rise,phd);for(let s=-1;s<=1;s+=2){const rp=box(W+1.4,.08,diag,rM);rp.position.set(0,fY+H+rise/2,s*phd/2);rp.rotation.x=s*ang;rp.castShadow=rp.receiveShadow=true;g.add(rp)}add(g,box(W+1.5,.05,.12,rM),0,fY+H+rise+.04)}for(const wx of[-3,3.2]){createWindow(g,1.4,1.5,wx,fY+.9,hd-.02,0);createWindow(g,1.4,1.5,wx,fY+2.3,hd-.02,0)}for(const wx of[-2.2,2.2]){createWindow(g,1.2,1.4,wx,fY+1,-hd+.02,Math.PI);createWindow(g,1.2,1.4,wx,fY+2.4,-hd+.02,Math.PI)}for(const sz of[-1.5,1.5]){createWindow(g,1,1.3,-hw+.02,fY+1.1,sz,Math.PI/2);createWindow(g,1,1.3,hw-.02,fY+1.1,sz,-Math.PI/2)}add(g,box(.9,2.2,.06,mDoorFrame),0,fY+1.15,hd-.04);add(g,box(.3,2.2,.05,new THREE.MeshStandardMaterial({color:'#b0c8e0',roughness:.02,metalness:.03,transparent:true,opacity:.6})),.7,fY+1.15,hd-.04);add(g,box(.04,2.2,.07,fM()),.84,fY+1.15,hd-.04);add(g,box(.04,2.2,.07,fM()),.56,fY+1.15,hd-.04);add(g,box(1.35,.3,.05,new THREE.MeshStandardMaterial({color:'#b0c8e0',roughness:.02,transparent:true,opacity:.6})),.2,fY+2.35,hd-.04);for(let i=0;i<3;i++)add(g,box(1.8+i*.3,.15,.4,new THREE.MeshStandardMaterial({color:'#d0d4d8',roughness:.6})),0,fY+.075+i*.15,hd+.35+i*.4);add(g,box(.45,2.6,.45,mBrick),-3.5,fY+H+1.5,-2);if(extras.garage){const gx=W/2+3.35;add(g,box(5.8,.35,6.8,mConcrete),gx,.175);add(g,box(5.5,2.4,.12,wM),gx,fY+1.2,-3.4);add(g,box(5.5,2.4,.12,wM),gx,fY+1.2,3.4);add(g,box(.12,2.4,6.8,wM),gx+2.75,fY+1.2);add(g,box(.12,2.4,6.8,wM),gx-2.75,fY+1.2);if(roofStyle==='flat'){add(g,box(6.2,.1,7.2,rM),gx,fY+2.5)}else{const rp2=box(6.2,.08,4.5,rM);rp2.position.set(gx,fY+2.6,-.5);rp2.rotation.x=-.4;rp2.castShadow=rp2.receiveShadow=true;g.add(rp2)}const gdMat=new THREE.MeshStandardMaterial({color:'#d8dce3',roughness:.28,metalness:.65});add(g,box(4.8,2.2,.06,gdMat),gx,fY+1.15,3.4);for(let gy=-.8;gy<1;gy+=.45)add(g,box(4.8,.025,.08,mSteel),gx,fY+gy+1.15,3.42)}if(extras.porch){add(g,box(4.5,.12,2.4,new THREE.MeshStandardMaterial({color:'#c0b0a0',roughness:.55})),0,fY+.06,hd+1.3);for(let px=-1.75;px<=1.75;px+=3.5){add(g,box(.18,.1,.18,mFascia),px,fY+.12,hd+.3);const col=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,2.6,12),mFascia);col.position.set(px,fY+1.45,hd+.3);col.castShadow=true;g.add(col);add(g,box(.18,.08,.18,mFascia),px,fY+2.78,hd+.3)}add(g,box(5.5,.08,3,rM),0,fY+2.9,hd+1.3)}}
+document.querySelectorAll('.cat-tab').forEach(t=>{t.onclick=function(){document.querySelectorAll('.cat-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');currentCat=this.dataset.cat;renderCatalog()}});
 
-function buildModern(g,wM,rM){const H=2.8,W=12.0,D=6.5,hw=W/2,hd=D/2;add(g,box(W+.3,.35,D+.3,mConcrete),0,.175);add(g,box(W+.38,.06,D+.38,new THREE.MeshStandardMaterial({color:'#b0b5ba',roughness:.55})),0,.38);const fY=.4;add(g,box(W,.1,D,mConcrete),0,fY+.05);add(g,box(W-.1,H,.12,wM),0,fY+H/2,-hd+.06);add(g,box(5,H,.12,wM),-3.5,fY+H/2,hd-.06);add(g,box(4.5,H,.12,wM),3.8,fY+H/2,hd-.06);add(g,box(1.8,.7,.12,wM),.1,fY+H-.35,hd-.06);add(g,box(.12,H,D-.1,wM),-hw+.06,fY+H/2);add(g,box(.12,H,D-.1,wM),hw-.06,fY+H/2);if(roofStyle==='flat'){const ow=W+1.4,od=D+1.4;add(g,box(ow,.1,od,rM),0,fY+H+.1)}else{const phw=W/2+.7,phd=D/2+.7,rise=phd*.55,diag=Math.sqrt(phd*phd+rise*rise),ang=Math.atan2(rise,phd);for(let s=-1;s<=1;s+=2){const rp=box(W+1.4,.08,diag,rM);rp.position.set(0,fY+H+rise/2,s*phd/2);rp.rotation.x=s*ang;rp.castShadow=rp.receiveShadow=true;g.add(rp)}}for(const wx of[-4.5,4.5]){createWindow(g,1.3,1.5,wx,fY+.9,hd-.02,0);createWindow(g,1.3,1.5,wx,fY+2.3,hd-.02,0)}for(const wx of[-3,3]){createWindow(g,1.2,1.4,wx,fY+1,-hd+.02,Math.PI);createWindow(g,1.2,1.4,wx,fY+2.4,-hd+.02,Math.PI)}for(const sz of[-1.5,1.5]){createWindow(g,.9,1.2,-hw+.02,fY+1.1,sz,Math.PI/2);createWindow(g,.9,1.2,hw-.02,fY+1.1,sz,-Math.PI/2)}add(g,box(.9,2.2,.06,mDoorFrame),0,fY+1.15,hd-.04);add(g,box(.45,2.6,.45,mBrick),-4.5,fY+H+1.5,-2);if(extras.garage){const gx=W/2+3.35;add(g,box(5.8,.35,6.8,mConcrete),gx,.175);add(g,box(5.5,2.4,.12,wM),gx,fY+1.2,-3.4);add(g,box(5.5,2.4,.12,wM),gx,fY+1.2,3.4);add(g,box(.12,2.4,6.8,wM),gx+2.75,fY+1.2);add(g,box(.12,2.4,6.8,wM),gx-2.75,fY+1.2);if(roofStyle==='flat'){add(g,box(6.2,.1,7.2,rM),gx,fY+2.5)}else{const rp2=box(6.2,.08,4.5,rM);rp2.position.set(gx,fY+2.6,-.5);rp2.rotation.x=-.4;rp2.castShadow=rp2.receiveShadow=true;g.add(rp2)}const gdMat=new THREE.MeshStandardMaterial({color:'#d8dce3',roughness:.28,metalness:.65});add(g,box(4.8,2.2,.06,gdMat),gx,fY+1.15,3.4)}}
+// Toolbar
+document.getElementById('btnPlace').onclick=function(){placeMode='place';this.classList.add('active');document.getElementById('btnDelete').classList.remove('active');document.getElementById('btnRotate').classList.remove('active');document.getElementById('hint').textContent=selectedItem?`Place mode — click to place ${selectedItem.name}`:'Place mode — select an item from catalog first'};
+document.getElementById('btnDelete').onclick=function(){placeMode='delete';this.classList.add('active');document.getElementById('btnPlace').classList.remove('active');document.getElementById('btnRotate').classList.remove('active');document.getElementById('hint').textContent='Delete mode — click objects to remove them'};
+document.getElementById('btnRotate').onclick=function(){placeMode='rotate';this.classList.add('active');document.getElementById('btnPlace').classList.remove('active');document.getElementById('btnDelete').classList.remove('active');document.getElementById('hint').textContent='Rotate mode — click objects to rotate 90°'};
+document.getElementById('btnClear').onclick=function(){if(confirm('Remove all placed objects?')){placedObjects.forEach(o=>scene.remove(o));placedObjects.length=0;totalCost=0;document.getElementById('priceTag').textContent='$0'}};
 
-function buildTwoStory(g,wM,rM){const fH=2.7,W=8.5,D=6.5,hw=W/2,hd=D/2;add(g,box(W+.3,.35,D+.3,mConcrete),0,.175);add(g,box(W+.38,.06,D+.38,new THREE.MeshStandardMaterial({color:'#b0b5ba',roughness:.55})),0,.38);const fY=.4;add(g,box(W,.1,D,mConcrete),0,fY+.05);add(g,box(W-.1,fH,.12,wM),0,fY+fH/2,-hd+.06);add(g,box(3,fH,.12,wM),-2.7,fY+fH/2,hd-.06);add(g,box(3,fH,.12,wM),2.7,fY+fH/2,hd-.06);add(g,box(1.2,.7,.12,wM),0,fY+fH-.35,hd-.06);add(g,box(.12,fH,D-.1,wM),-hw+.06,fY+fH/2);add(g,box(.12,fH,D-.1,wM),hw-.06,fY+fH/2);const midY=fY+fH;add(g,box(W,.12,D,mConcrete),0,midY+.06);const f2Y=midY+.25;add(g,box(W-.1,fH-.1,.12,wM),0,f2Y+(fH-.1)/2,-hd+.06);add(g,box(3,fH-.1,.12,wM),-2.7,f2Y+(fH-.1)/2,hd-.06);add(g,box(3,fH-.1,.12,wM),2.7,f2Y+(fH-.1)/2,hd-.06);add(g,box(1.2,.6,.12,wM),0,f2Y+fH-.4,hd-.06);add(g,box(.12,fH-.1,D-.1,wM),-hw+.06,f2Y+(fH-.1)/2);add(g,box(.12,fH-.1,D-.1,wM),hw-.06,f2Y+(fH-.1)/2);const totalH=f2Y+fH+.1;if(roofStyle==='flat'){add(g,box(W+1.2,.1,D+1.2,rM),0,totalH+.1)}else{const phw=W/2+.6,phd=D/2+.6,rise=phd*.55,diag=Math.sqrt(phd*phd+rise*rise),ang=Math.atan2(rise,phd);for(let s=-1;s<=1;s+=2){const rp=box(W+1.2,.08,diag,rM);rp.position.set(0,totalH+rise/2,s*phd/2);rp.rotation.x=s*ang;rp.castShadow=rp.receiveShadow=true;g.add(rp)}}for(let fl=0;fl<2;fl++){const fy=fl===0?fY:f2Y;createWindow(g,1.1,1.3,-2.7,fy+.9,hd-.02,0);createWindow(g,1.1,1.3,2.7,fy+.9,hd-.02,0);createWindow(g,1.1,1.3,-2.7,fy+2.2,hd-.02,0);createWindow(g,1.1,1.3,2.7,fy+2.2,hd-.02,0);createWindow(g,1,1.2,-1.8,fy+1,-hd+.02,Math.PI);createWindow(g,1,1.2,1.8,fy+1,-hd+.02,Math.PI)}add(g,box(.9,2.2,.06,mDoorFrame),0,fY+1.15,hd-.04);add(g,box(.45,2.8,.45,mBrick),2.8,totalH,.5,-2)}
+let gridOn=true;
+document.getElementById('btnGrid').onclick=function(){gridOn=!gridOn;gridHelper.visible=gridOn;this.textContent='📐 Grid: '+(gridOn?gridSize+'m':'OFF')};
 
-function buildPopup(g,wM,rM){const H=2.6,W=5.8,D=5.0,hw=W/2,hd=D/2;add(g,box(W+.3,.35,D+.3,mConcrete),0,.175);add(g,box(W+.38,.06,D+.38,new THREE.MeshStandardMaterial({color:'#b0b5ba',roughness:.55})),0,.38);const fY=.4;add(g,box(W,.1,D,mConcrete),0,fY+.05);add(g,box(W-.1,H,.12,wM),0,fY+H/2,-hd+.06);add(g,box(2.8,H,.12,wM),-1.4,fY+H/2,hd-.06);add(g,box(2.2,H,.12,wM),1.6,fY+H/2,hd-.06);add(g,box(1,.6,.12,wM),0,fY+H-.3,hd-.06);add(g,box(.12,H,D-.1,wM),-hw+.06,fY+H/2);add(g,box(.12,H,D-.1,wM),hw-.06,fY+H/2);const phw=W/2+.5,phd=D/2+.5,rise=phd*.42,diag=Math.sqrt(phd*phd+rise*rise),ang=Math.atan2(rise,phd);for(let s=-1;s<=1;s+=2){const rp=box(W+1,.08,diag,rM);rp.position.set(0,fY+H+rise/2,s*phd/2);rp.rotation.x=s*ang;rp.castShadow=rp.receiveShadow=true;g.add(rp)}createWindow(g,1,1.1,-1.4,fY+.9,hd-.02,0);createWindow(g,1,1.1,1.6,fY+.9,hd-.02,0);createWindow(g,.9,1,-1.2,fY+1,-hd+.02,Math.PI);createWindow(g,.9,1,1.2,fY+1,-hd+.02,Math.PI);add(g,box(.85,2.1,.06,mDoorFrame),0,fY+1.1,hd-.04)}
+function snap(val){return gridOn?Math.round(val/gridSize)*gridSize:val}
 
-function buildEnvironment(){envGroup.clear();const ground=new THREE.Mesh(new THREE.PlaneGeometry(45,45),new THREE.MeshStandardMaterial({color:'#3a5a2a',roughness:.85}));ground.rotation.x=-Math.PI/2;ground.position.y=-.06;ground.receiveShadow=true;envGroup.add(ground);const dm=new THREE.MeshStandardMaterial({color:'#b4b8be',roughness:.72});const drive=box(3.2,.035,11,dm);drive.position.set(1.5,.018,-5.5);envGroup.add(drive);const walk=box(1.6,.035,3.5,dm);walk.position.set(0,.018,-.6);envGroup.add(walk);const mulch=new THREE.MeshStandardMaterial({color:'#3d3028',roughness:.85});add(envGroup,box(10.2,.04,.6,mulch),0,.02,3.7);add(envGroup,box(10.2,.04,.6,mulch),0,.02,-3.7);function makeTree(x,z,s){const tg=new THREE.Group();const t=new THREE.Mesh(new THREE.CylinderGeometry(.1*s,.16*s,1.8*s,10),new THREE.MeshStandardMaterial({color:'#6b4d3a',roughness:.8}));t.position.y=.9*s;t.castShadow=true;tg.add(t);const lMat=new THREE.MeshStandardMaterial({color:'#3d6b2e',roughness:.65});for(let l=0;l<4;l++){const leaf=new THREE.Mesh(new THREE.ConeGeometry(.8*s-l*.12,.9*s,10),lMat);leaf.position.y=1.4*s+l*.5*s;leaf.castShadow=true;tg.add(leaf)}tg.position.set(x,0,z);envGroup.add(tg)}makeTree(-8,-5,1);makeTree(-8,5,.9);makeTree(8,-5,.95);makeTree(8,5,.85);makeTree(-6,8,.7);makeTree(6,-7,.75);const bushMat=new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.6});for(let bx=-4.5;bx<=4.5;bx+=1.5){const bush=new THREE.Mesh(new THREE.SphereGeometry(.25,8,6),bushMat);bush.position.set(bx,.12,3.85);bush.castShadow=true;envGroup.add(bush)}}
+function handleWorldClick(e){
+  if(!pointerLocked||placeMode==='place')return; // Only delete/rotate on click when not placing
+}
+// Place items by clicking canvas when pointer locked
+canvas.addEventListener('click',function(e){
+  if(!pointerLocked||!selectedItem||placeMode!=='place')return;
+  const item=selectedItem;
+  // Raycast to find ground position
+  const raycaster=new THREE.Raycaster();
+  const mouse=new THREE.Vector2(0,0); // center of screen
+  raycaster.setFromCamera(mouse,camera);
+  const dir=raycaster.ray.direction.clone();const orig=raycaster.ray.origin.clone();
+  // Intersect with y=0 plane
+  if(dir.y>=0)return; // looking up, skip
+  const t=-orig.y/dir.y;const pt=new THREE.Vector3(orig.x+dir.x*t,0,orig.z+dir.z*t);
+  if(Math.abs(pt.x)>14||Math.abs(pt.z)>14)return; // out of bounds
 
-function rebuild(){houseGroup.clear();const g=new THREE.Group();const w=wM(),r=rM();switch(style){case'modern':buildModern(g,w,r);break;case'twostory':buildTwoStory(g,w,r);break;case'popup':buildPopup(g,w,r);break;default:buildSignature(g,w,r)}houseGroup.add(g);buildEnvironment();updatePrice()}
-function updatePrice(){const bases={signature:168000,modern:156000,twostory:252000,popup:98000};let up=0;document.querySelectorAll('.opt.active').forEach(o=>up+=parseInt(o.dataset.price||0));const bt=document.querySelector('#styleOpts .opt.active')?.dataset.price||0;document.getElementById('priceTotal').textContent='$'+((bases[style]||168000)+up+parseInt(bt)).toLocaleString()}
-buildEnvironment();rebuild();
+  const x=snap(pt.x),z=snap(pt.z);
+  // Create object
+  let obj;
+  if(item.tree){// Tree with leaves
+    const grp=new THREE.Group();
+    const trunk=new THREE.Mesh(item.geo(),item.mat());trunk.position.y=.75;trunk.castShadow=true;grp.add(trunk);
+    const crown=new THREE.Mesh(new THREE.ConeGeometry(.7,.9,8),new THREE.MeshStandardMaterial({color:'#3d6b2e',roughness:.65}));crown.position.y=1.5;crown.castShadow=true;grp.add(crown);
+    obj=grp;
+  }else if(item.pitched){// Pitched roof panel
+    const grp=new THREE.Group();const panel=item.geo();
+    const p1=new THREE.Mesh(panel,item.mat());p1.position.set(0,.3,-.7);p1.rotation.x=-.6;p1.castShadow=true;grp.add(p1);
+    const p2=new THREE.Mesh(panel,item.mat());p2.position.set(0,.3,.7);p2.rotation.x=.6;p2.castShadow=true;grp.add(p2);
+    obj=grp;
+  }else{
+    obj=new THREE.Mesh(item.geo(),item.mat());obj.castShadow=true;obj.receiveShadow=true;
+  }
+  obj.position.set(x,.01,z);
+  if(item.rot){obj.rotation.y=Math.round(camera.rotation.y/(Math.PI/2))*(Math.PI/2)} // snap rotation to 90°
+  obj.userData={itemId:item.id,price:item.price,canRotate:!!item.rot};
+  scene.add(obj);placedObjects.push(obj);
+  totalCost+=item.price;document.getElementById('priceTag').textContent='$'+totalCost.toLocaleString();
+});
 
-// Mode buttons - SIMPLE direct click handlers
-document.getElementById('btnOrbit').onclick=function(){setMode('orbit')};
-document.getElementById('btnFree').onclick=function(){setMode('free')};
-document.getElementById('btnBuild').onclick=function(){setMode('build')};
-document.getElementById('btnPanel').onclick=function(){document.getElementById('panel').classList.toggle('hidden')};
-document.getElementById('btnFull').onclick=function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()};
-function setMode(m){mode=m;document.querySelectorAll('.tbtn[data-mode]').forEach(b=>b.classList.remove('active'));const btn=document.querySelector('.tbtn[data-mode='+m+']');if(btn)btn.classList.add('active');document.getElementById('hint').textContent=m==='free'?'🖱 Click to lock · WASD walk · Mouse look · Space↑ Shift↓':m==='build'?'🔨 Click to lock · WASD walk · Click to place furniture (coming soon)':'🖱 Drag to orbit · Scroll zoom · Right-drag pan';pointerLocked=false;yaw=camera.rotation.y;pitch=camera.rotation.x}
+// Also allow clicking objects for delete/rotate
+canvas.addEventListener('dblclick',function(e){
+  if(!pointerLocked||placeMode==='place')return;
+  const raycaster=new THREE.Raycaster();
+  const mouse2=new THREE.Vector2(0,0);raycaster.setFromCamera(mouse2,camera);
+  const hits=raycaster.intersectObjects(placedObjects,true);
+  if(hits.length>0){
+    let target=hits[0].object;while(target.parent&&target.parent!==scene&&placedObjects.includes(target.parent))target=target.parent;
+    if(placeMode==='delete'&&placedObjects.includes(target)){totalCost-=(target.userData.price||0);scene.remove(target);placedObjects.splice(placedObjects.indexOf(target),1);document.getElementById('priceTag').textContent='$'+totalCost.toLocaleString()}
+    else if(placeMode==='rotate'&&target.userData.canRotate){target.rotation.y+=Math.PI/2}
+  }
+});
 
-// Config buttons - simple onclick
-document.querySelectorAll('.opt').forEach(o=>{o.onclick=function(){const p=this.parentElement;p.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));this.classList.add('active');if(p.id==='styleOpts'){style=this.dataset.style;rebuild()}else if(p.id==='wallOpts')wallColor=this.dataset.wall;else if(p.id==='roofStyleOpts')roofStyle=this.dataset.roofstyle;else if(p.id==='roofOpts')roofColor=this.dataset.roof;else if(p.id==='winOpts')windowColor=this.dataset.window;else if(p.id==='extraOpts'){extras[this.dataset.extra]=!extras[this.dataset.extra];this.classList.toggle('active',extras[this.dataset.extra])}Object.keys(matCache).forEach(k=>delete matCache[k]);rebuild()}});
-document.getElementById('resetBtn').onclick=function(){style='signature';wallColor='white';roofStyle='flat';roofColor='slate';windowColor='black';extras={garage:false,porch:false};['styleOpts','wallOpts','roofStyleOpts','roofOpts','winOpts','extraOpts'].forEach(id=>{document.querySelectorAll('#'+id+' .opt').forEach((o,i)=>{o.classList.toggle('active',i===0);if(id==='extraOpts')o.classList.remove('active')})});Object.keys(matCache).forEach(k=>delete matCache[k]);rebuild()};
-
+// Resize
 function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}window.addEventListener('resize',resize);resize();
-function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.1),spd=5*dt;
-  if((mode==='free'||mode==='build')&&pointerLocked){const dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.y=0;dir.normalize();const right=new THREE.Vector3().crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();if(keys.w)camera.position.addScaledVector(dir,spd);if(keys.s)camera.position.addScaledVector(dir,-spd);if(keys.a)camera.position.addScaledVector(right,-spd);if(keys.d)camera.position.addScaledVector(right,spd);if(keys[' '])camera.position.y+=spd;if(keys.shift)camera.position.y-=spd;camera.rotation.order='YXZ';camera.rotation.y=yaw;camera.rotation.x=pitch}
+
+// Animate
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.1),spd=6*dt;
+  if(pointerLocked){const dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.y=0;dir.normalize();const right=new THREE.Vector3().crossVectors(dir,new THREE.Vector3(0,1,0)).normalize();if(keys.w)camera.position.addScaledVector(dir,spd);if(keys.s)camera.position.addScaledVector(dir,-spd);if(keys.a)camera.position.addScaledVector(right,-spd);if(keys.d)camera.position.addScaledVector(right,spd);if(keys[' '])camera.position.y+=spd;if(keys.shift)camera.position.y-=spd;camera.rotation.order='YXZ';camera.rotation.y=yaw;camera.rotation.x=pitch}
   renderer.render(scene,camera)}animate();
 </script>
 </body>
