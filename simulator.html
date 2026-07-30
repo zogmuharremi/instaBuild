@@ -14,63 +14,74 @@
     .top .logo{font-size:13px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:4px;text-decoration:none}.top .logo em{font-style:normal;color:var(--g)}
     .top .logo-mark{width:20px;height:20px;background:var(--g);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:10px}
     .tb{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:4px 8px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}.tb:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.tb.on{background:var(--g);border-color:var(--g);color:var(--n)}.tb.red{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.25);color:#f85149}.tb.red:hover{background:rgba(248,81,73,.2)}
-    .side{position:fixed;left:4px;top:48px;bottom:4px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:10px;padding:6px;overflow-y:auto;width:220px}
-    .side h3{font-size:9px;font-weight:700;color:var(--w);margin-bottom:3px}
-    .tabs{display:flex;gap:1px;margin-bottom:4px}.tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:2px;border-radius:3px;font-size:7px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}.tab:hover{color:var(--w)}.tab.on{background:var(--g);border-color:var(--g);color:var(--n)}
+    .side{position:fixed;left:4px;top:48px;bottom:4px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:10px;padding:6px;overflow-y:auto;width:220px;display:flex;flex-direction:column;gap:4px}
+    .side h3{font-size:9px;font-weight:700;color:var(--w)}
+    .tabs{display:flex;gap:1px}.tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:3px 1px;border-radius:3px;font-size:7px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}.tab:hover{color:var(--w)}.tab.on{background:var(--g);border-color:var(--g);color:var(--n)}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
     .it{background:var(--n3);border:1.5px solid var(--b);border-radius:4px;padding:3px;cursor:pointer;text-align:center;transition:.15s}.it:hover{border-color:rgba(255,255,255,.2)}.it.s{border-color:var(--g);background:rgba(46,204,113,.06)}
     .it .i{font-size:14px;line-height:18px}.it .n{font-size:7px;color:var(--s)}.it.s .n{color:var(--g)}.it .p{font-size:6px;color:rgba(46,204,113,.4)}
-    .prebox{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-    .pr{background:var(--n3);border:1.5px solid var(--b);border-radius:5px;padding:5px;cursor:pointer;transition:.15s}.pr:hover{border-color:var(--g)}.pr .pi{font-size:16px}.pr .pn{font-size:8px;font-weight:600;color:var(--w)}.pr .ps{font-size:7px;color:var(--s)}
-    .pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:480px;width:90%}.pop.on{display:block}.pop h3{font-size:15px;color:var(--w);margin-bottom:6px}.pop p{font-size:11px;color:var(--s);margin-bottom:10px}
+    .prebox{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .pr{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:6px;cursor:pointer;transition:.15s}.pr:hover{border-color:var(--g)}.pr .pi{font-size:18px}.pr .pn{font-size:9px;font-weight:600;color:var(--w)}.pr .ps{font-size:7px;color:var(--s);margin-top:2px}
+    .pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:500px;width:90%}.pop.show{display:block}.pop h3{font-size:15px;color:var(--w);margin-bottom:6px}.pop p{font-size:11px;color:var(--s);margin-bottom:10px}
     #hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;pointer-events:none;z-index:40}
-    @media(max-width:700px){.side{width:180px;left:2px}}@media(max-width:500px){.side{display:none}.top{padding:3px 6px}}
+    @media(max-width:700px){.side{width:180px;left:2px}}@media(max-width:500px){.side{display:none}}
   </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hint">Click canvas to lock · WASD walk · Pick item → click ground</div>
+<div id="hint">Click canvas to lock cursor · WASD walk · Pick item → click ground to place</div>
 <div class="top">
   <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em></a>
   <button class="tb on" id="bP">🔨 Place</button>
   <button class="tb" id="bD">🗑️ Delete</button>
   <button class="tb" id="bR">↻ Rotate</button>
   <button class="tb" id="bM">✋ Move</button>
-  <button class="tb" id="bG">📐 Grid ON</button>
-  <button class="tb" id="bPre">🏘️ Prebuilds</button>
-  <button class="tb" id="bUndo">↩ Undo</button>
+  <button class="tb" onclick="toggleGrid()">📐 Grid ON</button>
+  <button class="tb" onclick="showPrebuilds()">🏘️ Prebuilds</button>
+  <button class="tb" onclick="doUndo()">↩ Undo</button>
   <span style="color:var(--g);font-weight:700;font-size:12px" id="total">$0</span>
-  <button class="tb red" id="bClr">Clear</button>
+  <button class="tb red" onclick="doClear()">Clear</button>
 </div>
 <div class="side" id="side">
   <h3>📦 Catalog</h3>
   <div class="tabs" id="tabs">
-    <button class="tab on" data-cat="walls">🧱</button><button class="tab" data-cat="windows">🪟</button><button class="tab" data-cat="doors">🚪</button><button class="tab" data-cat="floors">🟫</button><button class="tab" data-cat="furniture">🛋️</button><button class="tab" data-cat="kitchen">🍳</button><button class="tab" data-cat="outdoor">🌳</button><button class="tab" data-cat="roofs">🏠</button>
+    <button class="tab on" data-cat="walls" onclick="switchTab('walls')">🧱</button>
+    <button class="tab" data-cat="windows" onclick="switchTab('windows')">🪟</button>
+    <button class="tab" data-cat="doors" onclick="switchTab('doors')">🚪</button>
+    <button class="tab" data-cat="floors" onclick="switchTab('floors')">🟫</button>
+    <button class="tab" data-cat="furniture" onclick="switchTab('furniture')">🛋️</button>
+    <button class="tab" data-cat="kitchen" onclick="switchTab('kitchen')">🍳</button>
+    <button class="tab" data-cat="outdoor" onclick="switchTab('outdoor')">🌳</button>
+    <button class="tab" data-cat="roofs" onclick="switchTab('roofs')">🏠</button>
   </div>
   <div class="grid" id="grid"></div>
 </div>
-<div class="pop" id="prePop"><h3>🏘️ Prebuilt Homes</h3><p>Click to load — fully furnished.</p><div class="prebox" id="preList"></div><div style="margin-top:10px"><button class="tb" id="bClosePre">Cancel</button></div></div>
+<div class="pop" id="prePop"><h3>🏘️ Prebuilt Homes</h3><p>Click any home to load it — fully furnished, ready to customize.</p><div class="prebox" id="preList"></div><div style="margin-top:10px"><button class="tb" onclick="closePre()">Cancel</button></div></div>
 
 <script type="module">
 import*as THREE from'three';
-// ─── EXPOSE GLOBALLY ───
-const W={};
+
+// ALL state on window for global access
+const W=window._W={};
+W.R=null;W.S=null;W.cam=null;W.clk=null;W.keys={};W.yaw=0;W.pitch=0;W.locked=false;
+W.pMode='place';W.gridOn=true;W.total=0;W.sel=null;W.catKey='walls';
+W.placed=[];W.undoStack=[];W.allItems={};W.prebuilds=[];
 
 // ─── INIT ───
 const canvas=document.getElementById('c');
-W.R=new THREE.WebGLRenderer({canvas,antialias:true});W.R.setPixelRatio(2);W.R.shadowMap.enabled=true;
+W.R=new THREE.WebGLRenderer({canvas,antialias:true});W.R.setPixelRatio(Math.min(devicePixelRatio,2));W.R.shadowMap.enabled=true;
 W.S=new THREE.Scene();W.S.background=new THREE.Color('#0d1a2d');W.S.fog=new THREE.Fog('#0d1a2d',25,60);
 W.cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,50);W.cam.position.set(0,1.7,0);
-W.clk=new THREE.Clock();W.keys={};W.yaw=0;W.pitch=0;W.locked=false;W.pMode='place';W.gridOn=true;W.total=0;
+W.clk=new THREE.Clock();
 document.addEventListener('keydown',e=>W.keys[e.key.toLowerCase()]=true);
 document.addEventListener('keyup',e=>W.keys[e.key.toLowerCase()]=false);
-canvas.addEventListener('click',e=>{if(!W.locked)canvas.requestPointerLock();else W.handleClick()});
-canvas.addEventListener('dblclick',e=>{if(W.locked)W.handleDblClick()});
-document.addEventListener('pointerlockchange',()=>{W.locked=document.pointerLockElement===canvas;if(W.locked)document.addEventListener('mousemove',W.mm);else document.removeEventListener('mousemove',W.mm)});
-W.mm=function(e){W.yaw-=e.movementX*.002;W.pitch-=e.movementY*.002;W.pitch=Math.max(-1.4,Math.min(1.4,W.pitch))};
+canvas.addEventListener('click',e=>{if(!W.locked)canvas.requestPointerLock()});
+canvas.addEventListener('dblclick',()=>{if(W.locked)dblClick()});
+document.addEventListener('pointerlockchange',()=>{W.locked=document.pointerLockElement===canvas;if(W.locked)document.addEventListener('mousemove',onMouse);else document.removeEventListener('mousemove',onMouse)});
+function onMouse(e){W.yaw-=e.movementX*.002;W.pitch-=e.movementY*.002;W.pitch=Math.max(-1.4,Math.min(1.4,W.pitch))}
 
 W.S.add(new THREE.AmbientLight('#c8ddf8',.6));
-const sun=new THREE.DirectionalLight('#fffef5',3);sun.position.set(14,10,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);W.S.add(sun);
+const sun=new THREE.DirectionalLight('#fffef5',3);sun.position.set(14,10,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-20;sun.shadow.camera.right=20;sun.shadow.camera.top=10;sun.shadow.camera.bottom=-10;W.S.add(sun);
 W.S.add(new THREE.HemisphereLight('#c8ddf8','#3a5030',.3));
 W.gridH=new THREE.GridHelper(40,40,'#2ecc71','#1a2a1e');W.gridH.position.set(0,.005,0);W.S.add(W.gridH);
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#3a5a2a',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;W.S.add(ground);
@@ -87,7 +98,6 @@ const M={
   roof:new THREE.MeshStandardMaterial({color:'#3d4855',roughness:.4}),
   leaf:new THREE.MeshStandardMaterial({color:'#3d6b2e',roughness:.65}),
   bark:new THREE.MeshStandardMaterial({color:'#6b4d3a',roughness:.8}),
-  bush:new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.6}),
   beige:new THREE.MeshStandardMaterial({color:'#e8dfd2',roughness:.45}),
   gray:new THREE.MeshStandardMaterial({color:'#9ca8b4',roughness:.45}),
   navy:new THREE.MeshStandardMaterial({color:'#2a3a55',roughness:.45}),
@@ -97,16 +107,17 @@ const M={
   black:new THREE.MeshStandardMaterial({color:'#1a1a1a',roughness:.2}),
   silver:new THREE.MeshStandardMaterial({color:'#c0c0c0',roughness:.2,metalness:.7}),
   marble:new THREE.MeshStandardMaterial({color:'#e8e0d8',roughness:.15}),
-  terracotta:new THREE.MeshStandardMaterial({color:'#b55a3a',roughness:.4}),
+  terra:new THREE.MeshStandardMaterial({color:'#b55a3a',roughness:.4}),
   green:new THREE.MeshStandardMaterial({color:'#4a6e3e',roughness:.4}),
   sofa:new THREE.MeshStandardMaterial({color:'#e8e8e4',roughness:.4}),
   pool:new THREE.MeshStandardMaterial({color:'#4080c0',roughness:.15,metalness:.2}),
   fountain:new THREE.MeshStandardMaterial({color:'#a0a0a0',roughness:.3}),
-  lantern:new THREE.MeshStandardMaterial({color:'#f0a030',roughness:.3,emissive:'#f0a030',emissiveIntensity:.3}),
-  darkWood:new THREE.MeshStandardMaterial({color:'#4a2a1a',roughness:.4}),
-  grass:new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.8}),
   path:new THREE.MeshStandardMaterial({color:'#c0b8a8',roughness:.6}),
   rug:new THREE.MeshStandardMaterial({color:'#8b7355',roughness:.8}),
+  darkWood:new THREE.MeshStandardMaterial({color:'#4a2a1a',roughness:.4}),
+  lantern:new THREE.MeshStandardMaterial({color:'#f0a030',roughness:.3,emissive:'#f0a030',emissiveIntensity:.3}),
+  bush:new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.6}),
+  grass:new THREE.MeshStandardMaterial({color:'#4a7a3a',roughness:.8}),
 };
 
 // ─── CATALOG ───
@@ -125,233 +136,115 @@ W.cat={
     {id:'col_wood',n:'Wood Column',i:'🪵',p:250,g:()=>new THREE.BoxGeometry(.15,.15,3),m:()=>M.wood,wall:true},
   ],
   windows:[
-    {id:'win_s',n:'Small Window',i:'🪟',p:500,g:()=>new THREE.BoxGeometry(1,.9,.05),m:()=>M.glass},
-    {id:'win_m',n:'Medium Window',i:'🪟',p:700,g:()=>new THREE.BoxGeometry(1.3,1.1,.05),m:()=>M.glass},
-    {id:'win_l',n:'Large Window',i:'🪟',p:900,g:()=>new THREE.BoxGeometry(1.5,1.4,.05),m:()=>M.glass},
-    {id:'win_xl',n:'Extra Large',i:'🪟',p:1200,g:()=>new THREE.BoxGeometry(2,1.6,.05),m:()=>M.glass},
-    {id:'win_r',n:'Round Window',i:'⭕',p:600,g:()=>new THREE.CylinderGeometry(.4,.4,.05,16),m:()=>M.glass},
-    {id:'win_tall',n:'Tall Slim',i:'▯',p:550,g:()=>new THREE.BoxGeometry(.6,1.8,.05),m:()=>M.glass},
+    {id:'win_s',n:'Small',i:'🪟',p:500,g:()=>new THREE.BoxGeometry(1,.9,.05),m:()=>M.glass},{id:'win_m',n:'Medium',i:'🪟',p:700,g:()=>new THREE.BoxGeometry(1.3,1.1,.05),m:()=>M.glass},{id:'win_l',n:'Large',i:'🪟',p:900,g:()=>new THREE.BoxGeometry(1.5,1.4,.05),m:()=>M.glass},{id:'win_xl',n:'Extra Large',i:'🪟',p:1200,g:()=>new THREE.BoxGeometry(2,1.6,.05),m:()=>M.glass},{id:'win_r',n:'Round',i:'⭕',p:600,g:()=>new THREE.CylinderGeometry(.4,.4,.05,16),m:()=>M.glass},{id:'win_tall',n:'Tall Slim',i:'▯',p:550,g:()=>new THREE.BoxGeometry(.6,1.8,.05),m:()=>M.glass},
   ],
   doors:[
-    {id:'d_front',n:'Front Door',i:'🚪',p:1200,g:()=>new THREE.BoxGeometry(.9,2.2,.06),m:()=>M.door},
-    {id:'d_wood',n:'Wood Door',i:'🚪',p:1000,g:()=>new THREE.BoxGeometry(.9,2.2,.06),m:()=>M.wood},
-    {id:'d_garage',n:'Garage Door',i:'🚗',p:2500,g:()=>new THREE.BoxGeometry(2.5,2.2,.06),m:()=>M.silver},
-    {id:'d_double',n:'Double Door',i:'🚪🚪',p:2000,g:()=>new THREE.BoxGeometry(1.6,2.2,.06),m:()=>M.door},
-    {id:'d_slide',n:'Sliding Door',i:'🪟',p:2800,g:()=>new THREE.BoxGeometry(2,2.2,.05),m:()=>M.glass},
+    {id:'d_front',n:'Front Door',i:'🚪',p:1200,g:()=>new THREE.BoxGeometry(.9,2.2,.06),m:()=>M.door},{id:'d_wood',n:'Wood Door',i:'🚪',p:1000,g:()=>new THREE.BoxGeometry(.9,2.2,.06),m:()=>M.wood},{id:'d_garage',n:'Garage Door',i:'🚗',p:2500,g:()=>new THREE.BoxGeometry(2.5,2.2,.06),m:()=>M.silver},{id:'d_double',n:'Double Door',i:'🚪🚪',p:2000,g:()=>new THREE.BoxGeometry(1.6,2.2,.06),m:()=>M.door},{id:'d_slide',n:'Sliding Door',i:'🪟',p:2800,g:()=>new THREE.BoxGeometry(2,2.2,.05),m:()=>M.glass},
   ],
   floors:[
-    {id:'f_wood',n:'Wood Floor',i:'🟫',p:150,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.wood},
-    {id:'f_tile',n:'Tile Floor',i:'⬜',p:200,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.tile},
-    {id:'f_conc',n:'Concrete',i:'🪨',p:100,g:()=>new THREE.BoxGeometry(2,.06,2),m:()=>M.conc},
-    {id:'f_marble',n:'Marble',i:'✨',p:500,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.marble},
-    {id:'f_dark',n:'Dark Wood',i:'🟤',p:200,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.darkWood},
-    {id:'f_grass',n:'Grass Tile',i:'🌿',p:80,g:()=>new THREE.BoxGeometry(2,.03,2),m:()=>M.grass},
+    {id:'f_wood',n:'Wood Floor',i:'🟫',p:150,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.wood},{id:'f_tile',n:'Tile Floor',i:'⬜',p:200,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.tile},{id:'f_conc',n:'Concrete',i:'🪨',p:100,g:()=>new THREE.BoxGeometry(2,.06,2),m:()=>M.conc},{id:'f_marble',n:'Marble',i:'✨',p:500,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.marble},{id:'f_dark',n:'Dark Wood',i:'🟤',p:200,g:()=>new THREE.BoxGeometry(2,.04,2),m:()=>M.darkWood},{id:'f_grass',n:'Grass Tile',i:'🌿',p:80,g:()=>new THREE.BoxGeometry(2,.03,2),m:()=>M.grass},
   ],
   furniture:[
-    {id:'fu_sofa',n:'Sofa / Couch',i:'🛋️',p:1500,g:()=>new THREE.BoxGeometry(1.8,.5,.7),m:()=>M.sofa},
-    {id:'fu_table',n:'Dining Table',i:'🍽️',p:800,g:()=>new THREE.BoxGeometry(1.4,.04,.9),m:()=>M.wood},
-    {id:'fu_bed',n:'Bed',i:'🛏️',p:1200,g:()=>new THREE.BoxGeometry(1.6,.3,2),m:()=>M.wood},
-    {id:'fu_chair',n:'Chair',i:'🪑',p:300,g:()=>new THREE.BoxGeometry(.35,.4,.35),m:()=>M.wood},
-    {id:'fu_tv',n:'TV Unit',i:'📺',p:900,g:()=>new THREE.BoxGeometry(1.1,.3,.15),m:()=>M.black},
-    {id:'fu_shelf',n:'Bookshelf',i:'📚',p:600,g:()=>new THREE.BoxGeometry(.9,.3,1.4),m:()=>M.wood},
-    {id:'fu_rug',n:'Area Rug',i:'🟫',p:400,g:()=>new THREE.BoxGeometry(2,.02,1.5),m:()=>M.rug},
-    {id:'fu_desk',n:'Desk',i:'💻',p:700,g:()=>new THREE.BoxGeometry(1.2,.04,.6),m:()=>M.wood},
-    {id:'fu_lamp',n:'Floor Lamp',i:'💡',p:350,g:()=>new THREE.CylinderGeometry(.04,.07,1.4,8),m:()=>M.black},
-    {id:'fu_mirror',n:'Mirror',i:'🪞',p:400,g:()=>new THREE.BoxGeometry(.6,.04,.9),m:()=>M.silver},
+    {id:'fu_sofa',n:'Sofa/Couch',i:'🛋️',p:1500,g:()=>new THREE.BoxGeometry(1.8,.5,.7),m:()=>M.sofa},{id:'fu_table',n:'Dining Table',i:'🍽️',p:800,g:()=>new THREE.BoxGeometry(1.4,.04,.9),m:()=>M.wood},{id:'fu_bed',n:'Bed',i:'🛏️',p:1200,g:()=>new THREE.BoxGeometry(1.6,.3,2),m:()=>M.wood},{id:'fu_chair',n:'Chair',i:'🪑',p:300,g:()=>new THREE.BoxGeometry(.35,.4,.35),m:()=>M.wood},{id:'fu_tv',n:'TV Unit',i:'📺',p:900,g:()=>new THREE.BoxGeometry(1.1,.3,.15),m:()=>M.black},{id:'fu_shelf',n:'Bookshelf',i:'📚',p:600,g:()=>new THREE.BoxGeometry(.9,.3,1.4),m:()=>M.wood},{id:'fu_rug',n:'Area Rug',i:'🟫',p:400,g:()=>new THREE.BoxGeometry(2,.02,1.5),m:()=>M.rug},{id:'fu_desk',n:'Desk',i:'💻',p:700,g:()=>new THREE.BoxGeometry(1.2,.04,.6),m:()=>M.wood},{id:'fu_lamp',n:'Floor Lamp',i:'💡',p:350,g:()=>new THREE.CylinderGeometry(.04,.07,1.4,8),m:()=>M.black},{id:'fu_mirror',n:'Mirror',i:'🪞',p:400,g:()=>new THREE.BoxGeometry(.6,.04,.9),m:()=>M.silver},
   ],
   kitchen:[
-    {id:'k_counter',n:'Counter',i:'🍳',p:1000,g:()=>new THREE.BoxGeometry(1.8,.4,.6),m:()=>M.white},
-    {id:'k_fridge',n:'Fridge',i:'🧊',p:1800,g:()=>new THREE.BoxGeometry(.65,.7,.65),m:()=>M.silver},
-    {id:'k_sink',n:'Sink',i:'🚰',p:600,g:()=>new THREE.BoxGeometry(.8,.04,.5),m:()=>M.silver},
-    {id:'k_stove',n:'Stove',i:'🔥',p:900,g:()=>new THREE.BoxGeometry(.6,.04,.5),m:()=>M.black},
-    {id:'k_island',n:'Island',i:'🏝️',p:1500,g:()=>new THREE.BoxGeometry(1.4,.4,.8),m:()=>M.white},
-    {id:'k_cabinet',n:'Cabinet',i:'🗄️',p:700,g:()=>new THREE.BoxGeometry(.9,.4,.5),m:()=>M.wood},
+    {id:'k_counter',n:'Counter',i:'🍳',p:1000,g:()=>new THREE.BoxGeometry(1.8,.4,.6),m:()=>M.white},{id:'k_fridge',n:'Fridge',i:'🧊',p:1800,g:()=>new THREE.BoxGeometry(.65,.7,.65),m:()=>M.silver},{id:'k_sink',n:'Sink',i:'🚰',p:600,g:()=>new THREE.BoxGeometry(.8,.04,.5),m:()=>M.silver},{id:'k_stove',n:'Stove',i:'🔥',p:900,g:()=>new THREE.BoxGeometry(.6,.04,.5),m:()=>M.black},{id:'k_island',n:'Island',i:'🏝️',p:1500,g:()=>new THREE.BoxGeometry(1.4,.4,.8),m:()=>M.white},{id:'k_cabinet',n:'Cabinet',i:'🗄️',p:700,g:()=>new THREE.BoxGeometry(.9,.4,.5),m:()=>M.wood},
   ],
   outdoor:[
-    {id:'o_tree_s',n:'Small Tree',i:'🌳',p:300,g:()=>new THREE.CylinderGeometry(.07,.1,1.4,8),m:()=>M.bark,tree:true},
-    {id:'o_tree_m',n:'Medium Tree',i:'🌲',p:500,g:()=>new THREE.CylinderGeometry(.09,.14,2,8),m:()=>M.bark,tree:true},
-    {id:'o_palm',n:'Palm Tree',i:'🌴',p:600,g:()=>new THREE.CylinderGeometry(.1,.18,2.4,8),m:()=>M.bark,palm:true},
-    {id:'o_bush',n:'Bush',i:'🪴',p:150,g:()=>new THREE.SphereGeometry(.35,6,4),m:()=>M.bush},
-    {id:'o_fountain',n:'Fountain',i:'⛲',p:3000,g:()=>new THREE.CylinderGeometry(.45,.55,.25,12),m:()=>M.fountain},
-    {id:'o_pool',n:'Pool Tile',i:'🏊',p:500,g:()=>new THREE.BoxGeometry(1,.05,1),m:()=>M.pool},
-    {id:'o_fence',n:'Fence',i:'🚧',p:200,g:()=>new THREE.BoxGeometry(1,.7,.04),m:()=>M.wood},
-    {id:'o_path',n:'Path Stone',i:'🪨',p:100,g:()=>new THREE.BoxGeometry(.55,.03,.75),m:()=>M.path},
-    {id:'o_bench',n:'Bench',i:'🪑',p:400,g:()=>new THREE.BoxGeometry(1.4,.08,.35),m:()=>M.wood},
-    {id:'o_lantern',n:'Lantern',i:'🏮',p:250,g:()=>new THREE.CylinderGeometry(.12,.08,.4,8),m:()=>M.lantern},
-    {id:'o_mailbox',n:'Mailbox',i:'📮',p:200,g:()=>new THREE.BoxGeometry(.18,.35,.18),m:()=>M.black},
+    {id:'o_tree_s',n:'Small Tree',i:'🌳',p:300,g:()=>new THREE.CylinderGeometry(.07,.1,1.4,8),m:()=>M.bark,tree:true},{id:'o_tree_m',n:'Medium Tree',i:'🌲',p:500,g:()=>new THREE.CylinderGeometry(.09,.14,2,8),m:()=>M.bark,tree:true},{id:'o_palm',n:'Palm Tree',i:'🌴',p:600,g:()=>new THREE.CylinderGeometry(.1,.18,2.4,8),m:()=>M.bark,palm:true},{id:'o_bush',n:'Bush',i:'🪴',p:150,g:()=>new THREE.SphereGeometry(.35,6,4),m:()=>M.bush},{id:'o_fountain',n:'Fountain',i:'⛲',p:3000,g:()=>new THREE.CylinderGeometry(.45,.55,.25,12),m:()=>M.fountain},{id:'o_pool',n:'Pool Tile',i:'🏊',p:500,g:()=>new THREE.BoxGeometry(1,.05,1),m:()=>M.pool},{id:'o_fence',n:'Fence',i:'🚧',p:200,g:()=>new THREE.BoxGeometry(1,.7,.04),m:()=>M.wood},{id:'o_path',n:'Path Stone',i:'🪨',p:100,g:()=>new THREE.BoxGeometry(.55,.03,.75),m:()=>M.path},{id:'o_bench',n:'Bench',i:'🪑',p:400,g:()=>new THREE.BoxGeometry(1.4,.08,.35),m:()=>M.wood},{id:'o_lantern',n:'Lantern',i:'🏮',p:250,g:()=>new THREE.CylinderGeometry(.12,.08,.4,8),m:()=>M.lantern},{id:'o_mailbox',n:'Mailbox',i:'📮',p:200,g:()=>new THREE.BoxGeometry(.18,.35,.18),m:()=>M.black},
   ],
   roofs:[
-    {id:'r_flat',n:'Flat Slab 3m',i:'▬',p:2000,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.roof},
-    {id:'r_pitch',n:'Pitched 3m',i:'△',p:3500,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.roof,pitched:true},
-    {id:'r_metal',n:'Metal 3m',i:'🔩',p:4000,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.metal,pitched:true},
-    {id:'r_terra',n:'Terracotta 3m',i:'🟠',p:3200,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.terracotta,pitched:true},
+    {id:'r_flat',n:'Flat 3m',i:'▬',p:2000,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.roof},{id:'r_pitch',n:'Pitched 3m',i:'△',p:3500,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.roof,pitched:true},{id:'r_metal',n:'Metal 3m',i:'🔩',p:4000,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.metal,pitched:true},{id:'r_terra',n:'Terracotta 3m',i:'🟠',p:3200,g:()=>new THREE.BoxGeometry(3,.08,3),m:()=>M.terra,pitched:true},
   ]
 };
-
-// ─── FLAT INDEX ───
-W.allItems={};for(const k in W.cat)W.cat[k].forEach(it=>W.allItems[it.id]=it);
+for(const k in W.cat)W.cat[k].forEach(it=>W.allItems[it.id]=it);
 
 // ─── PREBUILDS ───
 W.prebuilds=[
-  {n:'Starter Home',i:'🏠',s:'64m² · 2 bed · $98K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_white',x:-3,z:-2},{t:'w_white',x:3,z:-2},{t:'w_white',x:-3,z:2},{t:'w_white',x:3,z:2},{t:'col_steel',x:-3,z:-2},{t:'col_steel',x:-3,z:2},{t:'col_steel',x:3,z:-2},{t:'col_steel',x:3,z:2},
-    {t:'win_m',x:-1.5,z:-3},{t:'win_m',x:1.5,z:-3},{t:'d_front',x:0,z:3},{t:'r_pitch',x:0,z:0},
-    {t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},
-    {t:'fu_bed',x:-2,z:-1},{t:'fu_sofa',x:2,z:1},{t:'fu_tv',x:2,z:-2},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:2,z:1},
-    {t:'o_tree_s',x:-5,z:-4},{t:'o_fence',x:-3.5,z:3.5},{t:'o_fence',x:3.5,z:3.5},{t:'o_path',x:0,z:3.8},
+  {n:'Starter Home',i:'🏠',s:'64m² · 2 bed · 1 bath · $98K',items:[
+    {t:'w_white',x:0,z:0},{t:'w_white',x:-2.5,z:-1.5},{t:'w_white',x:2.5,z:-1.5},{t:'w_white',x:-2.5,z:1.5},{t:'w_white',x:2.5,z:1.5},{t:'win_m',x:-1.3,z:-2.5},{t:'win_m',x:1.3,z:-2.5},{t:'d_front',x:0,z:2.5},{t:'r_pitch',x:0,z:0},{t:'f_wood',x:0,z:0},{t:'f_wood',x:2,z:0},{t:'f_wood',x:-2,z:0},{t:'fu_bed',x:-1.5,z:-1},{t:'fu_sofa',x:1.5,z:1},{t:'fu_tv',x:1.5,z:-1.5},{t:'fu_table',x:.5,z:.5},{t:'fu_rug',x:1.5,z:1},{t:'o_tree_s',x:-4,z:-3},{t:'o_bush',x:-2,z:3},
   ]},
-  {n:'Family Home',i:'🏡',s:'120m² · 3 bed · $168K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_brick',x:-3.5,z:-2.5},{t:'w_brick',x:3.5,z:-2.5},{t:'w_white',x:-3.5,z:0},{t:'w_white',x:3.5,z:0},{t:'w_white',x:-3.5,z:2.5},{t:'w_white',x:3.5,z:2.5},
-    {t:'col_steel',x:-3.5,z:-2.5},{t:'col_steel',x:-3.5,z:0},{t:'col_steel',x:-3.5,z:2.5},{t:'col_steel',x:3.5,z:-2.5},{t:'col_steel',x:3.5,z:0},{t:'col_steel',x:3.5,z:2.5},
-    {t:'win_l',x:-2,z:-3.5},{t:'win_l',x:2,z:-3.5},{t:'d_double',x:0,z:3.5},{t:'r_flat',x:0,z:0},
-    {t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},{t:'f_wood',x:-1,z:2.8},{t:'f_wood',x:1,z:2.8},
-    {t:'fu_bed',x:-2,z:-2},{t:'fu_bed',x:2,z:-2},{t:'fu_sofa',x:-2,z:2},{t:'fu_tv',x:-2,z:-3},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:-2,z:2},
-    {t:'k_counter',x:2,z:1},{t:'k_fridge',x:2,z:2},{t:'k_sink',x:2,z:0},{t:'k_cabinet',x:2,z:3},
-    {t:'o_tree_m',x:-6,z:5},{t:'o_tree_m',x:6,z:5},{t:'o_fountain',x:0,z:-5},{t:'o_fence',x:-4,z:4},{t:'o_fence',x:4,z:4},{t:'o_lantern',x:0,z:4},
+  {n:'Family Home',i:'🏡',s:'120m² · 3 bed · 2 bath · $168K',items:[
+    {t:'w_white',x:0,z:0},{t:'w_brick',x:-3,z:-2},{t:'w_brick',x:3,z:-2},{t:'w_white',x:-3,z:2},{t:'w_white',x:3,z:2},{t:'w_white',x:-3,z:0},{t:'w_white',x:3,z:0},{t:'win_l',x:-2,z:-3},{t:'win_l',x:2,z:-3},{t:'d_double',x:0,z:3},{t:'r_flat',x:0,z:0},{t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},{t:'fu_bed',x:-2,z:-2},{t:'fu_bed',x:2,z:-2},{t:'fu_sofa',x:-2,z:2},{t:'fu_tv',x:-2,z:-2.5},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:-2,z:2},{t:'k_counter',x:2,z:1},{t:'k_fridge',x:2,z:2},{t:'o_tree_m',x:-5,z:4},{t:'o_tree_m',x:5,z:4},{t:'o_fountain',x:0,z:-4},{t:'o_fence',x:-3.5,z:3.5},{t:'o_fence',x:3.5,z:3.5},{t:'o_path',x:0,z:3.8},
   ]},
-  {n:'Modern Villa',i:'🏛️',s:'180m² · 4 bed · $245K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_white',x:0,z:-3.5},{t:'w_navy',x:-4.5,z:-1.75},{t:'w_navy',x:4.5,z:-1.75},{t:'w_navy',x:-4.5,z:1.75},{t:'w_navy',x:4.5,z:1.75},
-    {t:'col_steel',x:-4.5,z:-1.75},{t:'col_steel',x:-4.5,z:1.75},{t:'col_steel',x:4.5,z:-1.75},{t:'col_steel',x:4.5,z:1.75},
-    {t:'win_xl',x:-3,z:-4.5},{t:'win_xl',x:3,z:-4.5},{t:'win_l',x:-3,z:4.5},{t:'win_l',x:3,z:4.5},{t:'d_double',x:0,z:4.5},{t:'r_metal',x:0,z:-1.75},
-    {t:'f_marble',x:-2,z:-2},{t:'f_marble',x:2,z:-2},{t:'f_marble',x:-2,z:2},{t:'f_marble',x:2,z:2},
-    {t:'fu_bed',x:-3,z:-2},{t:'fu_bed',x:3,z:-2},{t:'fu_sofa',x:0,z:2.5},{t:'fu_tv',x:0,z:-3},{t:'fu_table',x:2,z:-1.5},{t:'fu_rug',x:0,z:2.5},
-    {t:'k_counter',x:-2,z:-1.5},{t:'k_fridge',x:-3.5,z:-1.5},{t:'k_island',x:-2,z:.5},{t:'fu_shelf',x:3,z:2},{t:'fu_desk',x:-3,z:2},{t:'fu_lamp',x:0,z:3},
-    {t:'o_fountain',x:0,z:-6},{t:'o_palm',x:-6.5,z:5.5},{t:'o_palm',x:6.5,z:5.5},{t:'o_pool',x:-6,z:0},{t:'o_pool',x:-6,z:1},{t:'o_pool',x:-6,z:2},
-    {t:'o_bench',x:0,z:5},{t:'o_lantern',x:-5,z:5},{t:'o_lantern',x:5,z:5},
+  {n:'Modern Villa',i:'🏛️',s:'180m² · 4 bed · 3 bath · $245K',items:[
+    {t:'w_white',x:0,z:0},{t:'w_white',x:0,z:-3},{t:'w_navy',x:-4,z:-1.5},{t:'w_navy',x:4,z:-1.5},{t:'w_navy',x:-4,z:1.5},{t:'w_navy',x:4,z:1.5},{t:'win_xl',x:-3,z:-4},{t:'win_xl',x:3,z:-4},{t:'win_l',x:-3,z:4},{t:'win_l',x:3,z:4},{t:'d_double',x:0,z:4},{t:'r_metal',x:0,z:-1.5},{t:'f_marble',x:-2,z:-2},{t:'f_marble',x:2,z:-2},{t:'f_marble',x:-2,z:2},{t:'f_marble',x:2,z:2},{t:'fu_bed',x:-3,z:-2},{t:'fu_bed',x:3,z:-2},{t:'fu_sofa',x:0,z:2.5},{t:'fu_tv',x:0,z:-3},{t:'fu_table',x:2,z:-1},{t:'fu_rug',x:0,z:2.5},{t:'k_counter',x:-2,z:-1},{t:'k_fridge',x:-3,z:-1},{t:'k_island',x:-2,z:1},{t:'fu_shelf',x:3,z:2},{t:'fu_desk',x:-3,z:2},{t:'fu_lamp',x:0,z:3},{t:'o_fountain',x:0,z:-5.5},{t:'o_palm',x:-6,z:5},{t:'o_palm',x:6,z:5},{t:'o_pool',x:-5.5,z:0},{t:'o_pool',x:-5.5,z:1},{t:'o_pool',x:-5.5,z:2},{t:'o_lantern',x:-5,z:4.5},{t:'o_lantern',x:5,z:4.5},{t:'o_bench',x:0,z:4.5},
   ]},
-  {n:'Tiny Cabin',i:'🪵',s:'28m² · 1 bed · $58K',items:[
-    {t:'w_wood',x:0,z:0},{t:'w_wood',x:-2,z:-1.5},{t:'w_wood',x:2,z:-1.5},{t:'w_wood',x:-2,z:1.5},{t:'w_wood',x:2,z:1.5},
-    {t:'win_s',x:-1,z:-2.5},{t:'win_s',x:1,z:-2.5},{t:'d_wood',x:0,z:2.5},{t:'r_pitch',x:0,z:0},{t:'f_dark',x:0,z:0},
-    {t:'fu_bed',x:-1,z:-1},{t:'fu_shelf',x:1,z:-1},{t:'fu_table',x:0,z:.5},{t:'fu_chair',x:.5,z:.5},{t:'fu_lamp',x:-1.5,z:0},{t:'fu_rug',x:0,z:.5},
-    {t:'o_tree_m',x:-3.5,z:-3.5},{t:'o_tree_m',x:3.5,z:-3.5},{t:'o_path',x:0,z:3},{t:'o_path',x:0,z:3.8},{t:'o_bench',x:0,z:4.5},{t:'o_lantern',x:0,z:4.5},
+  {n:'Tiny Cabin',i:'🪵',s:'28m² · 1 bed · 1 bath · $58K',items:[
+    {t:'w_wood',x:0,z:0},{t:'w_wood',x:-1.5,z:-1},{t:'w_wood',x:1.5,z:-1},{t:'w_wood',x:-1.5,z:1},{t:'w_wood',x:1.5,z:1},{t:'win_s',x:-1,z:-2},{t:'win_s',x:1,z:-2},{t:'d_wood',x:0,z:2},{t:'r_pitch',x:0,z:0},{t:'f_dark',x:0,z:0},{t:'fu_bed',x:-1,z:-.5},{t:'fu_shelf',x:1,z:-.5},{t:'fu_table',x:0,z:.5},{t:'fu_chair',x:.5,z:.5},{t:'fu_lamp',x:-1.5,z:.5},{t:'fu_rug',x:0,z:.5},{t:'o_tree_m',x:-3,z:-3},{t:'o_tree_m',x:3,z:-3},{t:'o_path',x:0,z:2.8},{t:'o_path',x:0,z:3.6},
   ]},
-  {n:'Luxury Mansion',i:'🏰',s:'320m² · 6 bed · $520K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_white',x:0,z:-4.5},{t:'w_navy',x:-5.5,z:-2.25},{t:'w_navy',x:5.5,z:-2.25},{t:'w_navy',x:-5.5,z:2.25},{t:'w_navy',x:5.5,z:2.25},{t:'w_white',x:-3,z:-6.5},{t:'w_white',x:3,z:-6.5},
-    {t:'col_steel',x:-5.5,z:-2.25},{t:'col_steel',x:-5.5,z:2.25},{t:'col_steel',x:5.5,z:-2.25},{t:'col_steel',x:5.5,z:2.25},{t:'col_steel',x:-3,z:-6.5},{t:'col_steel',x:3,z:-6.5},
-    {t:'win_xl',x:-3.5,z:-6},{t:'win_xl',x:3.5,z:-6},{t:'win_l',x:-4,z:6},{t:'win_l',x:4,z:6},{t:'win_m',x:0,z:-6},{t:'d_double',x:0,z:6},{t:'r_metal',x:0,z:-2.25},
-    {t:'f_marble',x:-2,z:-2},{t:'f_marble',x:2,z:-2},{t:'f_marble',x:-2,z:2},{t:'f_marble',x:2,z:2},{t:'f_marble',x:-2,z:-5},{t:'f_marble',x:2,z:-5},
-    {t:'fu_bed',x:-3,z:-3},{t:'fu_bed',x:3,z:-3},{t:'fu_bed',x:-3,z:0},{t:'fu_sofa',x:-3,z:3},{t:'fu_tv',x:-3,z:-4},{t:'fu_table',x:3,z:-1},{t:'fu_rug',x:-3,z:3},
-    {t:'k_counter',x:0,z:-3},{t:'k_fridge',x:-1.5,z:-3},{t:'k_island',x:2,z:2},{t:'k_sink',x:1.5,z:-3},{t:'k_stove',x:-.5,z:-3},
-    {t:'fu_shelf',x:3,z:3},{t:'fu_desk',x:-4,z:-1},{t:'fu_lamp',x:4,z:3},{t:'fu_mirror',x:-4,z:3},
-    {t:'o_fountain',x:0,z:-8},{t:'o_palm',x:-7.5,z:7},{t:'o_palm',x:7.5,z:7},{t:'o_palm',x:-7.5,z:-7},{t:'o_palm',x:7.5,z:-7},
-    {t:'o_pool',x:-6,z:0},{t:'o_pool',x:-6,z:1},{t:'o_pool',x:-6,z:2},{t:'o_pool',x:-6,z:3},
-    {t:'o_fence',x:-6,z:6.5},{t:'o_fence',x:6,z:6.5},{t:'o_lantern',x:-5,z:6.5},{t:'o_lantern',x:5,z:6.5},{t:'o_mailbox',x:-5,z:6},{t:'o_bench',x:-2,z:6.5},{t:'o_bench',x:2,z:6.5},
+  {n:'Luxury Mansion',i:'🏰',s:'320m² · 6 bed · 5 bath · $520K',items:[
+    {t:'w_white',x:0,z:0},{t:'w_white',x:0,z:-4},{t:'w_navy',x:-5,z:-2},{t:'w_navy',x:5,z:-2},{t:'w_navy',x:-5,z:2},{t:'w_navy',x:5,z:2},{t:'w_white',x:-2.5,z:-5.5},{t:'w_white',x:2.5,z:-5.5},{t:'win_xl',x:-4,z:-6},{t:'win_xl',x:4,z:-6},{t:'win_l',x:-4,z:5.5},{t:'win_l',x:4,z:5.5},{t:'d_double',x:0,z:5.5},{t:'r_metal',x:0,z:-2},{t:'f_marble',x:-2,z:-2},{t:'f_marble',x:2,z:-2},{t:'f_marble',x:-2,z:2},{t:'f_marble',x:2,z:2},{t:'f_marble',x:-2,z:-5},{t:'f_marble',x:2,z:-5},{t:'fu_bed',x:-3,z:-3},{t:'fu_bed',x:3,z:-3},{t:'fu_bed',x:-3,z:0},{t:'fu_sofa',x:-3,z:3},{t:'fu_tv',x:-3,z:-3.5},{t:'fu_table',x:3,z:-1},{t:'fu_rug',x:-3,z:3},{t:'k_counter',x:0,z:-3},{t:'k_fridge',x:-1.5,z:-3},{t:'k_island',x:2,z:2},{t:'k_stove',x:.5,z:-3},{t:'fu_shelf',x:3,z:3},{t:'fu_desk',x:-4,z:-1},{t:'fu_lamp',x:4,z:3},{t:'fu_mirror',x:-4,z:3},{t:'o_fountain',x:0,z:-7.5},{t:'o_palm',x:-7,z:6},{t:'o_palm',x:7,z:6},{t:'o_palm',x:-7,z:-6},{t:'o_palm',x:7,z:-6},{t:'o_pool',x:-6.5,z:0},{t:'o_pool',x:-6.5,z:1},{t:'o_pool',x:-6.5,z:2},{t:'o_pool',x:-6.5,z:3},{t:'o_fence',x:-6,z:6},{t:'o_fence',x:6,z:6},{t:'o_lantern',x:-5,z:6},{t:'o_lantern',x:5,z:6},{t:'o_mailbox',x:-5,z:5.5},{t:'o_bench',x:-2,z:6},{t:'o_bench',x:2,z:6},
   ]},
 ];
 
-W.sel=null;W.catKey='walls';W.placed=[];W.undoStack=[];
-W.hint=function(t){document.getElementById('hint').textContent=t};
-W.snap=function(v){return W.gridOn?Math.round(v/.5)*.5:v};
-W.updCost=function(){document.getElementById('total').textContent='$'+W.total.toLocaleString()};
-
-// ─── RENDER CATALOG ───
-W.renderCat=function(){
-  const el=document.getElementById('grid');el.innerHTML='';
-  W.cat[W.catKey].forEach(item=>{
-    const d=document.createElement('div');d.className='it'+(W.sel&&W.sel.id===item.id?' s':'');
-    d.innerHTML='<div class="i">'+item.i+'</div><div class="n">'+item.n+'</div><div class="p">$'+item.p+'</div>';
-    d.onclick=function(){document.querySelectorAll('.it').forEach(x=>x.classList.remove('s'));d.classList.add('s');W.sel=item;W.hint('Selected: '+item.n+' — Click ground to place')};
-    el.appendChild(d);
-  });
-};
-W.renderCat();
-
-// ─── TAB CLICKS ───
-document.querySelectorAll('.tab').forEach(t=>{t.onclick=function(){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));this.classList.add('on');W.catKey=this.dataset.cat;W.renderCat()}});
-
-// ─── MAKE OBJECT ───
-W.makeObj=function(item){
+// ─── FUNCTIONS ───
+function makeObj(item){
   if(item.tree){const g=new THREE.Group();const t=new THREE.Mesh(item.g(),item.m());t.position.y=.7;t.castShadow=true;g.add(t);const cr=new THREE.Mesh(new THREE.ConeGeometry(.65,.85,8),M.leaf);cr.position.y=1.4;cr.castShadow=true;g.add(cr);return g}
   if(item.palm){const g=new THREE.Group();const t=new THREE.Mesh(item.g(),item.m());t.position.y=1.2;t.castShadow=true;g.add(t);for(let f=0;f<6;f++){const fr=new THREE.Mesh(new THREE.BoxGeometry(.75,.02,.2),new THREE.MeshStandardMaterial({color:'#5a9a3e',roughness:.4,side:THREE.DoubleSide}));fr.position.set(0,2.5,0);fr.rotation.set(.3+Math.random()*.4,f/6*Math.PI*2,Math.random()*.3);fr.castShadow=true;g.add(fr)}return g}
   if(item.pitched){const g=new THREE.Group();const p1=new THREE.Mesh(item.g(),item.m());p1.position.set(0,.28,-.65);p1.rotation.x=-.6;p1.castShadow=true;g.add(p1);const p2=new THREE.Mesh(item.g(),item.m());p2.position.set(0,.28,.65);p2.rotation.x=.6;p2.castShadow=true;g.add(p2);return g}
   const obj=new THREE.Mesh(item.g(),item.m());obj.castShadow=true;obj.receiveShadow=true;return obj
-};
+}
+function getPos(){const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(0,0),W.cam);const d=rc.ray.direction.clone(),o=rc.ray.origin.clone();if(d.y>=0)return null;const t=-o.y/d.y;return new THREE.Vector3((W.gridOn?Math.round((o.x+d.x*t)/.5)*.5:(o.x+d.x*t)),.01,(W.gridOn?Math.round((o.z+d.z*t)/.5)*.5:(o.z+d.z*t)))}
+function updCost(){document.getElementById('total').textContent='$'+W.total.toLocaleString()}
+function hint(t){document.getElementById('hint').textContent=t}
 
-// ─── RAYCASTER ───
-W.getPos=function(){
-  const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(0,0),W.cam);
-  const d=rc.ray.direction.clone(),o=rc.ray.origin.clone();
-  if(d.y>=0)return null;
-  const t=-o.y/d.y;
-  return new THREE.Vector3(W.snap(o.x+d.x*t),.01,W.snap(o.z+d.z*t));
-};
-
-// ─── HANDLE CLICK (PLACE) ───
-W.handleClick=function(){
+// ─── PLACE (called from animation loop when mouse clicked) ───
+function tryPlace(){
   if(W.pMode!=='place'||!W.sel||!W.locked)return;
-  const pos=W.getPos();if(!pos||Math.abs(pos.x)>19||Math.abs(pos.z)>19)return;
-  const obj=W.makeObj(W.sel);
-  pos.y=W.sel.wall?1.4:.01;
-  obj.position.copy(pos);
+  const pos=getPos();if(!pos||Math.abs(pos.x)>19||Math.abs(pos.z)>19)return;
+  const obj=makeObj(W.sel);pos.y=W.sel.wall?1.4:.01;obj.position.copy(pos);
   if(W.sel.wall)obj.rotation.y=Math.round(W.cam.rotation.y/(Math.PI/2))*(Math.PI/2);
   obj.userData={id:W.sel.id,price:W.sel.p,canRot:true};
-  W.S.add(obj);W.placed.push(obj);
-  W.undoStack.push(obj);if(W.undoStack.length>50)W.undoStack.shift();
-  W.total+=W.sel.p;W.updCost();
-};
+  W.S.add(obj);W.placed.push(obj);W.undoStack.push(obj);if(W.undoStack.length>50)W.undoStack.shift();
+  W.total+=W.sel.p;updCost();
+}
 
-// ─── HANDLE DOUBLE CLICK (DELETE/ROTATE/MOVE) ───
-W.handleDblClick=function(){
+// ─── DOUBLE CLICK ───
+function dblClick(){
   if(W.pMode==='place')return;
   const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(0,0),W.cam);
   const hits=rc.intersectObjects(W.placed,true);
-  if(hits.length===0){if(W.pMode==='move'){const mo=W.placed.find(o=>o.userData._moving);if(mo){const pos=W.getPos();if(pos){mo.position.set(pos.x,mo.position.y,pos.z);mo.userData._moving=false;W.hint('Moved!')}}}return}
-  let tgt=hits[0].object;
-  while(tgt.parent&&tgt.parent!==W.S&&W.placed.includes(tgt.parent))tgt=tgt.parent;
+  if(hits.length===0){if(W.pMode==='move'){const mo=W.placed.find(o=>o.userData._moving);if(mo){const pos=getPos();if(pos){mo.position.set(pos.x,mo.position.y,pos.z);mo.userData._moving=false;hint('Moved!')}}}return}
+  let tgt=hits[0].object;while(tgt.parent&&tgt.parent!==W.S&&W.placed.includes(tgt.parent))tgt=tgt.parent;
   if(!W.placed.includes(tgt))return;
-  if(W.pMode==='delete'){W.total-=(tgt.userData.price||0);W.S.remove(tgt);W.placed.splice(W.placed.indexOf(tgt),1);W.updCost();W.hint('Deleted')}
-  else if(W.pMode==='rotate'){tgt.rotation.y+=Math.PI/2;W.hint('Rotated 90°')}
-  else if(W.pMode==='move'){W.placed.forEach(o=>delete o.userData._moving);tgt.userData._moving=true;W.hint('Moving: click ground to place it')}
-};
+  if(W.pMode==='delete'){W.total-=(tgt.userData.price||0);W.S.remove(tgt);W.placed.splice(W.placed.indexOf(tgt),1);updCost();hint('Deleted')}
+  else if(W.pMode==='rotate'){tgt.rotation.y+=Math.PI/2;hint('Rotated 90°')}
+  else if(W.pMode==='move'){W.placed.forEach(o=>delete o.userData._moving);tgt.userData._moving=true;hint('Moving: click ground to place')}
+}
 
-// ─── TOOLBAR (global onclick) ───
-window.setMode=function(m){
-  W.pMode=m;['bP','bD','bR','bM'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',['place','delete','rotate','move'][i]===m));
-  W.hint({place:W.sel?'Place: click ground to place '+W.sel.n:'Place: select item first',delete:'Delete: double-click objects',rotate:'Rotate: double-click to spin 90°',move:'Move: double-click then click new spot'}[m]||'');
+// ─── GLOBAL FUNCTIONS (exposed to window) ───
+window.switchTab=function(k){W.catKey=k;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.cat===k));
+  const el=document.getElementById('grid');el.innerHTML='';
+  W.cat[k].forEach(item=>{const d=document.createElement('div');d.className='it'+(W.sel&&W.sel.id===item.id?' s':'');d.innerHTML='<div class="i">'+item.i+'</div><div class="n">'+item.n+'</div><div class="p">$'+item.p+'</div>';d.onclick=function(){document.querySelectorAll('.it').forEach(x=>x.classList.remove('s'));d.classList.add('s');W.sel=item;hint('Selected: '+item.n+' — Click ground to place')};el.appendChild(d)});
 };
-window.toggleGrid=function(){W.gridOn=!W.gridOn;W.gridH.visible=W.gridOn;document.getElementById('bG').textContent='📐 Grid '+(W.gridOn?'ON':'OFF');document.getElementById('bG').classList.toggle('on',!W.gridOn)};
-window.doUndo=function(){const obj=W.undoStack.pop();if(obj){W.total-=(obj.userData.price||0);W.S.remove(obj);W.placed.splice(W.placed.indexOf(obj),1);W.updCost();W.hint('Undone')}};
-window.doClear=function(){if(!confirm('Clear everything?'))return;W.placed.forEach(o=>W.S.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;W.updCost();W.hint('Cleared')};
-window.showPrebuilds=function(){
-  const el=document.getElementById('preList');el.innerHTML='';
-  W.prebuilds.forEach(pb=>{const d=document.createElement('div');d.className='pr';d.innerHTML='<div class="pi">'+pb.i+'</div><div class="pn">'+pb.n+'</div><div class="ps">'+pb.s+'</div>';d.onclick=function(){window.loadPrebuild(pb)};el.appendChild(d)});
-  document.getElementById('prePop').classList.add('on');
-};
-window.closePre=function(){document.getElementById('prePop').classList.remove('on')};
-window.loadPrebuild=function(pb){
-  W.placed.forEach(o=>W.S.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;
-  let count=0;
-  pb.items.forEach(it=>{
-    const found=W.allItems[it.t];
-    if(!found){console.warn('Missing:',it.t);return}
-    const obj=W.makeObj(found);
-    obj.position.set(it.x||0,found.wall?1.4:.01,it.z||0);
-    if(it.ry)obj.rotation.y=it.ry;
-    obj.userData={id:found.id,price:found.p,canRot:true};
-    W.S.add(obj);W.placed.push(obj);W.total+=found.p;count++;
-  });
-  W.updCost();W.hint('Loaded: '+pb.n+' ('+count+' items)');
-  document.getElementById('prePop').classList.remove('on');
-  console.log('Prebuild loaded:',pb.n,count,'items');
-};
+window.setMode=function(m){W.pMode=m;['P','D','R','M'].forEach((l,i)=>document.getElementById('b'+l).classList.toggle('on',['place','delete','rotate','move'][i]===m));hint({place:W.sel?'Place: click ground to place '+W.sel.n:'Place: select item first',delete:'Delete: double-click objects',rotate:'Rotate: double-click to spin 90°',move:'Move: double-click then click new spot'}[m])};
+window.toggleGrid=function(){W.gridOn=!W.gridOn;W.gridH.visible=W.gridOn;const b=document.querySelector('#bG')||document.querySelector('[onclick*="toggleGrid"]');if(b)b.textContent='📐 Grid '+(W.gridOn?'ON':'OFF');b&&b.classList.toggle('on',!W.gridOn)};
+window.doUndo=function(){const obj=W.undoStack.pop();if(obj){W.total-=(obj.userData.price||0);W.S.remove(obj);W.placed.splice(W.placed.indexOf(obj),1);updCost();hint('Undone')}};
+window.doClear=function(){if(!confirm('Clear all?'))return;W.placed.forEach(o=>W.S.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;updCost();hint('Cleared')};
+window.showPrebuilds=function(){const el=document.getElementById('preList');el.innerHTML='';W.prebuilds.forEach(pb=>{const d=document.createElement('div');d.className='pr';d.innerHTML='<div class="pi">'+pb.i+'</div><div class="pn">'+pb.n+'</div><div class="ps">'+pb.s+'</div>';d.onclick=function(){loadPre(pb)};el.appendChild(d)});document.getElementById('prePop').classList.add('show')};
+window.closePre=function(){document.getElementById('prePop').classList.remove('show')};
+function loadPre(pb){W.placed.forEach(o=>W.S.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;let c=0;pb.items.forEach(it=>{const f=W.allItems[it.t];if(!f)return;const obj=makeObj(f);obj.position.set(it.x||0,f.wall?1.4:.01,it.z||0);if(it.ry)obj.rotation.y=it.ry;obj.userData={id:f.id,price:f.p,canRot:true};W.S.add(obj);W.placed.push(obj);W.total+=f.p;c++});updCost();hint('Loaded: '+pb.n+' ('+c+' items)');document.getElementById('prePop').classList.remove('show')}
 
-// ─── BUTTON HOOKS ───
+// ─── TOOLBAR HOOKS ───
 document.getElementById('bP').onclick=function(){window.setMode('place')};
 document.getElementById('bD').onclick=function(){window.setMode('delete')};
 document.getElementById('bR').onclick=function(){window.setMode('rotate')};
 document.getElementById('bM').onclick=function(){window.setMode('move')};
-document.getElementById('bG').onclick=window.toggleGrid;
-document.getElementById('bUndo').onclick=window.doUndo;
-document.getElementById('bClr').onclick=window.doClear;
-document.getElementById('bPre').onclick=window.showPrebuilds;
-document.getElementById('bClosePre').onclick=window.closePre;
 
-// ─── RESIZE + ANIMATE ───
+// ─── INITIAL RENDER ───
+window.switchTab('walls');
+
+// ─── ANIMATE ───
 function resize(){const w=innerWidth,h=innerHeight;W.R.setSize(w,h);W.cam.aspect=w/h;W.cam.updateProjectionMatrix()}window.addEventListener('resize',resize);resize();
-function anim(){requestAnimationFrame(anim);const dt=Math.min(W.clk.getDelta(),.1),s=7*dt;
-  if(W.locked){const d=new THREE.Vector3();W.cam.getWorldDirection(d);d.y=0;d.normalize();const r=new THREE.Vector3().crossVectors(d,new THREE.Vector3(0,1,0)).normalize();if(W.keys.w)W.cam.position.addScaledVector(d,s);if(W.keys.s)W.cam.position.addScaledVector(d,-s);if(W.keys.a)W.cam.position.addScaledVector(r,-s);if(W.keys.d)W.cam.position.addScaledVector(r,s);if(W.keys[' '])W.cam.position.y+=s;if(W.keys.shift)W.cam.position.y-=s;W.cam.rotation.order='YXZ';W.cam.rotation.y=W.yaw;W.cam.rotation.x=W.pitch}
+function anim(){requestAnimationFrame(anim);
+  if(W.locked){const dt=Math.min(W.clk.getDelta(),.1),s=7*dt;const d=new THREE.Vector3();W.cam.getWorldDirection(d);d.y=0;d.normalize();const r=new THREE.Vector3().crossVectors(d,new THREE.Vector3(0,1,0)).normalize();if(W.keys.w)W.cam.position.addScaledVector(d,s);if(W.keys.s)W.cam.position.addScaledVector(d,-s);if(W.keys.a)W.cam.position.addScaledVector(r,-s);if(W.keys.d)W.cam.position.addScaledVector(r,s);if(W.keys[' '])W.cam.position.y+=s;if(W.keys.shift)W.cam.position.y-=s;W.cam.rotation.order='YXZ';W.cam.rotation.y=W.yaw;W.cam.rotation.x=W.pitch}
+  // Handle placement on click while mouse is locked
+  if(W.locked&&W.pMode==='place'&&W.sel&&W._clickPending){tryPlace();W._clickPending=false}
   W.R.render(W.S,W.cam)}anim();
-console.log('🏗️ instaBuild 3D Builder ready! Click canvas to start.');
+// Override canvas click to flag placement
+canvas.addEventListener('click',e=>{if(W.locked){W._clickPending=true;tryPlace()}});
+canvas.addEventListener('dblclick',()=>{if(W.locked)dblClick()});
 </script>
 </body>
 </html>
