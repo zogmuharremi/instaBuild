@@ -51,7 +51,14 @@
 <div class="side">
   <h3>📦 Catalog</h3>
   <div class="tabs" id="tabs">
-    <button class="tab on" data-cat="walls">🧱</button><button class="tab" data-cat="windows">🪟</button><button class="tab" data-cat="doors">🚪</button><button class="tab" data-cat="floors">🟫</button><button class="tab" data-cat="furniture">🛋️</button><button class="tab" data-cat="kitchen">🍳</button><button class="tab" data-cat="outdoor">🌳</button><button class="tab" data-cat="roofs">🏠</button>
+    <button class="tab on" data-cat="walls" onclick="window.switchTab('walls')">🧱</button>
+    <button class="tab" data-cat="windows" onclick="window.switchTab('windows')">🪟</button>
+    <button class="tab" data-cat="doors" onclick="window.switchTab('doors')">🚪</button>
+    <button class="tab" data-cat="floors" onclick="window.switchTab('floors')">🟫</button>
+    <button class="tab" data-cat="furniture" onclick="window.switchTab('furniture')">🛋️</button>
+    <button class="tab" data-cat="kitchen" onclick="window.switchTab('kitchen')">🍳</button>
+    <button class="tab" data-cat="outdoor" onclick="window.switchTab('outdoor')">🌳</button>
+    <button class="tab" data-cat="roofs" onclick="window.switchTab('roofs')">🏠</button>
   </div>
   <div class="items" id="items"></div>
 </div>
