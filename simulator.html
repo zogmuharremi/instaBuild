@@ -4,1604 +4,758 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>instaBuild — 3D Builder</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={corePlugins:{preflight:false}}</script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <style>
     :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',sans-serif;background:var(--n);color:#c4ccd8;overflow:hidden;height:100vh}
-    #c{display:block;width:100%;height:100vh}
-    /* ── Toolbar ── */
-    .top{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap}
+    #c{display:block;width:100%;height:100vh;cursor:crosshair}
+    .top{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
     .top .logo{font-size:13px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:4px;text-decoration:none}.top .logo em{font-style:normal;color:var(--g)}
     .top .logo-mark{width:20px;height:20px;background:var(--g);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:10px}
     .tb{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:4px 8px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}.tb:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.tb.on{background:var(--g);border-color:var(--g);color:var(--n)}.tb.red{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.25);color:#f85149}.tb.red:hover{background:rgba(248,81,73,.2)}
-    /* ── Glassmorphism accordion sidebar ── */
-    .cat-accordion{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
-    .cat-accordion.open{max-height:800px}
-    .cat-chevron{transition:transform .3s ease}.cat-chevron.open{transform:rotate(180deg)}
-    .cat-item{transition:all .15s ease}.cat-item:hover{border-color:var(--g)!important;background:rgba(46,204,113,.06)!important}
-    .cat-item.selected{border-color:var(--g)!important;background:rgba(46,204,113,.08)!important}
-    .cat-item svg{transition:color .15s ease}
-    .cat-item.selected svg{color:var(--g)}
-    /* ── Prebuilds popup ── */
-    .prebox{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    .pr{background:var(--n3);border:1.5px solid var(--b);border-radius:8px;padding:10px;cursor:pointer;transition:.15s}.pr:hover{border-color:var(--g)}.pr .pi{font-size:20px}.pr .pn{font-size:10px;font-weight:600;color:var(--w)}.pr .ps{font-size:7px;color:var(--s);margin-top:2px}
-    .pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:500px;width:90%}.pop.show{display:block}.pop h3{font-size:15px;color:var(--w);margin-bottom:6px}.pop p{font-size:11px;color:var(--s);margin-bottom:10px}
-    #hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;pointer-events:none;z-index:40}
-    /* ── Scrollbar ── */
-    .sidebar-scroll::-webkit-scrollbar{width:3px}.sidebar-scroll::-webkit-scrollbar-track{background:transparent}.sidebar-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:10px}
-    @media(max-width:640px){.cat-sidebar{width:240px!important;left:2px!important}}
-    @media(max-width:480px){.cat-sidebar{display:none}}
+    .side{position:fixed;left:6px;top:50px;bottom:6px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:10px;padding:6px;overflow-y:auto;width:225px;display:flex;flex-direction:column;gap:4px}
+    .side h3{font-size:9px;font-weight:700;color:var(--w)}
+    .tabs{display:flex;gap:1px;margin-bottom:2px}.tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:2px 1px;border-radius:3px;font-size:7px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}.tab:hover{color:var(--w)}.tab.on{background:var(--g);border-color:var(--g);color:var(--n)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    .it{background:var(--n3);border:1.5px solid var(--b);border-radius:4px;padding:3px;cursor:pointer;text-align:center;transition:.15s}.it:hover{border-color:rgba(255,255,255,.2)}.it.s{border-color:var(--g);background:rgba(46,204,113,.06)}
+    .it .i{font-size:16px;line-height:18px}.it .n{font-size:7px;color:var(--s)}.it.s .n{color:var(--g)}.it .p{font-size:6.5px;color:rgba(46,204,113,.4)}
+    .it .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:2px;vertical-align:middle}
+    .popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:500px;width:90%}.popup.show{display:block}.popup h3{font-size:15px;color:var(--w);margin-bottom:6px}.popup p{font-size:11px;color:var(--s);margin-bottom:10px}
+    .prebox{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+    .pr{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:8px;cursor:pointer;transition:.15s}.pr:hover{border-color:var(--g)}.pr .pi{font-size:18px}.pr .pn{font-size:9px;font-weight:600;color:var(--w)}.pr .ps{font-size:7px;color:var(--s);margin-top:2px}
+    .pr .layout{width:80px;height:50px;margin:6px auto 4px;position:relative;background:var(--n);border:1px solid var(--b);border-radius:3px}
+    .pr .layout span{position:absolute;border-radius:1px}.pr .layout .lw{background:var(--g);opacity:.6}.pr .layout .lwin{background:#60a5fa;opacity:.7}.pr .layout .ldoor{background:#f59e0b;opacity:.7}
+    #hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;pointer-events:none;z-index:40;transition:opacity .3s}
+    #modeI{position:fixed;top:48px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:8px;align-items:center;opacity:0;transition:opacity .3s;pointer-events:none}
+    #modeI .mi{padding:5px 14px;border-radius:20px;font-size:10px;font-weight:700;font-family:Inter}
+    .hoverLabel{position:fixed;pointer-events:none;z-index:45;background:rgba(10,14,20,.9);border:1px solid var(--g);border-radius:6px;padding:4px 10px;font-size:10px;font-family:Inter;color:var(--w);white-space:nowrap;display:none}
+    .hoverLabel .hlp{color:var(--g);font-size:9px}
+    @media(max-width:700px){.side{width:185px;left:3px}}@media(max-width:500px){.side{display:none}}
   </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hint">Drag to orbit · Scroll to zoom · Right-drag to pan · Click ground to place</div>
+<div id="hint">Click canvas to lock · Pick item → click ground to place · Press R to rotate</div>
+<div id="modeI"><span class="mi" style="background:var(--g);color:var(--n)" id="miMode">🔨 PLACE</span><span class="mi" style="background:var(--n3);border:1px solid var(--b);color:var(--g)" id="miItem">No item selected</span></div>
+<div class="hoverLabel" id="hoverLabel"><span id="hlName"></span><br><span class="hlp" id="hlPrice"></span></div>
+
 <div class="top">
   <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em></a>
   <button class="tb on" id="bP">🔨 Place</button>
   <button class="tb" id="bD">🗑️ Delete</button>
   <button class="tb" id="bR">↻ Rotate</button>
   <button class="tb" id="bM">✋ Move</button>
-  <button class="tb" onclick="toggleGrid()">📐 Grid ON</button>
-  <button class="tb" onclick="showPrebuilds()">🏘️ Prebuilds</button>
-  <button class="tb" onclick="doUndo()">↩ Undo</button>
-  <span style="color:var(--g);font-weight:700;font-size:12px" id="budget" title="Remaining budget">💰 $100,000</span>
-  <button class="tb" onclick="saveProject()" style="color:#f59e0b;border-color:rgba(245,158,11,.3)">💾 Save</button>
-  <button class="tb" onclick="showLoadPopup()" style="color:#60a5fa;border-color:rgba(96,165,250,.3)">📂 Load</button>
-  <button class="tb red" onclick="doClear()">Clear</button>
+  <button class="tb" onclick="window.toggleGrid()">📐 Grid ON</button>
+  <button class="tb" onclick="window.showPrebuilds()">🏘️ Prebuilds</button>
+  <button class="tb" onclick="window.doUndo()">↩ Undo</button>
+  <span style="color:var(--g);font-weight:700;font-size:12px" id="budget">💰 $100,000</span>
+  <button class="tb" onclick="window.saveProject()" style="color:#f59e0b;border-color:rgba(245,158,11,.3)">💾 Save</button>
+  <button class="tb" onclick="window.showLoadPopup()" style="color:#60a5fa;border-color:rgba(96,165,250,.3)">📂 Load</button>
+  <button class="tb red" onclick="window.doClear()">Clear</button>
 </div>
-<!-- ══════════════════════════════════════
-  FLOATING GLASSMORPHISM CATALOG SIDEBAR
-  ══════════════════════════════════════ -->
-<div class="fixed left-3 top-[52px] z-50 cat-sidebar w-[244px] max-h-[calc(100vh-64px)] overflow-y-auto sidebar-scroll
-            backdrop-blur-2xl bg-[#0a0e14]/85 border border-white/[0.07] rounded-2xl
-            shadow-[0_8px_40px_rgba(0,0,0,.55),0_0_0_1px_rgba(255,255,255,.03)] p-2.5 flex flex-col gap-1"
-     id="catalogSidebar">
-  <div class="flex items-center gap-2 px-1.5 pb-2 border-b border-white/[0.06] mb-0.5">
-    <svg class="w-4 h-4 text-[#2ecc71]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-    <span class="text-[11px] font-bold text-white tracking-wide">CATALOG</span>
+<div class="side" id="side">
+  <h3>📦 Catalog</h3>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-cat="walls" onclick="window.switchTab('walls')">🧱</button>
+    <button class="tab" data-cat="windows" onclick="window.switchTab('windows')">🪟</button>
+    <button class="tab" data-cat="doors" onclick="window.switchTab('doors')">🚪</button>
+    <button class="tab" data-cat="floors" onclick="window.switchTab('floors')">🟫</button>
+    <button class="tab" data-cat="furniture" onclick="window.switchTab('furniture')">🛋️</button>
+    <button class="tab" data-cat="kitchen" onclick="window.switchTab('kitchen')">🍳</button>
+    <button class="tab" data-cat="outdoor" onclick="window.switchTab('outdoor')">🌳</button>
+    <button class="tab" data-cat="roofs" onclick="window.switchTab('roofs')">🏠</button>
   </div>
-  <div id="accordionRoot"></div>
+  <div class="grid" id="grid"></div>
 </div>
-<div class="pop" id="prePop"><h3>🏘️ Prebuilt Homes</h3><p>Click any home to load it — fully furnished, ready to customize.</p><div class="prebox" id="preList"></div><div style="margin-top:10px"><button class="tb" onclick="closePre()">Cancel</button></div></div>
+<div class="popup" id="prePop"><h3>🏘️ Prebuilt Homes</h3><p>Click any home to load it — fully furnished.</p><div class="prebox" id="preList"></div><div style="margin-top:10px"><button class="tb" onclick="window.closePre()">Cancel</button></div></div>
+<div class="popup" id="savePop"><h3>💾 Save Project</h3><p>Give your project a name.</p><input id="projectName" style="width:100%;padding:10px;background:var(--n3);border:1px solid var(--b);border-radius:6px;color:var(--w);font-size:13px;font-family:Inter;outline:none;margin-bottom:10px" placeholder="My Dream Home"><div style="display:flex;gap:8px;justify-content:center"><button class="tb" onclick="window.doSave()" style="background:var(--g);color:var(--n)">💾 Save</button><button class="tb" onclick="document.getElementById('savePop').classList.remove('show')">Cancel</button></div></div>
+<div class="popup" id="loadPop"><h3>📂 Load Project</h3><div id="loadList" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:10px"><div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading...</div></div><button class="tb" onclick="document.getElementById('loadPop').classList.remove('show')">Cancel</button></div>
 
-<!-- Save/Load popup -->
-<div class="pop" id="savePop"><h3>💾 Save Project</h3><p>Give your project a name.</p><input id="projectName" style="width:100%;padding:10px;background:var(--n3);border:1px solid var(--b);border-radius:6px;color:var(--w);font-size:13px;font-family:Inter;outline:none;margin-bottom:10px" placeholder="My Dream Home"><div style="display:flex;gap:8px;justify-content:center"><button class="tb" onclick="doSave()" style="background:var(--g);border-color:var(--g);color:var(--n)">💾 Save to Cloud</button><button class="tb" onclick="document.getElementById('savePop').classList.remove('show')">Cancel</button></div></div>
-
-<div class="pop" id="loadPop"><h3>📂 Load Project</h3><p>Select a saved project to load it.</p><div id="loadList" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:10px"><div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading projects...</div></div><div style="display:flex;gap:8px;justify-content:center"><button class="tb" onclick="document.getElementById('loadPop').classList.remove('show')">Cancel</button></div></div>
-
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ══════════════════════════════════════
-// STATE — all on window for onclick access
-// ══════════════════════════════════════
 const W = window._W = {};
 W.renderer = null; W.scene = null; W.camera = null; W.controls = null; W.clock = null;
-W.pMode = 'place'; W.gridOn = true; W.total = 0; W.budget = 100000; W.sel = null; W.catKey = 'walls';
-W.placeRotation = 0; // Rotation applied when placing (R key cycles 90°)
-W.placed = []; W.undoStack = []; W.allItems = {}; W.prebuilds = [];
-W.gridH = null; W.moveTarget = null; W.ghost = null; W.ghostTarget = new THREE.Vector3(); W.mouseMoved = false; W.mouseDown = new THREE.Vector2();
+W.pMode = 'place'; W.gridOn = true; W.budget = 100000; W.sel = null; W.catKey = 'walls';
+W.placeRotation = 0; W.placed = []; W.undoStack = []; W.allItems = {}; W.prebuilds = [];
+W.gridH = null; W.moveTarget = null; W.ghost = null; W.ghostTarget = new THREE.Vector3();
+W.mouseMoved = false; W.mouseDown = new THREE.Vector2(); W.locked = false;
+W.pitch = 0; W.yaw = 0; W.keys = {};
 
-// ══════════════════════════════════════
-// INIT — Renderer, Scene, Camera, Controls
-// ══════════════════════════════════════
+// ─── THREE.JS INIT ───
 const canvas = document.getElementById('c');
-
-// Hardware-accelerated WebGL renderer with shadows
-W.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+W.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 W.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 W.renderer.shadowMap.enabled = true;
-W.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 W.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 W.renderer.toneMappingExposure = 1.1;
 
-// Scene with fog for depth
 W.scene = new THREE.Scene();
 W.scene.background = new THREE.Color('#0d1a2d');
-W.scene.fog = new THREE.Fog('#0d1a2d', 30, 80);
+W.scene.fog = new THREE.Fog('#0d1a2d', 25, 60);
 
-// Camera — positioned for a nice top-down isometric overview
-W.camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.5, 120);
-W.camera.position.set(14, 10, 14);
-
-// OrbitControls — intuitive pan / zoom / rotate, bounded to prevent floor clipping
-W.controls = new OrbitControls(W.camera, canvas);
-W.controls.target.set(0, 1.0, 0);
+W.camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 50);
+W.camera.position.set(8, 6, 10);
+W.controls = new OrbitControls(W.camera, W.renderer.domElement);
+W.controls.target.set(0, 0.5, 0);
 W.controls.enableDamping = true;
-W.controls.dampingFactor = 0.12;
-W.controls.minDistance = 3;
-W.controls.maxDistance = 35;
-W.controls.maxPolarAngle = Math.PI * 0.48;       // ~86° — can't flip below horizon
-W.controls.minPolarAngle = 0.15;                  // prevent gimbal lock at zenith
-W.controls.mouseButtons = {
-  LEFT: THREE.MOUSE.ROTATE,
-  MIDDLE: THREE.MOUSE.PAN,
-  RIGHT: THREE.MOUSE.PAN
-};
+W.controls.dampingFactor = 0.08;
+W.controls.minDistance = 2;
+W.controls.maxDistance = 25;
+W.controls.maxPolarAngle = Math.PI * 0.52;
 W.controls.update();
 
 W.clock = new THREE.Clock();
 
-// ══════════════════════════════════════
-// LIGHTING — efficient three-point setup
-// ══════════════════════════════════════
-W.scene.add(new THREE.AmbientLight('#c8ddf8', 0.55));
-
-const sun = new THREE.DirectionalLight('#fffef5', 3.5);
-sun.position.set(14, 12, 8);
+// Lights
+W.scene.add(new THREE.AmbientLight('#c8ddf8', 0.6));
+const sun = new THREE.DirectionalLight('#fffef5', 3);
+sun.position.set(14, 10, 8);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
-sun.shadow.camera.left = -22;
-sun.shadow.camera.right = 22;
-sun.shadow.camera.top = 12;
-sun.shadow.camera.bottom = -12;
-sun.shadow.camera.near = 0.5;
-sun.shadow.camera.far = 60;
-sun.shadow.bias = -0.0001;
-sun.shadow.normalBias = 0.02;
+sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
+sun.shadow.camera.top = 10; sun.shadow.camera.bottom = -10;
 W.scene.add(sun);
+W.scene.add(new THREE.HemisphereLight('#c8ddf8', '#3a5030', 0.3));
 
-W.scene.add(new THREE.HemisphereLight('#c8ddf8', '#3a5030', 0.25));
-
-// Grid helper — green grid lines on dark ground
+// Grid + Ground
 W.gridH = new THREE.GridHelper(40, 40, '#2ecc71', '#1a2a1e');
 W.gridH.position.set(0, 0.005, 0);
 W.scene.add(W.gridH);
-
-// Ground plane
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(40, 40),
-  new THREE.MeshStandardMaterial({ color: '#3a5a2a', roughness: 0.9 })
-);
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: '#3a5a2a', roughness: 0.9 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
 W.scene.add(ground);
 
-// ══════════════════════════════════════
-// MATERIALS — shared, efficient reuse
-// ══════════════════════════════════════
+// ─── MATERIALS (color-coded by functional category) ───
 const M = {
-  steel:  new THREE.MeshStandardMaterial({ color: '#5a6878', roughness: 0.30, metalness: 0.85 }),
-  glass:  new THREE.MeshStandardMaterial({ color: '#c8ddf8', roughness: 0.03, metalness: 0.05, transparent: true, opacity: 0.50 }),
-  wood:   new THREE.MeshStandardMaterial({ color: '#c09870', roughness: 0.50 }),
-  brick:  new THREE.MeshStandardMaterial({ color: '#b05040', roughness: 0.55 }),
-  white:  new THREE.MeshStandardMaterial({ color: '#f0f3f7', roughness: 0.45 }),
-  door:   new THREE.MeshStandardMaterial({ color: '#2a3545', roughness: 0.20, metalness: 0.55 }),
-  conc:   new THREE.MeshStandardMaterial({ color: '#c4c8ce', roughness: 0.70 }),
-  roof:   new THREE.MeshStandardMaterial({ color: '#3d4855', roughness: 0.40 }),
-  leaf:   new THREE.MeshStandardMaterial({ color: '#3d6b2e', roughness: 0.65 }),
-  bark:   new THREE.MeshStandardMaterial({ color: '#6b4d3a', roughness: 0.80 }),
-  beige:  new THREE.MeshStandardMaterial({ color: '#e8dfd2', roughness: 0.45 }),
-  gray:   new THREE.MeshStandardMaterial({ color: '#9ca8b4', roughness: 0.45 }),
-  navy:   new THREE.MeshStandardMaterial({ color: '#2a3a55', roughness: 0.45 }),
-  metal:  new THREE.MeshStandardMaterial({ color: '#8899aa', roughness: 0.22, metalness: 0.55 }),
-  tile:   new THREE.MeshStandardMaterial({ color: '#d0d0d0', roughness: 0.30 }),
-  red:    new THREE.MeshStandardMaterial({ color: '#c04040', roughness: 0.50 }),
-  black:  new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.20 }),
-  silver: new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.20, metalness: 0.70 }),
-  marble: new THREE.MeshStandardMaterial({ color: '#e8e0d8', roughness: 0.15 }),
-  terra:  new THREE.MeshStandardMaterial({ color: '#b55a3a', roughness: 0.40 }),
-  green:  new THREE.MeshStandardMaterial({ color: '#4a6e3e', roughness: 0.40 }),
-  sofa:   new THREE.MeshStandardMaterial({ color: '#e8e8e4', roughness: 0.40 }),
-  pool:   new THREE.MeshStandardMaterial({ color: '#4080c0', roughness: 0.15, metalness: 0.20 }),
-  fountain: new THREE.MeshStandardMaterial({ color: '#a0a0a0', roughness: 0.30 }),
-  path:   new THREE.MeshStandardMaterial({ color: '#c0b8a8', roughness: 0.60 }),
-  rug:    new THREE.MeshStandardMaterial({ color: '#8b7355', roughness: 0.80 }),
-  darkWood: new THREE.MeshStandardMaterial({ color: '#4a2a1a', roughness: 0.40 }),
-  lantern: new THREE.MeshStandardMaterial({ color: '#f0a030', roughness: 0.30, emissive: '#f0a030', emissiveIntensity: 0.30 }),
-  bush:   new THREE.MeshStandardMaterial({ color: '#4a7a3a', roughness: 0.60 }),
-  grass:  new THREE.MeshStandardMaterial({ color: '#4a7a3a', roughness: 0.80 }),
+  // Walls
+  stuccoW:   new THREE.MeshStandardMaterial({ color: '#f0f3f7', roughness: 0.45 }),
+  stuccoC:   new THREE.MeshStandardMaterial({ color: '#e8dfd2', roughness: 0.45 }),
+  stuccoG:   new THREE.MeshStandardMaterial({ color: '#9ca8b4', roughness: 0.45 }),
+  stuccoN:   new THREE.MeshStandardMaterial({ color: '#2a3a55', roughness: 0.45 }),
+  brick:     new THREE.MeshStandardMaterial({ color: '#b05040', roughness: 0.55 }),
+  brickWH:   new THREE.MeshStandardMaterial({ color: '#e8dcd0', roughness: 0.55 }),
+  timber:    new THREE.MeshStandardMaterial({ color: '#c09870', roughness: 0.5 }),
+  steel:     new THREE.MeshStandardMaterial({ color: '#5a6878', roughness: 0.3, metalness: 0.85 }),
+  metalWall: new THREE.MeshStandardMaterial({ color: '#8899aa', roughness: 0.22, metalness: 0.55 }),
+  // Seating (warm fabric tones)
+  sofaCream: new THREE.MeshStandardMaterial({ color: '#e8e4dc', roughness: 0.45 }),
+  sofaTaupe: new THREE.MeshStandardMaterial({ color: '#c4b8a8', roughness: 0.45 }),
+  sofaNavy:  new THREE.MeshStandardMaterial({ color: '#3a4a62', roughness: 0.45 }),
+  // Tables/Desks (wood browns)
+  woodOak:   new THREE.MeshStandardMaterial({ color: '#c4a882', roughness: 0.5 }),
+  woodWalnut:new THREE.MeshStandardMaterial({ color: '#5c3d2e', roughness: 0.45 }),
+  woodCherry:new THREE.MeshStandardMaterial({ color: '#8b3a3a', roughness: 0.4 }),
+  // Appliances (cool silver/black metallic)
+  silver:    new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.2, metalness: 0.7 }),
+  black:     new THREE.MeshStandardMaterial({ color: '#1a1a1a', roughness: 0.2 }),
+  // Beds (two-tone)
+  bedFrame:  new THREE.MeshStandardMaterial({ color: '#8b6f4a', roughness: 0.5 }),
+  mattress:  new THREE.MeshStandardMaterial({ color: '#f5f0e8', roughness: 0.6 }),
+  // Storage
+  cabinet:   new THREE.MeshStandardMaterial({ color: '#6b4a2e', roughness: 0.45 }),
+  // Glass
+  glass:     new THREE.MeshStandardMaterial({ color: '#c8ddf8', roughness: 0.03, metalness: 0.05, transparent: true, opacity: 0.45 }),
+  frosted:   new THREE.MeshStandardMaterial({ color: '#d8e4f0', roughness: 0.1, metalness: 0.03, transparent: true, opacity: 0.55 }),
+  // Outdoor
+  leaf:      new THREE.MeshStandardMaterial({ color: '#3d6b2e', roughness: 0.65 }),
+  bark:      new THREE.MeshStandardMaterial({ color: '#6b4d3a', roughness: 0.8 }),
+  bush:      new THREE.MeshStandardMaterial({ color: '#4a7a3a', roughness: 0.6 }),
+  pool:      new THREE.MeshStandardMaterial({ color: '#4080c0', roughness: 0.15, metalness: 0.2 }),
+  fountain:  new THREE.MeshStandardMaterial({ color: '#a0a0a0', roughness: 0.3 }),
+  path:      new THREE.MeshStandardMaterial({ color: '#c0b8a8', roughness: 0.6 }),
+  lantern:   new THREE.MeshStandardMaterial({ color: '#f0a030', roughness: 0.3, emissive: '#f0a030', emissiveIntensity: 0.3 }),
+  // Roofs
+  roofSlate: new THREE.MeshStandardMaterial({ color: '#3d4855', roughness: 0.4 }),
+  roofTerra: new THREE.MeshStandardMaterial({ color: '#b55a3a', roughness: 0.4 }),
+  roofMetal: new THREE.MeshStandardMaterial({ color: '#8899aa', roughness: 0.22, metalness: 0.55 }),
+  roofGreen: new THREE.MeshStandardMaterial({ color: '#4a6e3e', roughness: 0.4 }),
+  // Doors
+  doorDark:  new THREE.MeshStandardMaterial({ color: '#2a3545', roughness: 0.2, metalness: 0.55 }),
+  // Floors
+  floorWood: new THREE.MeshStandardMaterial({ color: '#c4a882', roughness: 0.4 }),
+  floorTile: new THREE.MeshStandardMaterial({ color: '#d0d0d0', roughness: 0.3 }),
+  floorConc: new THREE.MeshStandardMaterial({ color: '#c4c8ce', roughness: 0.7 }),
+  floorMarble:new THREE.MeshStandardMaterial({ color: '#e8e0d8', roughness: 0.15 }),
+  floorDark: new THREE.MeshStandardMaterial({ color: '#4a2a1a', roughness: 0.4 }),
+  floorGrass:new THREE.MeshStandardMaterial({ color: '#4a7a3a', roughness: 0.8 }),
+  // Trim
+  conc:      new THREE.MeshStandardMaterial({ color: '#c4c8ce', roughness: 0.7 }),
+  rug:       new THREE.MeshStandardMaterial({ color: '#8b7355', roughness: 0.8 }),
 };
 
-// ══════════════════════════════════════════════════════════════
-// PROCEDURAL CANVAS TEXTURES — no external images needed
-// ══════════════════════════════════════════════════════════════
-function makeBrickTexture(baseColor = '#b05040', mortarColor = '#c8c0b8') {
-  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = mortarColor; ctx.fillRect(0, 0, 256, 256);
-  const bh = 24, gap = 2;
-  ctx.fillStyle = baseColor;
-  for (let row = 0; row < 11; row++) {
-    const y = row * (bh + gap);
-    const offset = row % 2 === 0 ? 0 : 40;
-    for (let col = -1; col < 4; col++) {
-      ctx.fillRect(col * 84 + offset, y, 80, bh);
-    }
+// BUILD HELPERS
+function box(w, h, d, mat) { const g = new THREE.BoxGeometry(w, h, d); const m = new THREE.Mesh(g, mat); m.castShadow = true; m.receiveShadow = true; return m; }
+function cyl(r, h, mat, segs = 8) { const g = new THREE.CylinderGeometry(r, r, h, segs); const m = new THREE.Mesh(g, mat); m.castShadow = true; m.receiveShadow = true; return m; }
+function sph(r, mat, segs = 6) { const g = new THREE.SphereGeometry(r, segs, 4); const m = new THREE.Mesh(g, mat); m.castShadow = true; return m; }
+function grp(...children) { const g = new THREE.Group(); children.forEach(c => g.add(c)); return g; }
+
+// ─── IMPROVED FURNITURE FACTORIES (silhouette-first, component-grouped) ───
+function makeChair() {
+  return grp(
+    box(0.38, 0.15, 0.38, M.sofaTaupe),              // seat
+    box(0.38, 0.55, 0.06, M.sofaTaupe),               // backrest (offset in position below)
+    cyl(0.028, 0.38, M.woodOak),                        // leg
+    cyl(0.028, 0.38, M.woodOak),                        // leg
+    cyl(0.028, 0.38, M.woodOak),                        // leg
+    cyl(0.028, 0.38, M.woodOak)                         // leg
+  );
+}
+function makeSofa() {
+  const g = grp(
+    box(1.9, 0.15, 0.65, M.sofaCream),               // seat base
+    box(1.9, 0.58, 0.08, M.sofaCream),                // backrest (tall, thin, rear)
+    box(0.10, 0.35, 0.65, M.sofaCream),               // left armrest
+    box(0.10, 0.35, 0.65, M.sofaCream)                // right armrest
+  );
+  // Position components
+  g.children[1].position.set(0, 0.35, -0.3);          // backrest at rear
+  g.children[2].position.set(-0.95, 0.15, 0);         // left arm
+  g.children[3].position.set(0.95, 0.15, 0);          // right arm
+  return g;
+}
+function makeTable() {
+  return grp(
+    box(1.5, 0.06, 0.9, M.woodOak),                  // thin top
+    cyl(0.03, 0.72, M.woodOak),                        // leg
+    cyl(0.03, 0.72, M.woodOak),                        // leg
+    cyl(0.03, 0.72, M.woodOak),                        // leg
+    cyl(0.03, 0.72, M.woodOak)                         // leg
+  );
+}
+function makeBed() {
+  const g = grp(
+    box(1.65, 0.08, 2.1, M.bedFrame),                // base frame
+    box(1.55, 0.22, 2.0, M.mattress),                 // mattress (lighter)
+    box(1.65, 0.65, 0.06, M.bedFrame)                 // headboard (tall, one end)
+  );
+  g.children[1].position.set(0, 0.15, 0);              // mattress on top
+  g.children[2].position.set(0, 0.35, -1.02);          // headboard at head
+  return g;
+}
+function makeTV() {
+  return grp(
+    box(1.2, 0.32, 0.3, M.woodOak),                  // stand
+    box(1.1, 0.02, 0.7, M.black),                     // screen (thin, dark)
+    box(0.06, 0.02, 0.7, M.black)                     // bezel
+  );
+}
+function makeBookshelf() {
+  const g = grp(box(0.95, 1.6, 0.32, M.cabinet));
+  // Shelf bands — thin horizontal strips
+  for (let i = 0; i < 4; i++) { const s = box(0.92, 0.025, 0.30, M.woodWalnut); s.position.y = -0.65 + i * 0.45; g.add(s); }
+  return g;
+}
+function makeDesk() {
+  return grp(
+    box(1.3, 0.04, 0.65, M.woodOak),                 // thin top
+    cyl(0.025, 0.72, M.woodOak), cyl(0.025, 0.72, M.woodOak),
+    cyl(0.025, 0.72, M.woodOak), cyl(0.025, 0.72, M.woodOak)
+  );
+}
+function makeLamp() {
+  return grp(
+    cyl(0.04, 1.2, M.black),                            // pole
+    cyl(0.03, 0.8, M.black),                            // upper pole
+    box(0.22, 0.22, 0.22, M.lantern)                   // shade (glowing)
+  );
+}
+function makeMirror() {
+  return grp(
+    box(0.65, 0.03, 1.0, M.silver),                   // mirror surface
+    box(0.7, 0.04, 0.04, M.woodOak),                   // frame top
+    box(0.7, 0.04, 0.04, M.woodOak)                    // frame bottom
+  );
+}
+function makeCounter() {
+  return grp(
+    box(1.8, 0.45, 0.6, M.stuccoW),                   // base cabinet
+    box(1.85, 0.03, 0.62, M.woodOak),                  // thin countertop
+    box(0.04, 0.02, 0.5, M.silver)                     // handle strip
+  );
+}
+function makeFridge() {
+  return grp(
+    box(0.7, 1.8, 0.7, M.silver),                     // tall body
+    box(0.68, 0.02, 0.1, M.black),                     // handle
+    box(0.68, 0.02, 0.1, M.black)                      // handle
+  );
+}
+function makeSink() { return grp(box(0.8, 0.04, 0.5, M.silver), box(0.7, 0.02, 0.4, M.black)); }
+function makeStove() { return grp(box(0.6, 0.04, 0.5, M.black), cyl(0.06, 0.015, M.silver, 6), cyl(0.06, 0.015, M.silver, 6)); }
+function makeIsland() {
+  return grp(
+    box(1.5, 0.45, 0.85, M.stuccoW),
+    box(1.55, 0.03, 0.87, M.woodOak),
+    box(0.06, 0.35, 0.04, M.woodOak),
+    box(0.06, 0.35, 0.04, M.woodOak)
+  );
+}
+function makeCabinet() {
+  return grp(
+    box(0.9, 0.45, 0.5, M.cabinet),
+    box(0.88, 0.02, 0.48, M.woodWalnut),
+    box(0.03, 0.02, 0.4, M.silver)
+  );
+}
+function makeRug() { const m = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.015, 1.6), M.rug); m.castShadow = false; m.receiveShadow = true; return m; }
+
+// Tree helpers
+function makeTree(small) {
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.10, 1.5, 8), M.bark);
+  trunk.position.y = 0.75; trunk.castShadow = true;
+  const crown = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.0, 8), M.leaf);
+  crown.position.y = 1.5; crown.castShadow = true;
+  return grp(trunk, crown);
+}
+function makePalm() {
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.18, 2.5, 8), M.bark);
+  trunk.position.y = 1.25; trunk.castShadow = true;
+  const g = grp(trunk);
+  for (let f = 0; f < 7; f++) {
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.02, 0.2), new THREE.MeshStandardMaterial({ color: '#5a9a3e', roughness: 0.4, side: THREE.DoubleSide }));
+    fr.position.set(0, 2.6, 0);
+    fr.rotation.set(0.25 + Math.random() * 0.4, f / 7 * Math.PI * 2, Math.random() * 0.3);
+    fr.castShadow = true;
+    g.add(fr);
   }
-  const imgData = ctx.getImageData(0, 0, 256, 256);
-  for (let i = 0; i < imgData.data.length; i += 4) {
-    const n = (Math.random() - 0.5) * 12;
-    imgData.data[i] += n; imgData.data[i+1] += n; imgData.data[i+2] += n;
-  }
-  ctx.putImageData(imgData, 0, 0);
-  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+  return g;
 }
 
-function makeWoodTexture(baseColor = '#c09870', grainColor = '#8b6b4a') {
-  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = baseColor; ctx.fillRect(0, 0, 256, 256);
-  ctx.strokeStyle = grainColor; ctx.lineWidth = 1;
-  for (let y = 0; y < 256; y += 6 + Math.random() * 4) {
-    ctx.globalAlpha = 0.3 + Math.random() * 0.4;
-    ctx.beginPath(); ctx.moveTo(0, y);
-    for (let x = 0; x < 256; x += 4) {
-      ctx.lineTo(x, y + Math.sin(x * 0.05 + y) * 3 + Math.random() * 1.5);
-    }
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-  for (let k = 0; k < 3; k++) {
-    const kx = 40 + Math.random() * 176, ky = 40 + Math.random() * 176;
-    ctx.fillStyle = grainColor; ctx.beginPath();
-    ctx.ellipse(kx, ky, 5 + Math.random() * 8, 3 + Math.random() * 5, Math.random() * Math.PI, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#5a3a1a'; ctx.beginPath();
-    ctx.ellipse(kx, ky, 3, 2, 0, 0, Math.PI * 2); ctx.fill();
-  }
-  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+// ─── WALL VARIANT FACTORIES (5 types) ───
+function makeStandardWall(mat) {
+  // Full structural wall 2m × 2.8m
+  const w = new THREE.Mesh(new THREE.BoxGeometry(2, 2.8, 0.1), mat);
+  w.castShadow = true; w.receiveShadow = true;
+  // Baseboard
+  const bb = box(2.02, 0.06, 0.12, M.cabinet); bb.position.y = -1.37;
+  // Top trim
+  const tt = box(2.02, 0.05, 0.13, M.stuccoW); tt.position.y = 1.38;
+  return grp(w, bb, tt);
+}
+function makeHalfWall(mat) {
+  const w = new THREE.Mesh(new THREE.BoxGeometry(2, 1.4, 0.1), mat);
+  w.castShadow = true; w.receiveShadow = true;
+  const cap = box(2.02, 0.05, 0.13, M.woodOak); cap.position.y = 0.68;
+  return grp(w, cap);
+}
+function makeGlassWall(tint) {
+  const frame = box(2, 2.8, 0.06, M.steel);
+  const glass = new THREE.Mesh(new THREE.BoxGeometry(1.88, 2.68, 0.02), tint || M.glass);
+  glass.position.z = 0; glass.castShadow = false; glass.receiveShadow = true;
+  // Mullion bars
+  const m1 = box(0.03, 2.68, 0.08, M.steel); m1.position.x = 0;
+  const m2 = box(1.88, 0.03, 0.08, M.steel); m2.position.y = 0.9;
+  const m3 = box(1.88, 0.03, 0.08, M.steel); m3.position.y = -0.9;
+  return grp(frame, glass, m1, m2, m3);
+}
+function makeGardenWall(mat) {
+  const w = new THREE.Mesh(new THREE.BoxGeometry(2, 1.0, 0.16), mat);
+  w.castShadow = true; w.receiveShadow = true;
+  const cap = box(2.04, 0.06, 0.18, M.conc); cap.position.y = 0.48;
+  return grp(w, cap);
+}
+function makeColumn(mat) {
+  const col = new THREE.Mesh(new THREE.BoxGeometry(0.16, 3.0, 0.16), mat);
+  col.castShadow = true; col.receiveShadow = true;
+  const cap = box(0.22, 0.08, 0.22, M.conc); cap.position.y = 1.48;
+  const base = box(0.22, 0.08, 0.22, M.conc); base.position.y = -1.48;
+  return grp(col, cap, base);
 }
 
-function makeDrywallTexture() {
-  const c = document.createElement('canvas'); c.width = 128; c.height = 128;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#f5f2ed'; ctx.fillRect(0, 0, 128, 128);
-  for (let i = 0; i < 600; i++) {
-    ctx.fillStyle = `rgba(0,0,0,${0.005 + Math.random() * 0.015})`;
-    ctx.fillRect(Math.random() * 128, Math.random() * 128, 1.5, 1.5);
-  }
-  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-// ══════════════════════════════════════════════════════════════
-// ASSET FACTORY — procedural realistic architectural assets
-// ══════════════════════════════════════════════════════════════
-const AssetFactory = (() => {
-  let _texBR = null, _texBB = null, _texW = null, _texD = null;
-  let _mDrywall = null, _mBrickR = null, _mBrickB = null, _mWoodT = null;
-  let _mBoard = null, _mFrame = null, _mGlass = null, _mFabric = null;
-  let _mLeg = null, _mBase = null;
-
-  function _init() {
-    if (_mDrywall) return;
-    _texD  = makeDrywallTexture();
-    _texBR = makeBrickTexture('#b05040', '#c8c0b8');
-    _texBB = makeBrickTexture('#e0d8c8', '#d0c8b8');
-    _texW  = makeWoodTexture('#c09870', '#8b6b4a');
-
-    _mDrywall  = new THREE.MeshStandardMaterial({ map: _texD, roughness: 0.55, color: '#f5f2ed' });
-    _mBrickR   = new THREE.MeshStandardMaterial({ map: _texBR, roughness: 0.8 });
-    _mBrickB   = new THREE.MeshStandardMaterial({ map: _texBB, roughness: 0.75 });
-    _mWoodT    = new THREE.MeshStandardMaterial({ map: _texW, roughness: 0.45 });
-    _mBoard    = new THREE.MeshStandardMaterial({ color: '#e8e4dc', roughness: 0.3, metalness: 0.05 });
-    _mFrame    = new THREE.MeshStandardMaterial({ color: '#e0dcd4', roughness: 0.35, metalness: 0.05 });
-    _mGlass    = new THREE.MeshPhysicalMaterial({
-      color: '#d8e8f8', roughness: 0.05, metalness: 0.1,
-      transparent: true, opacity: 0.4, clearcoat: 0.3, clearcoatRoughness: 0.1,
-    });
-    _mFabric   = new THREE.MeshStandardMaterial({ color: '#d5cfc8', roughness: 0.75 });
-    _mLeg      = new THREE.MeshStandardMaterial({ color: '#3a2a1a', roughness: 0.35, metalness: 0.1 });
-    _mBase     = new THREE.MeshStandardMaterial({ color: '#2a1a0a', roughness: 0.5 });
-  }
-
-  function createWall(opts = {}) {
-    _init();
-    const { w = 2, h = 2.8, d = 0.15, brick = 'red' } = opts;
-    const g = new THREE.Group(); g.name = 'realWall';
-    const cw = w - 0.04, ch = h - 0.12, cd = d - 0.04;
-    const core = new THREE.Mesh(new THREE.BoxGeometry(cw, ch, cd), _mDrywall);
-    core.castShadow = true; core.receiveShadow = true; g.add(core);
-
-    const bm = brick === 'beige' ? _mBrickB : _mBrickR;
-    const slab = new THREE.Mesh(new THREE.BoxGeometry(cw, ch, 0.03), bm);
-    slab.position.z = cd / 2 + 0.015;
-    slab.castShadow = true; slab.receiveShadow = true; g.add(slab);
-
-    const bb = new THREE.Mesh(new THREE.BoxGeometry(cw, 0.1, 0.04), _mBoard);
-    bb.position.set(0, -ch / 2 + 0.05, -cd / 2 - 0.02 + 0.005);
-    bb.castShadow = true; g.add(bb);
-
-    const crown = new THREE.Mesh(new THREE.BoxGeometry(cw + 0.02, 0.06, d + 0.01), _mBoard);
-    crown.position.y = ch / 2 + 0.03; crown.castShadow = true; g.add(crown);
-
-    const cap = new THREE.Mesh(new THREE.BoxGeometry(cw + 0.02, 0.04, d), _mBoard);
-    cap.position.y = ch / 2 + 0.08; cap.castShadow = true; g.add(cap);
-
-    return g;
-  }
-
-  function createWindow(opts = {}) {
-    _init();
-    const { ww = 1, wh = 0.9, ft = 0.06 } = opts;
-    const g = new THREE.Group(); g.name = 'realWindow';
-
-    const fgH = new THREE.BoxGeometry(ww, ft, 0.05);
-    const fgV = new THREE.BoxGeometry(ft, wh - ft * 2, 0.05);
-    const bars = [
-      { g: fgH, y: wh / 2 - ft / 2 }, { g: fgH, y: -wh / 2 + ft / 2 },
-      { g: fgV, x: -ww / 2 + ft / 2 }, { g: fgV, x: ww / 2 - ft / 2 },
-    ];
-    for (const b of bars) {
-      const m = new THREE.Mesh(b.g, _mFrame);
-      if (b.x != null) m.position.x = b.x;
-      if (b.y != null) m.position.y = b.y;
-      m.castShadow = true; m.receiveShadow = true; g.add(m);
-    }
-
-    const glass = new THREE.Mesh(
-      new THREE.BoxGeometry(ww - ft * 2, wh - ft * 2, 0.008),
-      _mGlass
-    );
-    glass.position.z = -0.01; glass.renderOrder = 1; glass.material.depthWrite = false;
-    g.add(glass);
-
-    const mh = new THREE.Mesh(new THREE.BoxGeometry(ww - ft * 2, 0.02, 0.01), _mFrame);
-    mh.position.z = -0.015; mh.castShadow = true; g.add(mh);
-    const mv = new THREE.Mesh(new THREE.BoxGeometry(0.02, wh - ft * 2, 0.01), _mFrame);
-    mv.position.z = -0.015; mv.castShadow = true; g.add(mv);
-
-    const sill = new THREE.Mesh(new THREE.BoxGeometry(ww + 0.1, 0.04, 0.11), _mFrame);
-    sill.position.set(0, -wh / 2 - 0.02, 0.02);
-    sill.castShadow = true; sill.receiveShadow = true; g.add(sill);
-
-    return g;
-  }
-
-  function createSofa(opts = {}) {
-    _init();
-    const { w = 1.8, d = 0.7, sh = 0.35 } = opts;
-    const g = new THREE.Group(); g.name = 'realSofa';
-
-    const base = new THREE.Mesh(new THREE.BoxGeometry(w - 0.06, 0.08, d - 0.04), _mBase);
-    base.position.y = sh - 0.2; base.castShadow = true; base.receiveShadow = true; g.add(base);
-
-    const cw = (w - 0.3) / 3, cd = d - 0.1, ch = 0.14;
-    for (let i = 0; i < 3; i++) {
-      const cx = -w / 2 + 0.15 + i * cw + cw / 2;
-      const seat = new THREE.Mesh(new THREE.BoxGeometry(cw - 0.03, ch, cd, 2, 2, 2), _mFabric);
-      seat.position.set(cx, sh, 0);
-      const pos = seat.geometry.attributes.position;
-      for (let vi = 0; vi < pos.count; vi++) {
-        if (pos.getY(vi) > ch / 2 - 0.02) pos.setY(vi, pos.getY(vi) + 0.015);
-      }
-      pos.needsUpdate = true; seat.geometry.computeVertexNormals();
-      seat.castShadow = true; seat.receiveShadow = true; g.add(seat);
-    }
-
-    const bw = (w - 0.2) / 2, bh = 0.45, bd = 0.16;
-    for (let i = 0; i < 2; i++) {
-      const bx = -w / 2 + 0.1 + i * bw + bw / 2;
-      const back = new THREE.Mesh(new THREE.BoxGeometry(bw - 0.03, bh, bd, 3, 3, 2), _mFabric);
-      back.position.set(bx, sh + bh / 2 + 0.06, -d / 2 + bd / 2 + 0.02);
-      back.rotation.x = -0.12;
-      back.castShadow = true; back.receiveShadow = true; g.add(back);
-    }
-
-    const aw = 0.14, ah = 0.3, ad = d;
-    for (const s of [-1, 1]) {
-      const arm = new THREE.Mesh(new THREE.BoxGeometry(aw, ah, ad - 0.02, 3, 3, 2), _mFabric);
-      arm.position.set(s * (w / 2 - aw / 2 - 0.01), sh + 0.05, 0);
-      const apos = arm.geometry.attributes.position;
-      for (let vi = 0; vi < apos.count; vi++) {
-        if (apos.getY(vi) > ah / 2 - 0.04) apos.setY(vi, apos.getY(vi) + 0.02);
-      }
-      apos.needsUpdate = true; arm.geometry.computeVertexNormals();
-      arm.castShadow = true; arm.receiveShadow = true; g.add(arm);
-    }
-
-    const legGeo = new THREE.CylinderGeometry(0.028, 0.04, 0.18, 8);
-    const offs = [[-w/2+0.12,-d/2+0.12],[w/2-0.12,-d/2+0.12],[-w/2+0.12,d/2-0.12],[w/2-0.12,d/2-0.12]];
-    for (const [lx, lz] of offs) {
-      const leg = new THREE.Mesh(legGeo, _mLeg);
-      leg.position.set(lx, -sh + 0.06, lz);
-      leg.castShadow = true; leg.receiveShadow = true; g.add(leg);
-    }
-
-    return g;
-  }
-
-  // ── DOOR — panel door with frame, stiles, rails, and handle ──
-  function createDoor(opts = {}) {
-    _init();
-    const { w = 0.9, h = 2.2, d = 0.06, double = false, garage = false } = opts;
-    const g = new THREE.Group(); g.name = 'realDoor';
-    const dw = double ? w * 0.85 : w;
-    // Outer frame
-    const ft = 0.05;
-    const frameMat = garage ? new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.25, metalness: 0.6 }) : _mBoard;
-    const fL = new THREE.Mesh(new THREE.BoxGeometry(ft, h, d + 0.02), frameMat); fL.position.x = -dw/2 + ft/2; fL.castShadow = true; g.add(fL);
-    const fR = new THREE.Mesh(new THREE.BoxGeometry(ft, h, d + 0.02), frameMat); fR.position.x = dw/2 - ft/2; fR.castShadow = true; g.add(fR);
-    const fT = new THREE.Mesh(new THREE.BoxGeometry(dw, ft, d + 0.02), frameMat); fT.position.y = h/2 - ft/2; fT.castShadow = true; g.add(fT);
-    // Door panel(s)
-    const panelW = (dw - ft * 2 - 0.02) / (double ? 2 : 1);
-    const panelD = d;
-    const panelMat = garage ? new THREE.MeshStandardMaterial({ color: '#d0d0d0', roughness: 0.2, metalness: 0.7 }) : _mWoodT;
-    for (let p = 0; p < (double ? 2 : 1); p++) {
-      const px = double ? (-dw/2 + ft + 0.01 + panelW/2 + p * panelW) : 0;
-      const panel = new THREE.Mesh(new THREE.BoxGeometry(panelW - 0.01, h - ft * 2 - 0.02, panelD), panelMat);
-      panel.position.set(px, 0, panelD/2 + 0.01);
-      panel.castShadow = true; panel.receiveShadow = true; g.add(panel);
-      // Handle
-      const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.1, 8), _mBase);
-      handle.rotation.z = Math.PI/2;
-      handle.position.set(px + panelW/2 - 0.06, 0.1, panelD/2 + 0.07);
-      handle.castShadow = true; g.add(handle);
-    }
-    return g;
-  }
-
-  // ── FLOOR — tiled surface with grid lines ──
-  function createFloor(opts = {}) {
-    _init();
-    const { w = 2, d = 2, color = '#c09870', tileColor = '#d4c0a0' } = opts;
-    const g = new THREE.Group(); g.name = 'realFloor';
-    const c = document.createElement('canvas'); c.width = 256; c.height = 256;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = color; ctx.fillRect(0, 0, 256, 256);
-    ctx.strokeStyle = tileColor; ctx.lineWidth = 3;
-    for (let x = 0; x < 256; x += 32) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke(); }
-    for (let y = 0; y < 256; y += 32) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke(); }
-    const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.colorSpace = THREE.SRGBColorSpace;
-    const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5 });
-    const base = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d), mat);
-    base.castShadow = true; base.receiveShadow = true; g.add(base);
-    // Thin border trim
-    const trimGeo = new THREE.BoxGeometry(w + 0.02, 0.02, 0.03);
-    for (const z of [-1, 1]) {
-      const trim = new THREE.Mesh(trimGeo, _mBoard);
-      trim.position.set(0, 0.02, z * (d/2 + 0.01)); trim.castShadow = true; g.add(trim);
-    }
-    return g;
-  }
-
-  // ── ROUND WINDOW — circular frame + glass ──
-  function createRoundWindow(opts = {}) {
-    _init();
-    const { r = 0.4 } = opts;
-    const g = new THREE.Group(); g.name = 'realWindow';
-    const frameO = new THREE.Mesh(new THREE.TorusGeometry(r, 0.04, 8, 24), _mFrame);
-    frameO.castShadow = true; g.add(frameO);
-    const glass = new THREE.Mesh(new THREE.CylinderGeometry(r - 0.03, r - 0.03, 0.005, 32), _mGlass);
-    glass.position.z = -0.01; glass.renderOrder = 1; glass.material.depthWrite = false; g.add(glass);
-    const mh = new THREE.Mesh(new THREE.BoxGeometry((r-0.03)*2, 0.015, 0.01), _mFrame);
-    mh.position.z = -0.015; mh.castShadow = true; g.add(mh);
-    const mv = new THREE.Mesh(new THREE.BoxGeometry(0.015, (r-0.03)*2, 0.01), _mFrame);
-    mv.position.z = -0.015; mv.castShadow = true; g.add(mv);
-    return g;
-  }
-
-  // ── COLUMN — vertical structural post ──
-  function createColumn(opts = {}) {
-    _init();
-    const { h = 3, mat } = opts;
-    const g = new THREE.Group(); g.name = 'realColumn';
-    const colMat = mat || _mBoard;
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, h - 0.2, 12), colMat);
-    shaft.position.y = 0; shaft.castShadow = true; shaft.receiveShadow = true; g.add(shaft);
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.1, 0.08, 12), _mBase);
-    base.position.y = -h/2 + 0.04; base.castShadow = true; g.add(base);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.07, 0.08, 12), _mBase);
-    cap.position.y = h/2 - 0.04; cap.castShadow = true; g.add(cap);
-    // Fluting lines
-    for (let i = 0; i < 8; i++) {
-      const line = new THREE.Mesh(new THREE.BoxGeometry(0.008, h - 0.28, 0.008), _mBoard);
-      const angle = (i / 8) * Math.PI * 2;
-      line.position.set(Math.cos(angle) * 0.072, 0, Math.sin(angle) * 0.072);
-      g.add(line);
-    }
-    return g;
-  }
-
-  // ── BED — mattress + headboard + frame ──
-  function createBed() {
-    _init();
-    const g = new THREE.Group(); g.name = 'realBed';
-    const base = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.12, 2), _mBase);
-    base.position.y = 0.06; base.castShadow = true; base.receiveShadow = true; g.add(base);
-    const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.22, 1.9, 3, 2, 3), _mFabric);
-    mattress.position.y = 0.22; mattress.castShadow = true; mattress.receiveShadow = true; g.add(mattress);
-    const headboard = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.8, 0.08, 2, 3, 1), _mWoodT);
-    headboard.position.set(0, 0.55, -0.96); headboard.castShadow = true; g.add(headboard);
-    const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.1, 0.4, 3, 2, 2), _mFabric);
-    pillow.position.set(0, 0.38, -0.7); pillow.castShadow = true; g.add(pillow);
-    return g;
-  }
-
-  // ── TABLE — top + 4 legs ──
-  function createTable(opts = {}) {
-    _init();
-    const { w = 1.4, d = 0.9, h = 0.75 } = opts;
-    const g = new THREE.Group(); g.name = 'realTable';
-    const top = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d, 2, 1, 2), _mWoodT);
-    top.position.y = h; top.castShadow = true; top.receiveShadow = true; g.add(top);
-    const leg = new THREE.CylinderGeometry(0.03, 0.04, h - 0.04, 8);
-    for (const [lx, lz] of [[-w/2+0.08,-d/2+0.08],[w/2-0.08,-d/2+0.08],[-w/2+0.08,d/2-0.08],[w/2-0.08,d/2-0.08]]) {
-      const l = new THREE.Mesh(leg, _mLeg);
-      l.position.set(lx, (h-0.04)/2, lz); l.castShadow = true; g.add(l);
-    }
-    return g;
-  }
-
-  // ── CHAIR ──
-  function createChair() {
-    _init();
-    const g = new THREE.Group(); g.name = 'realChair';
-    const seat = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.05, 0.35, 2, 1, 2), _mFabric);
-    seat.position.y = 0.4; seat.castShadow = true; g.add(seat);
-    const back = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.35, 0.04, 2, 2, 1), _mFabric);
-    back.position.set(0, 0.58, -0.17); back.rotation.x = -0.1; back.castShadow = true; g.add(back);
-    const legGeo = new THREE.CylinderGeometry(0.02, 0.025, 0.4, 6);
-    for (const [lx, lz] of [[-0.13,-0.13],[0.13,-0.13],[-0.13,0.13],[0.13,0.13]]) {
-      const l = new THREE.Mesh(legGeo, _mLeg);
-      l.position.set(lx, 0.2, lz); l.castShadow = true; g.add(l);
-    }
-    return g;
-  }
-
-  // ── COUNTER (kitchen) ──
-  function createCounter(opts = {}) {
-    _init();
-    const { w = 1.8, d = 0.6, h = 0.9 } = opts;
-    const g = new THREE.Group(); g.name = 'realCounter';
-    const body = new THREE.Mesh(new THREE.BoxGeometry(w - 0.02, h - 0.05, d - 0.02), _mFrame);
-    body.position.y = (h - 0.05)/2; body.castShadow = true; body.receiveShadow = true; g.add(body);
-    const top = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d), new THREE.MeshStandardMaterial({ color: '#3a3a3a', roughness: 0.2, metalness: 0.3 }));
-    top.position.y = h - 0.02; top.castShadow = true; g.add(top);
-    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.02, 0.02), new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.2, metalness: 0.8 }));
-    handle.position.set(w/2 - 0.1, h * 0.45, d/2); handle.castShadow = true; g.add(handle);
-    return g;
-  }
-
-  // ── FRIDGE ──
-  function createFridge() {
-    _init();
-    const g = new THREE.Group(); g.name = 'realFridge';
-    const body = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.8, 0.68, 2, 3, 2), _mFrame);
-    body.position.y = 0.9; body.castShadow = true; body.receiveShadow = true; g.add(body);
-    const upper = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.02), _mFrame);
-    upper.position.set(0, 1.35, 0.35); upper.castShadow = true; g.add(upper);
-    const lower = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.02), _mFrame);
-    lower.position.set(0, 0.35, 0.35); lower.castShadow = true; g.add(lower);
-    const h1 = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.02, 0.03), new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.2, metalness: 0.9 }));
-    h1.position.set(0.25, 1.35, 0.36); g.add(h1);
-    const h2 = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.02, 0.03), new THREE.MeshStandardMaterial({ color: '#c0c0c0', roughness: 0.2, metalness: 0.9 }));
-    h2.position.set(0.25, 0.35, 0.36); g.add(h2);
-    return g;
-  }
-
-  return { createWall, createWindow, createSofa, createDoor, createFloor, createRoundWindow, createColumn, createBed, createTable, createChair, createCounter, createFridge };
-})();
-
-// ══════════════════════════════════════
-// CATALOG — 67 items across 8 categories
-// ══════════════════════════════════════
+// ─── CATALOG (with color swatch per item) ───
 W.cat = {
   walls: [
-    { id: 'w_white',  n: 'White Wall',   i: '⬜', p: 200,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.white,  wall: true },
-    { id: 'w_brick',  n: 'Brick Wall',   i: '🧱', p: 350,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.brick,  wall: true },
-    { id: 'w_wood',   n: 'Wood Wall',    i: '🪵', p: 400,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.wood,   wall: true },
-    { id: 'w_beige',  n: 'Beige Wall',   i: '🟨', p: 250,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.beige,  wall: true },
-    { id: 'w_gray',   n: 'Gray Wall',    i: '🩶', p: 220,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.gray,   wall: true },
-    { id: 'w_navy',   n: 'Navy Wall',    i: '💙', p: 300,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.navy,   wall: true },
-    { id: 'w_metal',  n: 'Metal Wall',   i: '🔩', p: 500,  g: () => new THREE.BoxGeometry(2, 2.8, 0.1),  m: () => M.metal,  wall: true },
-    { id: 'w_half',   n: 'Half Wall 1.4m', i: '▬', p: 150, g: () => new THREE.BoxGeometry(2, 1.4, 0.1),  m: () => M.white,  wall: true },
-    { id: 'w_tall',   n: 'Tall Wall 3.5m', i: '▯', p: 400, g: () => new THREE.BoxGeometry(2, 3.5, 0.1),  m: () => M.white,  wall: true },
-    { id: 'col_steel', n: 'Steel Column', i: '▯', p: 300,  g: () => new THREE.BoxGeometry(0.15, 0.15, 3), m: () => M.steel,  wall: true },
-    { id: 'col_wood', n: 'Wood Column',  i: '🪵', p: 250,  g: () => new THREE.BoxGeometry(0.15, 0.15, 3), m: () => M.wood,   wall: true },
+    { id: 'w_white', n: 'White Wall', p: 200, f: () => makeStandardWall(M.stuccoW), sw: '#f0f3f7', wall: true },
+    { id: 'w_brick', n: 'Brick Wall', p: 350, f: () => makeStandardWall(M.brick), sw: '#b05040', wall: true },
+    { id: 'w_timber', n: 'Timber Wall', p: 400, f: () => makeStandardWall(M.timber), sw: '#c09870', wall: true },
+    { id: 'w_navy', n: 'Navy Wall', p: 300, f: () => makeStandardWall(M.stuccoN), sw: '#2a3a55', wall: true },
+    { id: 'w_metal', n: 'Metal Wall', p: 500, f: () => makeStandardWall(M.metalWall), sw: '#8899aa', wall: true },
+    { id: 'w_half', n: 'Half Wall 1.4m', p: 150, f: () => makeHalfWall(M.stuccoW), sw: '#f0f3f7', wall: true },
+    { id: 'w_glass', n: 'Glass Panel', p: 600, f: () => makeGlassWall(M.glass), sw: '#c8ddf8', wall: true },
+    { id: 'w_frost', n: 'Frosted Glass', p: 650, f: () => makeGlassWall(M.frosted), sw: '#d8e4f0', wall: true },
+    { id: 'w_garden', n: 'Garden Wall 1m', p: 120, f: () => makeGardenWall(M.brick), sw: '#b05040', wall: true },
+    { id: 'col_steel', n: 'Steel Column', p: 300, f: () => makeColumn(M.steel), sw: '#5a6878', wall: true },
+    { id: 'col_wood', n: 'Wood Column', p: 250, f: () => makeColumn(M.timber), sw: '#c09870', wall: true },
   ],
   windows: [
-    { id: 'win_s',   n: 'Small',        i: '🪟', p: 500,  g: () => new THREE.BoxGeometry(1, 0.9, 0.05),    m: () => M.glass },
-    { id: 'win_m',   n: 'Medium',       i: '🪟', p: 700,  g: () => new THREE.BoxGeometry(1.3, 1.1, 0.05),   m: () => M.glass },
-    { id: 'win_l',   n: 'Large',        i: '🪟', p: 900,  g: () => new THREE.BoxGeometry(1.5, 1.4, 0.05),   m: () => M.glass },
-    { id: 'win_xl',  n: 'Extra Large',  i: '🪟', p: 1200, g: () => new THREE.BoxGeometry(2, 1.6, 0.05),     m: () => M.glass },
-    { id: 'win_r',   n: 'Round',        i: '⭕', p: 600,  g: () => new THREE.CylinderGeometry(0.4, 0.4, 0.05, 16), m: () => M.glass },
-    { id: 'win_tall', n: 'Tall Slim',   i: '▯', p: 550,  g: () => new THREE.BoxGeometry(0.6, 1.8, 0.05),   m: () => M.glass },
+    { id: 'win_s', n: 'Small', p: 500, f: () => new THREE.Mesh(new THREE.BoxGeometry(1, 0.9, 0.05), M.glass), sw: '#c8ddf8' },
+    { id: 'win_m', n: 'Medium', p: 700, f: () => new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.1, 0.05), M.glass), sw: '#c8ddf8' },
+    { id: 'win_l', n: 'Large', p: 900, f: () => new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.4, 0.05), M.glass), sw: '#c8ddf8' },
+    { id: 'win_xl', n: 'Extra Large', p: 1200, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 1.6, 0.05), M.glass), sw: '#c8ddf8' },
+    { id: 'win_r', n: 'Round', p: 600, f: () => new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.05, 16), M.glass), sw: '#c8ddf8' },
   ],
   doors: [
-    { id: 'd_front',  n: 'Front Door',  i: '🚪', p: 1200, g: () => new THREE.BoxGeometry(0.9, 2.2, 0.06),  m: () => M.door },
-    { id: 'd_wood',   n: 'Wood Door',   i: '🚪', p: 1000, g: () => new THREE.BoxGeometry(0.9, 2.2, 0.06),  m: () => M.wood },
-    { id: 'd_garage', n: 'Garage Door',  i: '🚗', p: 2500, g: () => new THREE.BoxGeometry(2.5, 2.2, 0.06),  m: () => M.silver },
-    { id: 'd_double', n: 'Double Door',  i: '🚪🚪', p: 2000, g: () => new THREE.BoxGeometry(1.6, 2.2, 0.06),  m: () => M.door },
-    { id: 'd_slide',  n: 'Sliding Door', i: '🪟', p: 2800, g: () => new THREE.BoxGeometry(2, 2.2, 0.05),    m: () => M.glass },
+    { id: 'd_front', n: 'Front Door', p: 1200, f: () => grp(box(0.95, 2.2, 0.06, M.doorDark), box(0.7, 0.04, 0.5, M.silver)), sw: '#2a3545' },
+    { id: 'd_garage', n: 'Garage Door', p: 2500, f: () => grp(box(2.5, 2.2, 0.06, M.silver), box(2.48, 0.02, 0.08, M.steel)), sw: '#c0c0c0' },
+    { id: 'd_double', n: 'Double Door', p: 2000, f: () => grp(box(1.6, 2.2, 0.06, M.doorDark), box(0.7, 0.04, 0.9, M.silver)), sw: '#2a3545' },
+    { id: 'd_slide', n: 'Sliding Door', p: 2800, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 2.2, 0.05), M.glass), sw: '#c8ddf8' },
   ],
   floors: [
-    { id: 'f_wood',   n: 'Wood Floor',  i: '🟫', p: 150, g: () => new THREE.BoxGeometry(2, 0.04, 2), m: () => M.wood },
-    { id: 'f_tile',   n: 'Tile Floor',  i: '⬜', p: 200, g: () => new THREE.BoxGeometry(2, 0.04, 2), m: () => M.tile },
-    { id: 'f_conc',   n: 'Concrete',    i: '🪨', p: 100, g: () => new THREE.BoxGeometry(2, 0.06, 2), m: () => M.conc },
-    { id: 'f_marble', n: 'Marble',      i: '✨', p: 500, g: () => new THREE.BoxGeometry(2, 0.04, 2), m: () => M.marble },
-    { id: 'f_dark',   n: 'Dark Wood',   i: '🟤', p: 200, g: () => new THREE.BoxGeometry(2, 0.04, 2), m: () => M.darkWood },
-    { id: 'f_grass',  n: 'Grass Tile',  i: '🌿', p: 80,  g: () => new THREE.BoxGeometry(2, 0.03, 2), m: () => M.grass },
+    { id: 'f_wood', n: 'Wood Floor', p: 150, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.04, 2), M.floorWood), sw: '#c4a882' },
+    { id: 'f_tile', n: 'Tile Floor', p: 200, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.04, 2), M.floorTile), sw: '#d0d0d0' },
+    { id: 'f_conc', n: 'Concrete', p: 100, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.06, 2), M.floorConc), sw: '#c4c8ce' },
+    { id: 'f_marble', n: 'Marble', p: 500, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.04, 2), M.floorMarble), sw: '#e8e0d8' },
+    { id: 'f_dark', n: 'Dark Wood', p: 200, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.04, 2), M.floorDark), sw: '#4a2a1a' },
+    { id: 'f_grass', n: 'Grass Tile', p: 80, f: () => new THREE.Mesh(new THREE.BoxGeometry(2, 0.03, 2), M.floorGrass), sw: '#4a7a3a' },
   ],
   furniture: [
-    { id: 'fu_sofa',   n: 'Sofa/Couch',   i: '🛋️', p: 1500, g: () => new THREE.BoxGeometry(1.8, 0.5, 0.7),   m: () => M.sofa },
-    { id: 'fu_table',  n: 'Dining Table', i: '🍽️', p: 800,  g: () => new THREE.BoxGeometry(1.4, 0.04, 0.9),  m: () => M.wood },
-    { id: 'fu_bed',    n: 'Bed',          i: '🛏️', p: 1200, g: () => new THREE.BoxGeometry(1.6, 0.3, 2),     m: () => M.wood },
-    { id: 'fu_chair',  n: 'Chair',        i: '🪑', p: 300,  g: () => new THREE.BoxGeometry(0.35, 0.4, 0.35), m: () => M.wood },
-    { id: 'fu_tv',     n: 'TV Unit',      i: '📺', p: 900,  g: () => new THREE.BoxGeometry(1.1, 0.3, 0.15),  m: () => M.black },
-    { id: 'fu_shelf',  n: 'Bookshelf',    i: '📚', p: 600,  g: () => new THREE.BoxGeometry(0.9, 0.3, 1.4),   m: () => M.wood },
-    { id: 'fu_rug',    n: 'Area Rug',     i: '🟫', p: 400,  g: () => new THREE.BoxGeometry(2, 0.02, 1.5),    m: () => M.rug },
-    { id: 'fu_desk',   n: 'Desk',         i: '💻', p: 700,  g: () => new THREE.BoxGeometry(1.2, 0.04, 0.6),  m: () => M.wood },
-    { id: 'fu_lamp',   n: 'Floor Lamp',   i: '💡', p: 350,  g: () => new THREE.CylinderGeometry(0.04, 0.07, 1.4, 8), m: () => M.black },
-    { id: 'fu_mirror', n: 'Mirror',       i: '🪞', p: 400,  g: () => new THREE.BoxGeometry(0.6, 0.04, 0.9),  m: () => M.silver },
+    { id: 'fu_sofa', n: 'Sofa', p: 1500, f: makeSofa, sw: '#e8e4dc' },
+    { id: 'fu_chair', n: 'Chair', p: 300, f: makeChair, sw: '#c4b8a8' },
+    { id: 'fu_table', n: 'Dining Table', p: 800, f: makeTable, sw: '#c4a882' },
+    { id: 'fu_bed', n: 'Bed', p: 1200, f: makeBed, sw: '#f5f0e8' },
+    { id: 'fu_tv', n: 'TV Unit', p: 900, f: makeTV, sw: '#1a1a1a' },
+    { id: 'fu_shelf', n: 'Bookshelf', p: 600, f: makeBookshelf, sw: '#6b4a2e' },
+    { id: 'fu_desk', n: 'Desk', p: 700, f: makeDesk, sw: '#c4a882' },
+    { id: 'fu_lamp', n: 'Floor Lamp', p: 350, f: makeLamp, sw: '#f0a030' },
+    { id: 'fu_mirror', n: 'Mirror', p: 400, f: makeMirror, sw: '#c0c0c0' },
+    { id: 'fu_rug', n: 'Area Rug', p: 400, f: makeRug, sw: '#8b7355' },
   ],
   kitchen: [
-    { id: 'k_counter', n: 'Counter',  i: '🍳', p: 1000, g: () => new THREE.BoxGeometry(1.8, 0.4, 0.6), m: () => M.white },
-    { id: 'k_fridge',  n: 'Fridge',   i: '🧊', p: 1800, g: () => new THREE.BoxGeometry(0.65, 0.7, 0.65), m: () => M.silver },
-    { id: 'k_sink',    n: 'Sink',     i: '🚰', p: 600,  g: () => new THREE.BoxGeometry(0.8, 0.04, 0.5),  m: () => M.silver },
-    { id: 'k_stove',   n: 'Stove',    i: '🔥', p: 900,  g: () => new THREE.BoxGeometry(0.6, 0.04, 0.5),  m: () => M.black },
-    { id: 'k_island',  n: 'Island',   i: '🏝️', p: 1500, g: () => new THREE.BoxGeometry(1.4, 0.4, 0.8),  m: () => M.white },
-    { id: 'k_cabinet', n: 'Cabinet',  i: '🗄️', p: 700,  g: () => new THREE.BoxGeometry(0.9, 0.4, 0.5),  m: () => M.wood },
+    { id: 'k_counter', n: 'Counter', p: 1000, f: makeCounter, sw: '#f0f3f7' },
+    { id: 'k_fridge', n: 'Fridge', p: 1800, f: makeFridge, sw: '#c0c0c0' },
+    { id: 'k_sink', n: 'Sink', p: 600, f: makeSink, sw: '#c0c0c0' },
+    { id: 'k_stove', n: 'Stove', p: 900, f: makeStove, sw: '#1a1a1a' },
+    { id: 'k_island', n: 'Island', p: 1500, f: makeIsland, sw: '#f0f3f7' },
+    { id: 'k_cabinet', n: 'Cabinet', p: 700, f: makeCabinet, sw: '#6b4a2e' },
   ],
   outdoor: [
-    { id: 'o_tree_s',   n: 'Small Tree',  i: '🌳', p: 300,  g: () => new THREE.CylinderGeometry(0.07, 0.1, 1.4, 8), m: () => M.bark, tree: true },
-    { id: 'o_tree_m',   n: 'Medium Tree', i: '🌲', p: 500,  g: () => new THREE.CylinderGeometry(0.09, 0.14, 2, 8),  m: () => M.bark, tree: true },
-    { id: 'o_palm',     n: 'Palm Tree',   i: '🌴', p: 600,  g: () => new THREE.CylinderGeometry(0.1, 0.18, 2.4, 8),  m: () => M.bark, palm: true },
-    { id: 'o_bush',     n: 'Bush',        i: '🪴', p: 150,  g: () => new THREE.SphereGeometry(0.35, 6, 4),           m: () => M.bush },
-    { id: 'o_fountain', n: 'Fountain',    i: '⛲', p: 3000, g: () => new THREE.CylinderGeometry(0.45, 0.55, 0.25, 12), m: () => M.fountain },
-    { id: 'o_pool',     n: 'Pool Tile',   i: '🏊', p: 500,  g: () => new THREE.BoxGeometry(1, 0.05, 1),              m: () => M.pool },
-    { id: 'o_fence',    n: 'Fence',       i: '🚧', p: 200,  g: () => new THREE.BoxGeometry(1, 0.7, 0.04),            m: () => M.wood },
-    { id: 'o_path',     n: 'Path Stone',  i: '🪨', p: 100,  g: () => new THREE.BoxGeometry(0.55, 0.03, 0.75),        m: () => M.path },
-    { id: 'o_bench',    n: 'Bench',       i: '🪑', p: 400,  g: () => new THREE.BoxGeometry(1.4, 0.08, 0.35),         m: () => M.wood },
-    { id: 'o_lantern',  n: 'Lantern',     i: '🏮', p: 250,  g: () => new THREE.CylinderGeometry(0.12, 0.08, 0.4, 8),  m: () => M.lantern },
-    { id: 'o_mailbox',  n: 'Mailbox',     i: '📮', p: 200,  g: () => new THREE.BoxGeometry(0.18, 0.35, 0.18),        m: () => M.black },
+    { id: 'o_tree_s', n: 'Small Tree', p: 300, f: () => makeTree(true), sw: '#3d6b2e' },
+    { id: 'o_tree_m', n: 'Medium Tree', p: 500, f: () => makeTree(false), sw: '#3d6b2e' },
+    { id: 'o_palm', n: 'Palm Tree', p: 600, f: makePalm, sw: '#5a9a3e' },
+    { id: 'o_bush', n: 'Bush', p: 150, f: () => sph(0.4, M.bush), sw: '#4a7a3a' },
+    { id: 'o_fountain', n: 'Fountain', p: 3000, f: () => grp(cyl(0.5, 0.3, M.fountain, 14), cyl(0.25, 0.5, M.fountain, 14), cyl(0.1, 1.2, M.fountain, 8)), sw: '#a0a0a0' },
+    { id: 'o_pool', n: 'Pool Tile', p: 500, f: () => new THREE.Mesh(new THREE.BoxGeometry(1, 0.05, 1), M.pool), sw: '#4080c0' },
+    { id: 'o_fence', n: 'Fence', p: 200, f: () => grp(box(1, 0.7, 0.04, M.woodOak), box(1.02, 0.03, 0.06, M.woodOak)), sw: '#c4a882' },
+    { id: 'o_path', n: 'Path Stone', p: 100, f: () => new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.03, 0.75), M.path), sw: '#c0b8a8' },
+    { id: 'o_bench', n: 'Bench', p: 400, f: () => grp(box(1.5, 0.08, 0.35, M.woodOak), cyl(0.025, 0.4, M.woodOak), cyl(0.025, 0.4, M.woodOak)), sw: '#c4a882' },
+    { id: 'o_lantern', n: 'Lantern', p: 250, f: () => grp(cyl(0.03, 1.0, M.black), cyl(0.12, 0.4, M.lantern, 8)), sw: '#f0a030' },
+    { id: 'o_mailbox', n: 'Mailbox', p: 200, f: () => grp(cyl(0.03, 0.8, M.black), box(0.2, 0.35, 0.2, M.black)), sw: '#1a1a1a' },
   ],
   roofs: [
-    { id: 'r_flat',   n: 'Flat 3m',        i: '▬', p: 2000, g: () => new THREE.BoxGeometry(3, 0.08, 3), m: () => M.roof },
-    { id: 'r_pitch',  n: 'Pitched 3m',     i: '△', p: 3500, g: () => new THREE.BoxGeometry(3, 0.08, 3), m: () => M.roof, pitched: true },
-    { id: 'r_metal',  n: 'Metal 3m',       i: '🔩', p: 4000, g: () => new THREE.BoxGeometry(3, 0.08, 3), m: () => M.metal, pitched: true },
-    { id: 'r_terra',  n: 'Terracotta 3m',  i: '🟠', p: 3200, g: () => new THREE.BoxGeometry(3, 0.08, 3), m: () => M.terra, pitched: true },
-  ],
+    { id: 'r_flat', n: 'Flat Slab 3m', p: 2000, f: () => new THREE.Mesh(new THREE.BoxGeometry(3, 0.08, 3), M.roofSlate), sw: '#3d4855' },
+    { id: 'r_pitch', n: 'Pitched 3m', p: 3500, f: () => grp(box(3, 0.08, 3, M.roofSlate), box(3, 0.08, 3, M.roofSlate)), sw: '#3d4855' },
+    { id: 'r_metal', n: 'Metal 3m', p: 4000, f: () => grp(box(3, 0.08, 3, M.roofMetal), box(3, 0.08, 3, M.roofMetal)), sw: '#8899aa' },
+    { id: 'r_terra', n: 'Terracotta 3m', p: 3200, f: () => grp(box(3, 0.08, 3, M.roofTerra), box(3, 0.08, 3, M.roofTerra)), sw: '#b55a3a' },
+  ]
 };
 
-// Build flat allItems lookup for prebuilds
+// Build flat index
 for (const k in W.cat) W.cat[k].forEach(it => W.allItems[it.id] = it);
 
-// ══════════════════════════════════════
-// PREBUILDS
-// ══════════════════════════════════════
+// ─── PREBUILDS ───
 W.prebuilds = [
-  { n: 'Starter Home', i: '🏠', s: '64m² · 2 bed · 1 bath · $98K', items: [
-    { t: 'w_white', x: 0, z: 0 }, { t: 'w_white', x: -2.5, z: -1.5 }, { t: 'w_white', x: 2.5, z: -1.5 },
-    { t: 'w_white', x: -2.5, z: 1.5 }, { t: 'w_white', x: 2.5, z: 1.5 },
-    { t: 'win_m', x: -1.3, z: -2.5 }, { t: 'win_m', x: 1.3, z: -2.5 }, { t: 'd_front', x: 0, z: 2.5 },
-    { t: 'r_pitch', x: 0, z: 0 }, { t: 'f_wood', x: 0, z: 0 }, { t: 'f_wood', x: 2, z: 0 },
-    { t: 'f_wood', x: -2, z: 0 }, { t: 'fu_bed', x: -1.5, z: -1 }, { t: 'fu_sofa', x: 1.5, z: 1 },
-    { t: 'fu_tv', x: 1.5, z: -1.5 }, { t: 'fu_table', x: 0.5, z: 0.5 }, { t: 'fu_rug', x: 1.5, z: 1 },
-    { t: 'o_tree_s', x: -4, z: -3 }, { t: 'o_bush', x: -2, z: 3 },
+  { n: 'Starter Home', i: '🏠', s: '64m² · 2 bed · $98K', layout: '64', items: [
+    { t: 'w_white', x: 0, z: 0 }, { t: 'w_white', x: -3, z: -2.5 }, { t: 'w_white', x: 3, z: -2.5 },
+    { t: 'w_white', x: -3, z: 2.5 }, { t: 'w_white', x: 3, z: 2.5 },
+    { t: 'win_m', x: -1.5, z: -3.5 }, { t: 'win_m', x: 1.5, z: -3.5 }, { t: 'd_front', x: 0, z: 3.5 },
+    { t: 'r_pitch', x: 0, z: 0 },
+    { t: 'f_wood', x: -1, z: -1 }, { t: 'f_wood', x: 1, z: -1 }, { t: 'f_wood', x: -1, z: 1 }, { t: 'f_wood', x: 1, z: 1 },
+    { t: 'fu_bed', x: -2, z: -1.5 }, { t: 'fu_sofa', x: 2, z: 1 }, { t: 'fu_tv', x: 2, z: -2 },
+    { t: 'fu_table', x: 0, z: 0.5 }, { t: 'fu_rug', x: 2, z: 1 },
+    { t: 'o_tree_s', x: -5, z: -5 }, { t: 'o_fence', x: -3.5, z: 4 }, { t: 'o_fence', x: 3.5, z: 4 },
   ]},
-  { n: 'Family Home', i: '🏡', s: '120m² · 3 bed · 2 bath · $168K', items: [
-    { t: 'w_white', x: 0, z: 0 }, { t: 'w_brick', x: -3, z: -2 }, { t: 'w_brick', x: 3, z: -2 },
-    { t: 'w_white', x: -3, z: 2 }, { t: 'w_white', x: 3, z: 2 }, { t: 'w_white', x: -3, z: 0 },
-    { t: 'w_white', x: 3, z: 0 }, { t: 'win_l', x: -2, z: -3 }, { t: 'win_l', x: 2, z: -3 },
-    { t: 'd_double', x: 0, z: 3 }, { t: 'r_flat', x: 0, z: 0 },
-    { t: 'f_wood', x: -1, z: -1 }, { t: 'f_wood', x: 1, z: -1 }, { t: 'f_wood', x: -1, z: 1 },
-    { t: 'f_wood', x: 1, z: 1 }, { t: 'fu_bed', x: -2, z: -2 }, { t: 'fu_bed', x: 2, z: -2 },
-    { t: 'fu_sofa', x: -2, z: 2 }, { t: 'fu_tv', x: -2, z: -2.5 }, { t: 'fu_table', x: 0, z: 0.5 },
-    { t: 'fu_rug', x: -2, z: 2 }, { t: 'k_counter', x: 2, z: 1 }, { t: 'k_fridge', x: 2, z: 2 },
-    { t: 'o_tree_m', x: -5, z: 4 }, { t: 'o_tree_m', x: 5, z: 4 }, { t: 'o_fountain', x: 0, z: -4 },
-    { t: 'o_fence', x: -3.5, z: 3.5 }, { t: 'o_fence', x: 3.5, z: 3.5 }, { t: 'o_path', x: 0, z: 3.8 },
+  { n: 'Family Home', i: '🏡', s: '120m² · 3 bed · $168K', layout: '120', items: [
+    { t: 'w_white', x: 0, z: 0 }, { t: 'w_brick', x: -3.5, z: -2.5 }, { t: 'w_brick', x: 3.5, z: -2.5 },
+    { t: 'w_white', x: -3.5, z: 0 }, { t: 'w_white', x: 3.5, z: 0 }, { t: 'w_white', x: -3.5, z: 2.5 }, { t: 'w_white', x: 3.5, z: 2.5 },
+    { t: 'win_l', x: -2, z: -3.5 }, { t: 'win_l', x: 2, z: -3.5 }, { t: 'd_double', x: 0, z: 3.5 },
+    { t: 'r_flat', x: 0, z: 0 },
+    { t: 'f_wood', x: -1, z: -1 }, { t: 'f_wood', x: 1, z: -1 }, { t: 'f_wood', x: -1, z: 1 }, { t: 'f_wood', x: 1, z: 1 },
+    { t: 'fu_bed', x: -2, z: -2 }, { t: 'fu_bed', x: 2, z: -2 }, { t: 'fu_sofa', x: -2, z: 2 },
+    { t: 'fu_tv', x: -2, z: -3 }, { t: 'fu_table', x: 0, z: 0.5 }, { t: 'fu_rug', x: -2, z: 2 },
+    { t: 'k_counter', x: 2, z: 1 }, { t: 'k_fridge', x: 2, z: 2 },
+    { t: 'o_tree_m', x: -6, z: 5 }, { t: 'o_tree_m', x: 6, z: 5 }, { t: 'o_fountain', x: 0, z: -5 },
+    { t: 'o_fence', x: -4, z: 4 }, { t: 'o_fence', x: 4, z: 4 }, { t: 'o_path', x: 0, z: 4 },
   ]},
-  { n: 'Modern Villa', i: '🏛️', s: '180m² · 4 bed · 3 bath · $245K', items: [
-    { t: 'w_white', x: 0, z: 0 }, { t: 'w_white', x: 0, z: -3 },
-    { t: 'w_navy', x: -4, z: -1.5 }, { t: 'w_navy', x: 4, z: -1.5 },
-    { t: 'w_navy', x: -4, z: 1.5 }, { t: 'w_navy', x: 4, z: 1.5 },
-    { t: 'win_xl', x: -3, z: -4 }, { t: 'win_xl', x: 3, z: -4 },
-    { t: 'win_l', x: -3, z: 4 }, { t: 'win_l', x: 3, z: 4 }, { t: 'd_double', x: 0, z: 4 },
-    { t: 'r_metal', x: 0, z: -1.5 },
-    { t: 'f_marble', x: -2, z: -2 }, { t: 'f_marble', x: 2, z: -2 },
-    { t: 'f_marble', x: -2, z: 2 }, { t: 'f_marble', x: 2, z: 2 },
-    { t: 'fu_bed', x: -3, z: -2 }, { t: 'fu_bed', x: 3, z: -2 },
-    { t: 'fu_sofa', x: 0, z: 2.5 }, { t: 'fu_tv', x: 0, z: -3 },
-    { t: 'fu_table', x: 2, z: -1 }, { t: 'fu_rug', x: 0, z: 2.5 },
-    { t: 'k_counter', x: -2, z: -1 }, { t: 'k_fridge', x: -3, z: -1 },
-    { t: 'k_island', x: -2, z: 1 }, { t: 'fu_shelf', x: 3, z: 2 },
-    { t: 'fu_desk', x: -3, z: 2 }, { t: 'fu_lamp', x: 0, z: 3 },
-    { t: 'o_fountain', x: 0, z: -5.5 }, { t: 'o_palm', x: -6, z: 5 }, { t: 'o_palm', x: 6, z: 5 },
-    { t: 'o_pool', x: -5.5, z: 0 }, { t: 'o_pool', x: -5.5, z: 1 }, { t: 'o_pool', x: -5.5, z: 2 },
-    { t: 'o_lantern', x: -5, z: 4.5 }, { t: 'o_lantern', x: 5, z: 4.5 }, { t: 'o_bench', x: 0, z: 4.5 },
-  ]},
-  { n: 'Tiny Cabin', i: '🪵', s: '28m² · 1 bed · 1 bath · $58K', items: [
-    { t: 'w_wood', x: 0, z: 0 }, { t: 'w_wood', x: -1.5, z: -1 }, { t: 'w_wood', x: 1.5, z: -1 },
-    { t: 'w_wood', x: -1.5, z: 1 }, { t: 'w_wood', x: 1.5, z: 1 },
-    { t: 'win_s', x: -1, z: -2 }, { t: 'win_s', x: 1, z: -2 }, { t: 'd_wood', x: 0, z: 2 },
-    { t: 'r_pitch', x: 0, z: 0 }, { t: 'f_dark', x: 0, z: 0 },
-    { t: 'fu_bed', x: -1, z: -0.5 }, { t: 'fu_shelf', x: 1, z: -0.5 },
-    { t: 'fu_table', x: 0, z: 0.5 }, { t: 'fu_chair', x: 0.5, z: 0.5 },
-    { t: 'fu_lamp', x: -1.5, z: 0.5 }, { t: 'fu_rug', x: 0, z: 0.5 },
-    { t: 'o_tree_m', x: -3, z: -3 }, { t: 'o_tree_m', x: 3, z: -3 },
-    { t: 'o_path', x: 0, z: 2.8 }, { t: 'o_path', x: 0, z: 3.6 },
-  ]},
-  { n: 'Luxury Mansion', i: '🏰', s: '320m² · 6 bed · 5 bath · $520K', items: [
-    { t: 'w_white', x: 0, z: 0 }, { t: 'w_white', x: 0, z: -4 },
-    { t: 'w_navy', x: -5, z: -2 }, { t: 'w_navy', x: 5, z: -2 },
-    { t: 'w_navy', x: -5, z: 2 }, { t: 'w_navy', x: 5, z: 2 },
-    { t: 'w_white', x: -2.5, z: -5.5 }, { t: 'w_white', x: 2.5, z: -5.5 },
-    { t: 'win_xl', x: -4, z: -6 }, { t: 'win_xl', x: 4, z: -6 },
-    { t: 'win_l', x: -4, z: 5.5 }, { t: 'win_l', x: 4, z: 5.5 }, { t: 'd_double', x: 0, z: 5.5 },
-    { t: 'r_metal', x: 0, z: -2 },
-    { t: 'f_marble', x: -2, z: -2 }, { t: 'f_marble', x: 2, z: -2 },
-    { t: 'f_marble', x: -2, z: 2 }, { t: 'f_marble', x: 2, z: 2 },
-    { t: 'f_marble', x: -2, z: -5 }, { t: 'f_marble', x: 2, z: -5 },
-    { t: 'fu_bed', x: -3, z: -3 }, { t: 'fu_bed', x: 3, z: -3 }, { t: 'fu_bed', x: -3, z: 0 },
-    { t: 'fu_sofa', x: -3, z: 3 }, { t: 'fu_tv', x: -3, z: -3.5 },
-    { t: 'fu_table', x: 3, z: -1 }, { t: 'fu_rug', x: -3, z: 3 },
-    { t: 'k_counter', x: 0, z: -3 }, { t: 'k_fridge', x: -1.5, z: -3 },
-    { t: 'k_island', x: 2, z: 2 }, { t: 'k_stove', x: 0.5, z: -3 },
-    { t: 'fu_shelf', x: 3, z: 3 }, { t: 'fu_desk', x: -4, z: -1 },
-    { t: 'fu_lamp', x: 4, z: 3 }, { t: 'fu_mirror', x: -4, z: 3 },
-    { t: 'o_fountain', x: 0, z: -7.5 },
-    { t: 'o_palm', x: -7, z: 6 }, { t: 'o_palm', x: 7, z: 6 },
-    { t: 'o_palm', x: -7, z: -6 }, { t: 'o_palm', x: 7, z: -6 },
-    { t: 'o_pool', x: -6.5, z: 0 }, { t: 'o_pool', x: -6.5, z: 1 },
-    { t: 'o_pool', x: -6.5, z: 2 }, { t: 'o_pool', x: -6.5, z: 3 },
-    { t: 'o_fence', x: -6, z: 6 }, { t: 'o_fence', x: 6, z: 6 },
-    { t: 'o_lantern', x: -5, z: 6 }, { t: 'o_lantern', x: 5, z: 6 },
-    { t: 'o_mailbox', x: -5, z: 5.5 }, { t: 'o_bench', x: -2, z: 6 }, { t: 'o_bench', x: 2, z: 6 },
+  { n: 'Modern Villa', i: '🏛️', s: '180m² · 4 bed · $245K', layout: '180', items: [
+    { t: 'w_white', x: 0, z: 0 }, { t: 'w_white', x: 0, z: -3.5 }, { t: 'w_navy', x: -4.5, z: -1.75 }, { t: 'w_navy', x: 4.5, z: -1.75 },
+    { t: 'w_navy', x: -4.5, z: 1.75 }, { t: 'w_navy', x: 4.5, z: 1.75 }, { t: 'w_glass', x: -4.5, z: 0 }, { t: 'w_glass', x: 4.5, z: 0 },
+    { t: 'win_xl', x: -3, z: -4.5 }, { t: 'win_xl', x: 3, z: -4.5 }, { t: 'win_l', x: -3, z: 4.5 }, { t: 'win_l', x: 3, z: 4.5 },
+    { t: 'd_double', x: 0, z: 4.5 }, { t: 'r_metal', x: 0, z: -1.75 },
+    { t: 'f_marble', x: -2, z: -2 }, { t: 'f_marble', x: 2, z: -2 }, { t: 'f_marble', x: -2, z: 2 }, { t: 'f_marble', x: 2, z: 2 },
+    { t: 'fu_bed', x: -3, z: -2 }, { t: 'fu_bed', x: 3, z: -2 }, { t: 'fu_sofa', x: 0, z: 2.5 },
+    { t: 'fu_tv', x: 0, z: -3 }, { t: 'fu_table', x: 2, z: -1 }, { t: 'fu_rug', x: 0, z: 2.5 },
+    { t: 'k_counter', x: -2, z: -1 }, { t: 'k_fridge', x: -3, z: -1 }, { t: 'k_island', x: -2, z: 1 },
+    { t: 'fu_shelf', x: 3, z: 2 }, { t: 'fu_desk', x: -3, z: 2 }, { t: 'fu_lamp', x: 0, z: 3 },
+    { t: 'o_fountain', x: 0, z: -6 }, { t: 'o_palm', x: -6, z: 5.5 }, { t: 'o_palm', x: 6, z: 5.5 },
+    { t: 'o_pool', x: -6, z: 0 }, { t: 'o_pool', x: -6, z: 1 }, { t: 'o_pool', x: -6, z: 2 },
+    { t: 'o_bench', x: 0, z: 5 }, { t: 'o_lantern', x: -5, z: 5 }, { t: 'o_lantern', x: 5, z: 5 },
   ]},
 ];
 
-// ══════════════════════════════════════
-// MESH FACTORY — create 3D objects from catalog items
-// ══════════════════════════════════════
-function makeObj(item) {
-  // ── AssetFactory routing for ALL catalog items ──
-  const routes = {
-    // Walls
-    w_white:  () => AssetFactory.createWall({ w:2, h:2.8, brick:'red' }),
-    w_brick:  () => AssetFactory.createWall({ w:2, h:2.8, brick:'red' }),
-    w_wood:   () => AssetFactory.createWall({ w:2, h:2.8, brick:'beige' }),
-    w_beige:  () => AssetFactory.createWall({ w:2, h:2.8, brick:'beige' }),
-    w_gray:   () => AssetFactory.createWall({ w:2, h:2.8, brick:'red' }),
-    w_navy:   () => AssetFactory.createWall({ w:2, h:2.8, brick:'red' }),
-    w_metal:  () => AssetFactory.createWall({ w:2, h:2.8, brick:'red' }),
-    w_half:   () => AssetFactory.createWall({ w:2, h:1.4, brick:'red' }),
-    w_tall:   () => AssetFactory.createWall({ w:2, h:3.5, brick:'red' }),
-    // Columns
-    col_steel: () => AssetFactory.createColumn({ h:3, mat:null }),
-    col_wood:  () => AssetFactory.createColumn({ h:3, mat:null }),
-    // Windows
-    win_s:    () => AssetFactory.createWindow({ ww:1, wh:0.9 }),
-    win_m:    () => AssetFactory.createWindow({ ww:1.3, wh:1.1 }),
-    win_l:    () => AssetFactory.createWindow({ ww:1.5, wh:1.4 }),
-    win_xl:   () => AssetFactory.createWindow({ ww:2, wh:1.6 }),
-    win_tall: () => AssetFactory.createWindow({ ww:0.6, wh:1.8 }),
-    win_r:    () => AssetFactory.createRoundWindow({ r:0.4 }),
-    // Doors
-    d_front:  () => AssetFactory.createDoor({ w:0.9, h:2.2 }),
-    d_wood:   () => AssetFactory.createDoor({ w:0.9, h:2.2 }),
-    d_garage: () => AssetFactory.createDoor({ w:2.5, h:2.2, garage:true }),
-    d_double: () => AssetFactory.createDoor({ w:1.6, h:2.2, double:true }),
-    d_slide:  () => AssetFactory.createDoor({ w:2, h:2.2, double:true }),
-    // Floors
-    f_wood:   () => AssetFactory.createFloor({ w:2, d:2, color:'#c09870', tileColor:'#d4c0a0' }),
-    f_tile:   () => AssetFactory.createFloor({ w:2, d:2, color:'#d8d8d8', tileColor:'#e8e8e8' }),
-    f_conc:   () => AssetFactory.createFloor({ w:2, d:2, color:'#c8ccc8', tileColor:'#d8dcd8' }),
-    f_marble: () => AssetFactory.createFloor({ w:2, d:2, color:'#f0ece4', tileColor:'#f8f4ec' }),
-    f_dark:   () => AssetFactory.createFloor({ w:2, d:2, color:'#5a3a2a', tileColor:'#6a4a3a' }),
-    f_grass:  () => AssetFactory.createFloor({ w:2, d:2, color:'#4a7a3a', tileColor:'#5a8a4a' }),
-    // Furniture
-    fu_sofa:  () => AssetFactory.createSofa({ w:1.8, d:0.7 }),
-    fu_bed:   () => AssetFactory.createBed(),
-    fu_table: () => AssetFactory.createTable({ w:1.4, d:0.9 }),
-    fu_chair: () => AssetFactory.createChair(),
-    fu_desk:  () => AssetFactory.createTable({ w:1.2, d:0.6, h:0.72 }),
-    // Kitchen
-    k_counter:() => AssetFactory.createCounter({ w:1.8, d:0.6, h:0.9 }),
-    k_fridge: () => AssetFactory.createFridge(),
-    k_island: () => AssetFactory.createCounter({ w:1.4, d:0.8, h:0.9 }),
-  };
-  if (routes[item.id]) return routes[item.id]();
+function hint(t) { document.getElementById('hint').textContent = t; }
+function updCost() { document.getElementById('budget').textContent = '💰 $' + (W.budget - W.total).toLocaleString(); }
+function snap(v) { return W.gridOn ? Math.round(v / 0.5) * 0.5 : v; }
 
-  // Trees: trunk + leaf canopy
-  if (item.tree) {
-    const g = new THREE.Group();
-    const trunk = new THREE.Mesh(item.g(), item.m());
-    trunk.position.y = 0.7; trunk.castShadow = true;
-    g.add(trunk);
-    const crown = new THREE.Mesh(new THREE.ConeGeometry(0.65, 0.85, 8), M.leaf);
-    crown.position.y = 1.4; crown.castShadow = true;
-    g.add(crown);
-    return g;
-  }
-  // Palm trees: trunk + fronds
-  if (item.palm) {
-    const g = new THREE.Group();
-    const trunk = new THREE.Mesh(item.g(), item.m());
-    trunk.position.y = 1.2; trunk.castShadow = true;
-    g.add(trunk);
-    for (let f = 0; f < 6; f++) {
-      const frond = new THREE.Mesh(
-        new THREE.BoxGeometry(0.75, 0.02, 0.2),
-        new THREE.MeshStandardMaterial({ color: '#5a9a3e', roughness: 0.4, side: THREE.DoubleSide })
-      );
-      frond.position.set(0, 2.5, 0);
-      frond.rotation.set(0.3 + Math.random() * 0.4, f / 6 * Math.PI * 2, Math.random() * 0.3);
-      frond.castShadow = true;
-      g.add(frond);
-    }
-    return g;
-  }
-  // Pitched roof: two angled panels
-  if (item.pitched) {
-    const g = new THREE.Group();
-    const p1 = new THREE.Mesh(item.g(), item.m());
-    p1.position.set(0, 0.28, -0.65); p1.rotation.x = -0.6; p1.castShadow = true;
-    g.add(p1);
-    const p2 = new THREE.Mesh(item.g(), item.m());
-    p2.position.set(0, 0.28, 0.65); p2.rotation.x = 0.6; p2.castShadow = true;
-    g.add(p2);
-    return g;
-  }
-  // Standard mesh
-  const obj = new THREE.Mesh(item.g(), item.m());
-  obj.castShadow = true;
-  obj.receiveShadow = true;
-  return obj;
-}
-
-// ══════════════════════════════════════
-// GridPlacer — OOP modular grid placement with smooth ghost preview
-// ══════════════════════════════════════
-class GridPlacer {
-  constructor(scene, camera, gridOnFn) {
-    this.scene = scene;
-    this.camera = camera;
-    this._gridOnFn = gridOnFn;
-    this._plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);   // y=0 ground plane
-    this._rc = new THREE.Raycaster();
-    this._snapSize = 0.5;
-    this._smoothFactor = 0.22;  // lerp speed for ghost glide
-    this.currentPos = new THREE.Vector3();
-  }
-
-  get gridOn() { return this._gridOnFn(); }
-  get snapSize() { return this.gridOn ? this._snapSize : 0.01; }
-
-  /** Raycast from mouse event → ground-plane intersection (world coords) */
-  rayToGround(e) {
-    const mouse = new THREE.Vector2(
-      (e.clientX / innerWidth) * 2 - 1,
-      -(e.clientY / innerHeight) * 2 + 1
-    );
-    this._rc.setFromCamera(mouse, this.camera);
-    const pt = new THREE.Vector3();
-    const hit = this._rc.ray.intersectPlane(this._plane, pt);
-    return hit ? pt : null;
-  }
-
-  /** Snap a world position to the grid */
-  snap(pt) {
-    const s = this.snapSize;
-    return new THREE.Vector3(
-      Math.round(pt.x / s) * s,
-      0.01,
-      Math.round(pt.z / s) * s
-    );
-  }
-
-  /** Get the snapped ground position for a mouse event (null if off-world) */
-  getSnappedPos(e) {
-    const raw = this.rayToGround(e);
-    if (!raw || Math.abs(raw.x) > 19.5 || Math.abs(raw.z) > 19.5) return null;
-    return this.snap(raw);
-  }
-
-  /** Create a ghost preview mesh for an item */
-  createGhost(item) {
-    this.destroyGhost();
-    if (!item) return;
-    const obj = makeObj(item);
-    // Traverse and make semi-transparent green
-    obj.traverse(child => {
-      if (child.isMesh && child.material) {
-        child.material = child.material.clone();
-        child.material.transparent = true;
-        child.material.opacity = 0.45;
-        child.material.emissive = new THREE.Color('#2ecc71');
-        child.material.emissiveIntensity = 0.35;
-        child.material.depthWrite = false;
-      }
-    });
-    obj.visible = true;
-    this.scene.add(obj);
-    this._ghost = obj;
-    this.currentPos.set(0, 0.01, 0);
-    obj.position.copy(this.currentPos);
-    return obj;
-  }
-
-  /** Remove ghost from scene */
-  destroyGhost() {
-    if (this._ghost) {
-      this.scene.remove(this._ghost);
-      this._ghost.traverse(c => { if (c.geometry) c.geometry.dispose(); if (c.material) c.material.dispose(); });
-      this._ghost = null;
-    }
-  }
-
-  /** Move ghost smoothly toward a snapped position */
-  updateGhost(targetPos, wallItem) {
-    if (!this._ghost) return;
-    const tgt = targetPos.clone();
-    tgt.y = wallItem ? 1.4 : 0.01;
-    this.currentPos.lerp(tgt, this._smoothFactor);
-    this._ghost.position.copy(this.currentPos);
-    // Use manual R-key rotation if set, otherwise auto-face camera for walls
-    if (W.placeRotation !== 0) {
-      this._ghost.rotation.y = W.placeRotation;
-    } else if (wallItem) {
-      const dir = new THREE.Vector3().subVectors(tgt, this.camera.position).setY(0).normalize();
-      const angle = Math.atan2(dir.x, dir.z);
-      this._ghost.rotation.y = Math.round(angle / (Math.PI / 2)) * (Math.PI / 2);
-    }
-  }
-
-  /** Place the real item at the given position (returns the created mesh) */
-  placeItem(item, pos) {
-    const obj = makeObj(item);
-    pos.y = item.wall ? 1.4 : 0.01;
-    obj.position.copy(pos);
-    // Use manual R-key rotation if set, otherwise auto-face camera for walls
-    if (W.placeRotation !== 0) {
-      obj.rotation.y = W.placeRotation;
-    } else if (item.wall) {
-      const dir = new THREE.Vector3().subVectors(pos, this.camera.position).setY(0).normalize();
-      obj.rotation.y = Math.round(Math.atan2(dir.x, dir.z) / (Math.PI / 2)) * (Math.PI / 2);
-    }
-    obj.userData = { id: item.id, price: item.p, canRot: true };
-    this.scene.add(obj);
-    return obj;
-  }
-
-  /** Raycast to find a placed object under the mouse */
-  findPlacedAtEvent(e, placedList, sceneRef) {
-    // Use center of screen when pointer is locked
-    const x = document.pointerLockElement ? 0 : (e.clientX / innerWidth) * 2 - 1;
-    const y = document.pointerLockElement ? 0 : -(e.clientY / innerHeight) * 2 + 1;
-    const mouse = new THREE.Vector2(x, y);
-    this._rc.setFromCamera(mouse, this.camera);
-    const hits = this._rc.intersectObjects(placedList, true);
-    if (hits.length === 0) return null;
-    let tgt = hits[0].object;
-    while (tgt.parent && tgt.parent !== sceneRef && placedList.includes(tgt.parent)) {
-      tgt = tgt.parent;
-    }
-    return placedList.includes(tgt) ? tgt : null;
+// ─── GHOST PLACEMENT ───
+let ghostObj = null;
+function createGhost(item) { if (ghostObj) { W.scene.remove(ghostObj); } if (!item) return; const g = item.f(); g.traverse(c => { if (c.material) { c.material = c.material.clone(); c.material.transparent = true; c.material.opacity = 0.4; } }); ghostObj = g; W.scene.add(g); }
+function destroyGhost() { if (ghostObj) { W.scene.remove(ghostObj); ghostObj = null; } }
+function updateGhost(pos, item) {
+  if (!ghostObj || !item) return;
+  ghostObj.position.copy(pos);
+  if (item.wall) {
+    if (W.placeRotation !== 0) ghostObj.rotation.y = W.placeRotation;
+    else { const d = new THREE.Vector3().subVectors(pos, W.camera.position).setY(0).normalize(); ghostObj.rotation.y = Math.round(Math.atan2(d.x, d.z) / (Math.PI / 2)) * (Math.PI / 2); }
   }
 }
 
-// ══════════════════════════════════════
-// BudgetManager — cost tracking with overspend prevention
-// ══════════════════════════════════════
-class BudgetManager {
-  constructor(initialBudget, uiElId) {
-    this._balance = initialBudget;
-    this._initial = initialBudget;
-    this._uiEl = document.getElementById(uiElId);
-    this._refresh();
-  }
+function getGroundPos(e) {
+  const rc = new THREE.Raycaster();
+  const mx = document.pointerLockElement ? 0 : (e.clientX / innerWidth) * 2 - 1;
+  const my = document.pointerLockElement ? 0 : -(e.clientY / innerHeight) * 2 + 1;
+  rc.setFromCamera(new THREE.Vector2(mx, my), W.camera);
+  const pt = new THREE.Vector3();
+  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const hit = rc.ray.intersectPlane(plane, pt);
+  if (!hit || Math.abs(pt.x) > 19 || Math.abs(pt.z) > 19) return null;
+  return new THREE.Vector3(snap(pt.x), 0.01, snap(pt.z));
+}
 
-  get balance() { return this._balance; }
+// ─── PLACE ───
+function placeItem() {
+  if (!W.sel || W.pMode !== 'place') return;
+  const pos = new THREE.Vector3(0, 0, 0);
+  const d = new THREE.Vector3(); W.camera.getWorldDirection(d);
+  d.y = 0; d.normalize();
+  // Place 2m in front of camera
+  pos.copy(W.camera.position).addScaledVector(d, 3);
+  pos.x = snap(pos.x); pos.z = snap(pos.z);
+  pos.y = W.sel.wall ? 1.4 : 0.01;
+  const obj = W.sel.f();
+  obj.position.copy(pos);
+  if (W.placeRotation !== 0) obj.rotation.y = W.placeRotation;
+  else if (W.sel.wall) { const ad = new THREE.Vector3().subVectors(pos, W.camera.position).setY(0).normalize(); obj.rotation.y = Math.round(Math.atan2(ad.x, ad.z) / (Math.PI / 2)) * (Math.PI / 2); }
+  obj.userData = { id: W.sel.id, price: W.sel.p, name: W.sel.n, canRot: true };
+  W.scene.add(obj); W.placed.push(obj); W.undoStack.push(obj);
+  if (W.undoStack.length > 50) W.undoStack.shift();
+  W.total += W.sel.p; W.placeRotation = 0;
+  updCost(); hint('Placed: ' + W.sel.n + '  |  Budget: $' + (W.budget - W.total).toLocaleString());
+}
 
-  canAfford(price) { return this._balance >= price; }
+// ─── DELETE / ROTATE / MOVE ───
+function findAtCenter() {
+  const rc = new THREE.Raycaster(); rc.setFromCamera(new THREE.Vector2(0, 0), W.camera);
+  const hits = rc.intersectObjects(W.placed, true);
+  if (hits.length === 0) return null;
+  let tgt = hits[0].object;
+  while (tgt.parent && tgt.parent !== W.scene && W.placed.includes(tgt.parent)) tgt = tgt.parent;
+  return W.placed.includes(tgt) ? tgt : null;
+}
 
-  /** Spend — returns true on success, false if insufficient funds */
-  spend(price, itemName) {
-    if (price > this._balance) {
-      hint('❌ Cannot afford ' + itemName + ' ($' + price.toLocaleString() + ' needed, $' + this._balance.toLocaleString() + ' left)');
-      return false;
-    }
-    this._balance -= price;
-    this._refresh();
-    return true;
-  }
+function doAction() {
+  if (W.pMode === 'place') { placeItem(); return; }
+  const tgt = findAtCenter();
+  if (!tgt) return;
+  if (W.pMode === 'delete') { W.total -= (tgt.userData.price || 0); W.scene.remove(tgt); W.placed.splice(W.placed.indexOf(tgt), 1); updCost(); hint('Deleted'); }
+  else if (W.pMode === 'rotate') { tgt.rotation.y += Math.PI / 2; hint('Rotated 90°'); }
+  else if (W.pMode === 'move') { W.placed.forEach(o => delete o.userData._moving); tgt.userData._moving = true; W.moveTarget = tgt; hint('Moving: click ground to place'); }
+}
 
-  /** Refund on delete/undo */
-  refund(price) {
-    this._balance += price;
-    this._refresh();
-  }
-
-  /** Check + spend combo for prebuild loading — returns count of affordable items */
-  spendBatch(items, allItems) {
-    let totalCost = 0;
-    for (const it of items) {
-      const f = allItems[it.t];
-      if (f) totalCost += f.p;
-    }
-    if (!this.canAfford(totalCost)) {
-      hint('❌ Prebuild costs $' + totalCost.toLocaleString() + ' — only $' + this._balance.toLocaleString() + ' available');
-      return -1;
-    }
-    this._balance -= totalCost;
-    this._refresh();
-    return totalCost;
-  }
-
-  /** Full reset (clear all) */
-  reset() {
-    this._balance = this._initial;
-    this._refresh();
-  }
-
-  _refresh() {
-    if (!this._uiEl) return;
-    const low = this._balance < 5000;
-    this._uiEl.textContent = '💰 $' + this._balance.toLocaleString();
-    this._uiEl.style.color = low ? '#f85149' : 'var(--g)';
+// ─── HOVER LABEL ───
+const hoverLabel = document.getElementById('hoverLabel');
+const hoverLabelName = document.getElementById('hlName');
+const hoverLabelPrice = document.getElementById('hlPrice');
+function updateHoverLabel() {
+  const tgt = findAtCenter();
+  if (tgt && tgt.userData && tgt.userData.name) {
+    const pos = new THREE.Vector3(); tgt.getWorldPosition(pos);
+    const proj = pos.clone().project(W.camera);
+    hoverLabel.style.display = 'block';
+    hoverLabel.style.left = ((proj.x * 0.5 + 0.5) * innerWidth) + 'px';
+    hoverLabel.style.top = ((-proj.y * 0.5 + 0.5) * innerHeight - 40) + 'px';
+    hoverLabelName.textContent = tgt.userData.name;
+    hoverLabelPrice.textContent = '$' + (tgt.userData.price || 0).toLocaleString();
+  } else {
+    hoverLabel.style.display = 'none';
   }
 }
 
-// ══════════════════════════════════════
-// Instantiate core systems
-// ══════════════════════════════════════
-const placer = new GridPlacer(W.scene, W.camera, () => W.gridOn);
-const budget = new BudgetManager(W.budget, 'budget');
-W.placer = placer;
-W.budgetMgr = budget;
-
-// ══════════════════════════════════════
-// UI HELPERS
-// ══════════════════════════════════════
-function hint(t) {
-  document.getElementById('hint').textContent = t;
-}
-
-// ══════════════════════════════════════
-// CLICK HANDLER — action depends on mode, budget-gated
-// ══════════════════════════════════════
-function handleClick(e) {
-  // === PLACE MODE (budget-gated) ===
+// ─── MODE INDICATOR ───
+function updateModeIndicator() {
+  const mi = document.getElementById('miMode');
+  const mii = document.getElementById('miItem');
+  const labels = { place: '🔨 PLACE', delete: '🗑️ DELETE', rotate: '↻ ROTATE', move: '✋ MOVE' };
+  mi.textContent = labels[W.pMode] || '';
   if (W.pMode === 'place' && W.sel) {
-    if (!budget.canAfford(W.sel.p)) {
-      hint('❌ Cannot afford ' + W.sel.n + ' ($' + W.sel.p.toLocaleString() + ' needed, $' + budget.balance.toLocaleString() + ' left)');
-      return;
-    }
-    const pos = placer.getSnappedPos(e);
-    if (!pos) return;
-    if (!budget.spend(W.sel.p, W.sel.n)) return;
-    const obj = placer.placeItem(W.sel, pos);
-    W.placed.push(obj);
-    W.undoStack.push(obj);
-    if (W.undoStack.length > 50) W.undoStack.shift();
-    W.total += W.sel.p;
-    W.placeRotation = 0; // Reset rotation for next placement
-    hint('Placed: ' + W.sel.n + '  |  Budget: $' + budget.balance.toLocaleString());
-    return;
-  }
-
-  // === DELETE MODE (refunds on delete) ===
-  if (W.pMode === 'delete') {
-    const tgt = placer.findPlacedAtEvent(e, W.placed, W.scene);
-    if (!tgt) return;
-    const price = tgt.userData.price || 0;
-    W.scene.remove(tgt);
-    W.placed.splice(W.placed.indexOf(tgt), 1);
-    W.total -= price;
-    budget.refund(price);
-    hint('Deleted — refunded $' + price.toLocaleString() + '  |  Budget: $' + budget.balance.toLocaleString());
-    return;
-  }
-
-  // === ROTATE MODE ===
-  if (W.pMode === 'rotate') {
-    const tgt = placer.findPlacedAtEvent(e, W.placed, W.scene);
-    if (!tgt) return;
-    tgt.rotation.y += Math.PI / 2;
-    hint('Rotated 90°');
-    return;
-  }
-
-  // === MOVE MODE ===
-  if (W.pMode === 'move') {
-    if (W.moveTarget) {
-      const pos = placer.getSnappedPos(e);
-      if (!pos) return;
-      pos.y = W.moveTarget.position.y;
-      W.moveTarget.position.copy(pos);
-      W.moveTarget = null;
-      hint('Moved!');
-      return;
-    }
-    const tgt = placer.findPlacedAtEvent(e, W.placed, W.scene);
-    if (!tgt) return;
-    W.moveTarget = tgt;
-    hint('Moving — click ground to place, or click another item to cancel');
-    return;
-  }
+    mii.style.display = 'inline'; mii.textContent = W.sel.n + ' · $' + W.sel.p + (W.placeRotation ? ' · ' + Math.round(W.placeRotation * 180 / Math.PI) + '°' : '');
+  } else if (W.pMode === 'rotate') {
+    mii.style.display = 'inline'; mii.textContent = 'Center object → click';
+  } else if (W.pMode === 'delete') {
+    mii.style.display = 'inline'; mii.textContent = 'Center object → click';
+  } else if (W.pMode === 'move') {
+    mii.style.display = 'inline'; mii.textContent = W.moveTarget ? 'Click ground to place' : 'Click object to grab';
+  } else { mii.style.display = 'none'; }
+  document.getElementById('modeI').style.opacity = '1';
 }
 
-// ══════════════════════════════════════
-// MOUSE EVENTS — click vs drag detection + ghost preview
-// ══════════════════════════════════════
-canvas.addEventListener('pointerdown', (e) => {
-  W.mouseDown.set(e.clientX, e.clientY);
-  W.mouseMoved = false;
-});
-
-canvas.addEventListener('pointermove', (e) => {
-  // Drag detection
-  if (Math.abs(e.clientX - W.mouseDown.x) > 2 || Math.abs(e.clientY - W.mouseDown.y) > 2) {
-    W.mouseMoved = true;
-  }
-  // Ghost preview: move ghost to snapped position under cursor in place mode
-  if (W.pMode === 'place' && W.sel) {
-    const pos = placer.getSnappedPos(e);
-    if (pos) {
-      if (!W.ghost) placer.createGhost(W.sel);
-      W.ghostTarget.copy(pos);
-      W.ghost = true;  // flag that ghost exists
-    } else {
-      if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-    }
-  }
-});
-
-canvas.addEventListener('pointerup', (e) => {
-  if (W.mouseMoved) return;       // was a drag (orbit/pan), not a click
-  if (e.button !== 0) return;    // only left-click
-  handleClick(e);
-});
-
-// Cancel move on mode switch or right-click
-canvas.addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-  if (W.moveTarget) { W.moveTarget = null; hint('Move cancelled'); }
-});
-
-// ══════════════════════════════════════
-// KEYBOARD SHORTCUTS — R to rotate while placing
-// ══════════════════════════════════════
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'r' || e.key === 'R') {
-    // Only in Place mode with an item selected
-    if (W.pMode === 'place' && W.sel) {
-      W.placeRotation = (W.placeRotation + Math.PI / 2) % (Math.PI * 2);
-      const deg = Math.round(W.placeRotation * (180 / Math.PI));
-      hint('↻ Rotated ' + deg + '° — click to place ' + W.sel.n);
-      // Update ghost rotation immediately if ghost exists
-      if (W.ghost) placer.updateGhost(W.ghostTarget, W.sel.wall);
-    }
-  }
-});
-
-// ══════════════════════════════════════
-// SVG ICON FACTORY — high-quality geometric icons per category/item
-// ══════════════════════════════════════
-const SVG_NS = 'http://www.w3.org/2000/svg';
-function svgEl(attrs) { const e = document.createElementNS(SVG_NS, 'svg'); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
-function svgChild(tag, attrs) { const e = document.createElementNS(SVG_NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
-
-// Category header SVGs
-const CAT_SVGS = {
-  walls:    '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="2" width="18" height="20" rx="1.5"/><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="14" x2="12" y2="22"/></svg>',
-  windows:  '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="18" rx="1.5"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
-  doors:    '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="2" width="18" height="20" rx="1.5"/><circle cx="17" cy="12" r="1.3" fill="currentColor"/><line x1="14" y1="2" x2="14" y2="22"/></svg>',
-  floors:   '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>',
-  furniture:'<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="14" width="18" height="3" rx="1"/><rect x="5" y="8" width="2.5" height="6" rx="0.8"/><rect x="16.5" y="8" width="2.5" height="6" rx="0.8"/><rect x="3" y="5" width="18" height="3" rx="1"/></svg>',
-  kitchen:  '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="20" height="14" rx="1.5"/><rect x="3" y="9" width="4" height="4" rx="0.5"/><circle cx="12" cy="12" r="3"/><rect x="17" y="9" width="4" height="4" rx="0.5"/></svg>',
-  outdoor:  '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L3 20h18L12 2z"/><rect x="10" y="20" width="4" height="2" rx="0.5"/></svg>',
-  roofs:    '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 14L12 3l11 11"/><rect x="4" y="14" width="16" height="8" rx="1"/></svg>',
-};
-
-// Item SVGs — returns inline SVG string for each catalog item
-function getItemSVG(item) {
-  const k = W.catKey; // set before calling
-  if (k === 'walls') {
-    const cols = { w_white:'#e8e8ec', w_brick:'#c05040', w_wood:'#c09870', w_beige:'#e8dfd2', w_gray:'#9ca8b4', w_navy:'#3a4a65', w_metal:'#8899aa' };
-    const c = cols[item.id] || '#8892a4';
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="${c}" stroke="#fff" stroke-width="0.8" stroke-opacity="0.15"/><line x1="3" y1="10" x2="21" y2="10" stroke="#fff" stroke-width="0.6" stroke-opacity="0.12"/></svg>`;
-  }
-  if (k === 'windows') {
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2" fill="#88b8d8" fill-opacity="0.5" stroke="#c8ddf8" stroke-width="1" stroke-opacity="0.5"/><line x1="12" y1="3" x2="12" y2="21" stroke="#c8ddf8" stroke-width="0.8" stroke-opacity="0.4"/><line x1="2" y1="12" x2="22" y2="12" stroke="#c8ddf8" stroke-width="0.8" stroke-opacity="0.4"/></svg>`;
-  }
-  if (k === 'doors') {
-    const c = item.id === 'd_garage' ? '#c0c0c0' : '#3a4555';
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="2" fill="${c}" stroke="#fff" stroke-width="0.8" stroke-opacity="0.15"/><circle cx="17" cy="12" r="1.5" fill="#f0c040" fill-opacity="0.6"/></svg>`;
-  }
-  if (k === 'floors') {
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2" fill="${item.id==='f_marble'?'#e8e0d8':item.id==='f_grass'?'#5a8e3e':'#c09870'}" stroke="#fff" stroke-width="0.8" stroke-opacity="0.1"/><line x1="2" y1="12" x2="22" y2="12" stroke="#fff" stroke-width="0.5" stroke-opacity="0.08"/><line x1="12" y1="2" x2="12" y2="22" stroke="#fff" stroke-width="0.5" stroke-opacity="0.08"/></svg>`;
-  }
-  if (k === 'furniture') {
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2" fill="#d0c8b8" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/></svg>`;
-  }
-  if (k === 'kitchen') {
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" fill="#e8e8e8" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/></svg>`;
-  }
-  if (k === 'outdoor') {
-    if (item.tree || item.palm) return `<svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M12 2L4 20h16L12 2z" fill="#4a7a3a" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/><rect x="10" y="20" width="4" height="3" rx="1" fill="#6b4d3a"/></svg>`;
-    if (item.id === 'o_bush') return `<svg class="w-5 h-5" viewBox="0 0 24 24"><circle cx="12" cy="14" r="8" fill="#5a8a3e" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/></svg>`;
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="15" rx="2" fill="#b0a898" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/></svg>`;
-  }
-  if (k === 'roofs') {
-    const c = item.id === 'r_terra' ? '#c06040' : item.id === 'r_metal' ? '#8899aa' : '#4d5865';
-    return `<svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M2 14L12 4l10 10" fill="${c}" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/><rect x="4" y="14" width="16" height="8" rx="1" fill="${c}" fill-opacity="0.6"/></svg>`;
-  }
-  return `<svg class="w-5 h-5" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="#8892a4" stroke="#fff" stroke-width="0.7" stroke-opacity="0.15"/></svg>`;
-}
-
-const CAT_LABELS = {
-  walls:'Walls & Columns', windows:'Windows', doors:'Doors', floors:'Floors',
-  furniture:'Furniture', kitchen:'Kitchen', outdoor:'Outdoor', roofs:'Roofs'
-};
-
-// ══════════════════════════════════════
-// BUILD CATALOG ACCORDION (called once on init)
-// ══════════════════════════════════════
-function buildCatalog() {
-  const root = document.getElementById('accordionRoot');
-  root.innerHTML = '';
-  const catOrder = ['walls','windows','doors','floors','furniture','kitchen','outdoor','roofs'];
-
-  catOrder.forEach((k, idx) => {
-    // Accordion row wrapper
-    const row = document.createElement('div');
-    row.className = 'border-b border-white/[0.04] last:border-0';
-
-    // Header button
-    const header = document.createElement('button');
-    header.className = 'w-full flex items-center gap-2 px-1.5 py-2 hover:bg-white/[0.03] rounded-lg transition-colors text-left';
-    header.innerHTML = CAT_SVGS[k] + `<span class="text-[11px] font-semibold text-white/80 flex-1">${CAT_LABELS[k]}</span><span class="text-[9px] text-white/25 mr-1">${W.cat[k].length}</span><svg class="w-3 h-3 text-white/30 cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
-    header.setAttribute('data-cat', k);
-    header.onclick = function () { toggleCategory(k); };
-
-    // Content panel
-    const content = document.createElement('div');
-    content.className = 'cat-accordion grid grid-cols-2 gap-1 px-1 pb-2';
-    content.id = 'cat-content-' + k;
-    content.setAttribute('data-cat', k);
-
-    row.appendChild(header);
-    row.appendChild(content);
-    root.appendChild(row);
-  });
-
-  // Open first category by default
-  toggleCategory('walls');
-}
-
-// ══════════════════════════════════════
-// TOGGLE CATEGORY — expand/collapse accordion
-// ══════════════════════════════════════
-window.toggleCategory = function (k) {
-  W.catKey = k;
-  W.moveTarget = null;
-  if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-
-  // Close all other accordions + reset chevrons
-  document.querySelectorAll('.cat-accordion').forEach(el => {
-    el.classList.remove('open');
-  });
-  document.querySelectorAll('.cat-chevron').forEach(el => {
-    el.classList.remove('open');
-  });
-
-  // Highlight active header
-  document.querySelectorAll('[data-cat]').forEach(el => {
-    if (el.tagName === 'BUTTON') {
-      el.style.color = el.getAttribute('data-cat') === k ? '' : '';
-    }
-  });
-
-  // Open target panel
-  const panel = document.getElementById('cat-content-' + k);
-  const chevron = document.querySelector(`button[data-cat="${k}"] .cat-chevron`);
-  if (panel) panel.classList.add('open');
-  if (chevron) chevron.classList.add('open');
-
-  // Populate items
-  renderCategoryItems(k, panel);
-};
-
-// ══════════════════════════════════════
-// RENDER CATEGORY ITEMS into accordion panel
-// ══════════════════════════════════════
-function renderCategoryItems(k, panel) {
-  panel.innerHTML = '';
+// ─── GLOBAL FUNCTIONS ───
+window.switchTab = function(k) {
+  W.catKey = k; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.cat === k));
+  const el = document.getElementById('grid'); el.innerHTML = '';
   W.cat[k].forEach(item => {
-    const isSel = W.sel && W.sel.id === item.id;
-    const d = document.createElement('div');
-    d.className = 'cat-item flex items-center gap-1.5 px-1.5 py-1.5 rounded-md cursor-pointer border border-white/[0.05] bg-white/[0.02]' + (isSel ? ' selected' : '');
-    d.innerHTML =
-      getItemSVG(item) +
-      '<div class="flex-1 min-w-0"><div class="text-[10px] font-medium text-white truncate leading-tight">' + item.n + '</div>' +
-      '<div class="text-[9px] text-white/30">$' + item.p.toLocaleString() + '</div></div>';
-    d.onclick = function (ev) {
-      ev.stopPropagation();
-      document.querySelectorAll('.cat-item').forEach(x => x.classList.remove('selected'));
-      d.classList.add('selected');
-      W.sel = item;
-      W.catKey = k;
-      W.placeRotation = 0; // Reset manual rotation when picking new item
-      if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-      hint('Selected: ' + item.n + ' ($' + item.p.toLocaleString() + ')  |  Budget: $' + budget.balance.toLocaleString() + ' — move mouse to preview');
-    };
-    panel.appendChild(d);
+    const d = document.createElement('div'); d.className = 'it' + (W.sel && W.sel.id === item.id ? ' s' : '');
+    d.innerHTML = '<span class="sw" style="background:' + (item.sw || '#888') + '"></span>' + item.i + '<div class="n">' + item.n + '</div><div class="p">$' + item.p + '</div>';
+    d.onclick = function() { document.querySelectorAll('.it').forEach(x => x.classList.remove('s')); d.classList.add('s'); W.sel = item; W.placeRotation = 0; destroyGhost(); hint('Selected: ' + item.n + ' — click to place, R to rotate'); updateModeIndicator(); };
+    el.appendChild(d);
   });
-}
-
-// Re-render current category items (called after prebuild clears selection)
-window.refreshCatalogItems = function () {
-  const k = W.catKey;
-  const panel = document.getElementById('cat-content-' + k);
-  if (panel && panel.classList.contains('open')) {
-    renderCategoryItems(k, panel);
-  }
 };
-
-window.setMode = function (m) {
-  W.pMode = m;
-  W.moveTarget = null;
-  if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-  ['P', 'D', 'R', 'M'].forEach((l, i) => {
-    document.getElementById('b' + l).classList.toggle('on', ['place', 'delete', 'rotate', 'move'][i] === m);
-  });
-  const bal = budget.balance;
-  const msgs = {
-    place:  W.sel ? 'Place: click ground to place ' + W.sel.n + ' ($' + W.sel.p.toLocaleString() + ')  |  Budget: $' + bal.toLocaleString() : 'Place: select an item first  |  Budget: $' + bal.toLocaleString(),
-    delete: 'Delete: click any placed object to remove it (refunds cost)',
-    rotate: 'Rotate: click an object to spin 90°',
-    move:   'Move: click an object then click ground to reposition',
-  };
-  hint(msgs[m]);
+window.setMode = function(m) {
+  W.pMode = m; ['P', 'D', 'R', 'M'].forEach((l, i) => document.getElementById('b' + l).classList.toggle('on', ['place', 'delete', 'rotate', 'move'][i] === m));
+  W.placeRotation = 0; destroyGhost(); updateModeIndicator();
+  hint({ place: W.sel ? 'Place: click to place ' + W.sel.n + '  |  R = rotate' : 'Place: select item first', delete: 'Delete: look at object → click', rotate: 'Rotate: look at object → click to spin 90°', move: 'Move: click object → click ground' }[m]);
 };
-
-window.toggleGrid = function () {
-  W.gridOn = !W.gridOn;
-  W.gridH.visible = W.gridOn;
-  const b = document.querySelector('[onclick*="toggleGrid"]');
-  if (b) {
-    b.textContent = '📐 Grid ' + (W.gridOn ? 'ON' : 'OFF');
-    b.classList.toggle('on', !W.gridOn);
-  }
-};
-
-window.doUndo = function () {
-  W.moveTarget = null;
-  if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-  const obj = W.undoStack.pop();
-  if (obj) {
-    const price = obj.userData.price || 0;
-    W.scene.remove(obj);
-    W.placed.splice(W.placed.indexOf(obj), 1);
-    W.total -= price;
-    budget.refund(price);
-    hint('Undone — refunded $' + price.toLocaleString() + '  |  Budget: $' + budget.balance.toLocaleString());
-  }
-};
-
-window.doClear = function () {
-  if (!confirm('Clear all placed items? This resets your budget to $100,000.')) return;
-  if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-  W.placed.forEach(o => W.scene.remove(o));
-  W.placed.length = 0;
-  W.undoStack.length = 0;
-  W.total = 0;
-  W.moveTarget = null;
-  budget.reset();
-  hint('Cleared — budget reset to $' + budget.balance.toLocaleString());
-};
-
-window.showPrebuilds = function () {
-  W.moveTarget = null;
-  const el = document.getElementById('preList');
-  el.innerHTML = '';
+window.toggleGrid = function() { W.gridOn = !W.gridOn; W.gridH.visible = W.gridOn; const b = document.querySelector('[onclick*="toggleGrid"]'); if (b) { b.textContent = '📐 Grid ' + (W.gridOn ? 'ON' : 'OFF'); b.classList.toggle('on', !W.gridOn); } };
+window.doUndo = function() { const obj = W.undoStack.pop(); if (obj) { W.total -= (obj.userData.price || 0); W.scene.remove(obj); W.placed.splice(W.placed.indexOf(obj), 1); updCost(); hint('Undone'); } };
+window.doClear = function() { if (!confirm('Clear all?')) return; W.placed.forEach(o => W.scene.remove(o)); W.placed.length = 0; W.undoStack.length = 0; W.total = 0; updCost(); hint('Cleared — $' + W.budget.toLocaleString() + ' available'); };
+window.showPrebuilds = function() {
+  const el = document.getElementById('preList'); el.innerHTML = '';
   W.prebuilds.forEach(pb => {
-    const d = document.createElement('div');
-    d.className = 'pr';
+    const d = document.createElement('div'); d.className = 'pr';
+    const ly = document.createElement('div'); ly.className = 'layout';
+    // Mini floor plan
+    ly.innerHTML = '<span class="lw" style="left:10%;top:15%;width:80%;height:12%"></span><span class="lw" style="left:10%;top:15%;width:12%;height:70%"></span><span class="lw" style="left:10%;bottom:15%;width:80%;height:12%"></span><span class="lw" style="right:10%;top:15%;width:12%;height:70%"></span><span class="lwin" style="left:25%;top:10%;width:15%;height:20%"></span><span class="lwin" style="right:40%;top:10%;width:15%;height:20%"></span><span class="ldoor" style="left:38%;bottom:10%;width:20%;height:18%"></span>';
     d.innerHTML = '<div class="pi">' + pb.i + '</div><div class="pn">' + pb.n + '</div><div class="ps">' + pb.s + '</div>';
-    d.onclick = function () { loadPre(pb); };
+    d.insertBefore(ly, d.firstChild);
+    d.onclick = function() { window.loadPrebuild(pb); };
     el.appendChild(d);
   });
   document.getElementById('prePop').classList.add('show');
 };
-
-window.closePre = function () {
-  document.getElementById('prePop').classList.remove('show');
-};
-
-function loadPre(pb) {
-  // Check if the user can afford the prebuild
-  const cost = budget.spendBatch(pb.items, W.allItems);
-  if (cost === -1) return;  // can't afford, hint already shown
-
-  if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
-  W.placed.forEach(o => W.scene.remove(o));
-  W.placed.length = 0;
-  W.undoStack.length = 0;
-  W.total = 0;
-  W.moveTarget = null;
+window.closePre = function() { document.getElementById('prePop').classList.remove('show'); };
+window.loadPrebuild = function(pb) {
+  W.placed.forEach(o => W.scene.remove(o)); W.placed.length = 0; W.undoStack.length = 0; W.total = 0;
   let c = 0;
   pb.items.forEach(it => {
-    const f = W.allItems[it.t];
-    if (!f) return;
-    const obj = makeObj(f);
-    obj.position.set(it.x || 0, f.wall ? 1.4 : 0.01, it.z || 0);
+    const found = W.allItems[it.t]; if (!found) return;
+    const obj = found.f();
+    obj.position.set(it.x || 0, found.wall ? 1.4 : 0.01, it.z || 0);
     if (it.ry) obj.rotation.y = it.ry;
-    obj.userData = { id: f.id, price: f.p, canRot: true };
-    W.scene.add(obj);
-    W.placed.push(obj);
-    W.total += f.p;
-    c++;
+    obj.userData = { id: found.id, price: found.p, name: found.n, canRot: true };
+    W.scene.add(obj); W.placed.push(obj); W.total += found.p; c++;
   });
-  hint('Loaded: ' + pb.n + ' (' + c + ' items) — spent $' + cost.toLocaleString() + '  |  Budget: $' + budget.balance.toLocaleString());
+  updCost(); hint('Loaded: ' + pb.n + ' (' + c + ' items)');
   document.getElementById('prePop').classList.remove('show');
-}
-
-// ══════════════════════════════════════
-// TOOLBAR HOOKS — direct onclick (not addEventListener)
-// ══════════════════════════════════════
-document.getElementById('bP').onclick = function () { window.setMode('place'); };
-document.getElementById('bD').onclick = function () { window.setMode('delete'); };
-document.getElementById('bR').onclick = function () { window.setMode('rotate'); };
-document.getElementById('bM').onclick = function () { window.setMode('move'); };
-
-// ══════════════════════════════════════
-// SAVE / LOAD — Supabase backend
-// ══════════════════════════════════════
-const API_BASE = window.location.origin;
-
-window.saveProject = function () {
-  document.getElementById('savePop').classList.add('show');
-  document.getElementById('projectName').focus();
 };
 
-window.doSave = async function () {
+// ─── SAVE/LOAD ───
+const API = window.location.origin;
+window.saveProject = function() { document.getElementById('savePop').classList.add('show'); document.getElementById('projectName').focus(); };
+window.doSave = async function() {
   const name = document.getElementById('projectName').value.trim() || 'Untitled';
-  const items = W.placed.map(o => ({
-    id: o.userData.id,
-    x: Math.round(o.position.x * 100) / 100,
-    y: Math.round(o.position.y * 100) / 100,
-    z: Math.round(o.position.z * 100) / 100,
-    ry: Math.round(o.rotation.y * 100) / 100,
-    price: o.userData.price
-  }));
-  const data = {
-    name: name,
-    items: items,
-    total_cost: W.total,
-    budget: W.budgetMgr ? W.budgetMgr._balance : W.budget
-  };
+  const items = W.placed.map(o => ({ id: o.userData.id, x: Math.round(o.position.x * 100) / 100, y: Math.round(o.position.y * 100) / 100, z: Math.round(o.position.z * 100) / 100, ry: Math.round(o.rotation.y * 100) / 100, price: o.userData.price }));
   const btn = document.querySelector('#savePop .tb');
   btn.textContent = 'Saving...'; btn.disabled = true;
   try {
-    const res = await fetch(API_BASE + '/api/projects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    if (json.success) {
-      hint('✅ Project saved! id: ' + json.project_id);
-      document.getElementById('savePop').classList.remove('show');
-    } else {
-      hint('❌ Save failed: ' + (json.error || 'Unknown'));
-    }
-  } catch (err) {
-    hint('❌ Network error — is the Flask server running?');
-    console.error(err);
-  }
-  btn.textContent = '💾 Save to Cloud'; btn.disabled = false;
+    const r = await fetch(API + '/api/projects', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, items, total_cost: W.total, budget: W.budget - W.total }) });
+    const j = await r.json();
+    hint(j.success ? '✅ Saved! id: ' + j.project_id : '❌ ' + (j.error || 'Failed'));
+    document.getElementById('savePop').classList.remove('show');
+  } catch (e) { hint('❌ Network error — Flask server running?'); }
+  btn.textContent = '💾 Save'; btn.disabled = false;
 };
-
-window.showLoadPopup = async function () {
+window.showLoadPopup = async function() {
   document.getElementById('loadPop').classList.add('show');
   const list = document.getElementById('loadList');
-  list.innerHTML = '<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading projects...</div>';
+  list.innerHTML = '<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading...</div>';
   try {
-    const res = await fetch(API_BASE + '/api/projects');
-    const json = await res.json();
-    if (!json.success || !json.projects.length) {
-      list.innerHTML = '<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">No saved projects yet. Build something and hit 💾 Save!</div>';
-      return;
-    }
+    const r = await fetch(API + '/api/projects'); const j = await r.json();
+    if (!j.success || !j.projects.length) { list.innerHTML = '<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">No saved projects</div>'; return; }
     list.innerHTML = '';
-    json.projects.forEach(p => {
-      const d = document.createElement('div');
-      d.style.cssText = 'background:var(--n3);border:1px solid var(--b);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center';
-      d.innerHTML = '<div><div style="font-weight:600;color:var(--w);font-size:12px">' + p.name + '</div><div style="font-size:10px;color:var(--s)">$' + (p.total_cost||0).toLocaleString() + ' · ' + (p.updated_at||p.created_at||'').slice(0,10) + '</div></div>';
-      const btns = document.createElement('div');
-      btns.style.cssText = 'display:flex;gap:4px';
-      const loadBtn = document.createElement('button');
-      loadBtn.className = 'tb'; loadBtn.style.background = 'var(--g)'; loadBtn.style.borderColor = 'var(--g)'; loadBtn.style.color = 'var(--n)';
-      loadBtn.textContent = 'Load'; loadBtn.onclick = function () { doLoad(p.id); };
-      const delBtn = document.createElement('button');
-      delBtn.className = 'tb red'; delBtn.textContent = '✕'; delBtn.onclick = function () { doDeleteProject(p.id, d); };
-      btns.appendChild(loadBtn); btns.appendChild(delBtn);
-      d.appendChild(btns); list.appendChild(d);
+    j.projects.forEach(p => {
+      const d = document.createElement('div'); d.style.cssText = 'background:var(--n3);border:1px solid var(--b);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center';
+      d.innerHTML = '<div><div style="font-weight:600;color:var(--w);font-size:12px">' + p.name + '</div><div style="font-size:10px;color:var(--s)">$' + (p.total_cost || 0).toLocaleString() + ' · ' + (p.updated_at || p.created_at || '').slice(0, 10) + '</div></div>';
+      const btns = document.createElement('div'); btns.style.cssText = 'display:flex;gap:4px';
+      const lb = document.createElement('button'); lb.className = 'tb'; lb.style.background = 'var(--g)'; lb.style.borderColor = 'var(--g)'; lb.style.color = 'var(--n)'; lb.textContent = 'Load';
+      lb.onclick = async function() {
+        const lr = await fetch(API + '/api/projects/' + p.id); const lj = await lr.json();
+        if (!lj.success) return hint('❌ Load failed');
+        W.placed.forEach(o => W.scene.remove(o)); W.placed.length = 0; W.undoStack.length = 0; W.total = 0;
+        const proj = lj.project;
+        W.budget = proj.budget ? (proj.budget + (proj.total_cost || 0)) : 100000;
+        let c = 0;
+        proj.items.forEach(it => {
+          const found = W.allItems[it.id]; if (!found) return;
+          const obj = found.f(); obj.position.set(it.x || 0, it.y || 0.01, it.z || 0);
+          if (it.ry) obj.rotation.y = it.ry;
+          obj.userData = { id: found.id, price: found.p, name: found.n, canRot: true };
+          W.scene.add(obj); W.placed.push(obj); W.total += found.p; c++;
+        });
+        updCost(); hint('✅ Loaded: ' + proj.name + ' (' + c + ' items)');
+        document.getElementById('loadPop').classList.remove('show');
+      };
+      const db = document.createElement('button'); db.className = 'tb red'; db.textContent = '✕';
+      db.onclick = async function() { if (!confirm('Delete?')) return; await fetch(API + '/api/projects/' + p.id, { method: 'DELETE' }); d.remove(); };
+      btns.appendChild(lb); btns.appendChild(db); d.appendChild(btns); list.appendChild(d);
     });
-  } catch (err) {
-    list.innerHTML = '<div style="color:#f85149;font-size:12px;text-align:center;padding:20px">❌ Network error — is the Flask server running?</div>';
-  }
+  } catch (e) { list.innerHTML = '<div style="color:#f85149;font-size:12px;text-align:center;padding:20px">❌ Network error</div>'; }
 };
 
-async function doLoad(projectId) {
-  try {
-    const res = await fetch(API_BASE + '/api/projects/' + projectId);
-    const json = await res.json();
-    if (!json.success) { hint('❌ Load failed'); return; }
-    const p = json.project;
-    W.placed.forEach(o => W.scene.remove(o));
-    W.placed.length = 0; W.undoStack.length = 0; W.total = 0;
-    W.budget = p.budget || 100000;
-    if (W.budgetMgr) { W.budgetMgr._balance = W.budget; W.budgetMgr._initial = W.budget; W.budgetMgr._refresh(); }
-    let count = 0;
-    p.items.forEach(it => {
-      const found = W.allItems[it.id];
-      if (!found) return;
-      // Use the existing makeObj defined elsewhere in this module
-      const obj = (typeof makeObj === 'function') ? makeObj(found) : placer.placeItem(found, { x: 0, y: 0, z: 0 });
-      obj.position.set(it.x||0, it.y||.01, it.z||0);
-      if (it.ry) obj.rotation.y = it.ry;
-      obj.userData = { id: found.id, price: found.p, canRot: true };
-      W.scene.add(obj); W.placed.push(obj); W.total += found.p; count++;
-    });
-    if (W.budgetMgr) { W.budgetMgr._balance = W.budget - W.total; W.budgetMgr._refresh(); }
-    document.getElementById('loadPop').classList.remove('show');
-    hint('✅ Loaded: ' + p.name + ' (' + count + ' items)');
-  } catch (err) { hint('❌ Load error'); console.error(err); }
-}
-
-async function doDeleteProject(projectId, el) {
-  if (!confirm('Delete this project permanently?')) return;
-  try { await fetch(API_BASE + '/api/projects/' + projectId, { method: 'DELETE' }); el.remove(); hint('🗑️ Project deleted'); }
-  catch (err) { hint('❌ Delete failed'); }
-}
-
-// ══════════════════════════════════════
-// RESIZE + ANIMATE
-// ══════════════════════════════════════
-buildCatalog();
-
-// ══════════════════════════════════════
-// RENDER LOOP — rAF with auto-resize, camera bounds, and damping
-// ══════════════════════════════════════
-function onResize() {
-  const w = innerWidth;
-  const h = innerHeight;
-  W.renderer.setSize(w, h);
-  W.camera.aspect = w / h;
-  W.camera.updateProjectionMatrix();
-}
-window.addEventListener('resize', onResize);
-onResize();
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  // ── Smooth ghost preview lerp (runs every frame for fluid glide) ──
-  if (W.ghost && W.sel) {
-    placer.updateGhost(W.ghostTarget, W.sel.wall);
+// ─── KEYBOARD ───
+document.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') {
+    if (W.pMode === 'place' && W.sel) {
+      e.preventDefault();
+      W.placeRotation = (W.placeRotation + Math.PI / 2) % (Math.PI * 2);
+      const deg = Math.round(W.placeRotation * 180 / Math.PI);
+      hint('↻ ' + deg + '° — click to place ' + W.sel.n);
+      updateModeIndicator();
+    }
   }
+});
 
-  // ── Camera bounds: never clip through the floor ──
-  // Clamp camera and orbit target above ground
-  if (W.camera.position.y < 0.3) W.camera.position.y = 0.3;
-  if (W.controls.target.y < 0.3) W.controls.target.y = 0.3;
+// ─── TOOLBAR HOOKS ───
+document.getElementById('bP').onclick = () => window.setMode('place');
+document.getElementById('bD').onclick = () => window.setMode('delete');
+document.getElementById('bR').onclick = () => window.setMode('rotate');
+document.getElementById('bM').onclick = () => window.setMode('move');
 
-  // Keep camera within the 40×40 world bounds horizontally too
-  W.camera.position.x = Math.max(-19, Math.min(19, W.camera.position.x));
-  W.camera.position.z = Math.max(-19, Math.min(19, W.camera.position.z));
-  W.controls.target.x = Math.max(-19, Math.min(19, W.controls.target.x));
-  W.controls.target.z = Math.max(-19, Math.min(19, W.controls.target.z));
+// ─── CANVAS CLICK ───
+canvas.addEventListener('pointerdown', e => { W.mouseDown.set(e.clientX, e.clientY); W.mouseMoved = false; });
+canvas.addEventListener('pointermove', e => {
+  if (Math.abs(e.clientX - W.mouseDown.x) > 2 || Math.abs(e.clientY - W.mouseDown.y) > 2) W.mouseMoved = true;
+  if (W.pMode === 'place' && W.sel && !W.mouseMoved) {
+    const pos = getGroundPos(e);
+    if (pos) {
+      if (!ghostObj) createGhost(W.sel);
+      const gp = pos.clone(); gp.y = W.sel.wall ? 1.4 : 0.01;
+      updateGhost(gp, W.sel);
+    } else { destroyGhost(); }
+  }
+});
+canvas.addEventListener('pointerup', e => { if (!W.mouseMoved) doAction(); });
 
+// Move click for move mode
+canvas.addEventListener('click', e => {
+  if (W.pMode === 'move' && W.moveTarget) {
+    const pos = getGroundPos(e);
+    if (pos) { pos.y = W.moveTarget.position.y; W.moveTarget.position.copy(pos); W.moveTarget.userData._moving = false; W.moveTarget = null; hint('Moved!'); }
+  }
+});
+
+// ─── INIT ───
+window.switchTab('walls');
+window.setMode('place');
+
+// ─── RESIZE + ANIMATE ───
+function resize() { const w = innerWidth, h = innerHeight; W.renderer.setSize(w, h); W.camera.aspect = w / h; W.camera.updateProjectionMatrix(); }
+window.addEventListener('resize', resize); resize();
+function anim() {
+  requestAnimationFrame(anim);
   W.controls.update();
+  // Ghost: place 3m in front of camera
+  if (ghostObj && W.sel && W.pMode === 'place' && !W.mouseMoved) {
+    const d = new THREE.Vector3(); W.camera.getWorldDirection(d); d.y = 0; d.normalize();
+    const pos = W.camera.position.clone().addScaledVector(d, 3);
+    pos.x = snap(pos.x); pos.z = snap(pos.z); pos.y = W.sel.wall ? 1.4 : 0.01;
+    updateGhost(pos, W.sel);
+  }
+  updateHoverLabel();
   W.renderer.render(W.scene, W.camera);
 }
-animate();
+anim();
 </script>
 </body>
 </html>
