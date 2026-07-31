@@ -515,14 +515,11 @@ function getGroundPos(e) {
 }
 
 // ─── PLACE ───
-function placeItem() {
+function placeItem(e) {
   if (!W.sel || W.pMode !== 'place') return;
-  const pos = new THREE.Vector3(0, 0, 0);
-  const d = new THREE.Vector3(); W.camera.getWorldDirection(d);
-  d.y = 0; d.normalize();
-  // Place 2m in front of camera
-  pos.copy(W.camera.position).addScaledVector(d, 3);
-  pos.x = snap(pos.x); pos.z = snap(pos.z);
+  // Use mouse position for placement — click on the ground
+  const pos = getGroundPos(e);
+  if (!pos) return; // clicked sky/off-world
   pos.y = W.sel.wall ? 1.4 : 0.01;
   const obj = W.sel.f();
   obj.position.copy(pos);
@@ -545,8 +542,8 @@ function findAtCenter() {
   return W.placed.includes(tgt) ? tgt : null;
 }
 
-function doAction() {
-  if (W.pMode === 'place') { placeItem(); return; }
+function doAction(e) {
+  if (W.pMode === 'place') { placeItem(e); return; }
   const tgt = findAtCenter();
   if (!tgt) return;
   if (W.pMode === 'delete') { W.total -= (tgt.userData.price || 0); W.scene.remove(tgt); W.placed.splice(W.placed.indexOf(tgt), 1); updCost(); hint('Deleted'); }
@@ -725,7 +722,7 @@ canvas.addEventListener('pointermove', e => {
     } else { destroyGhost(); }
   }
 });
-canvas.addEventListener('pointerup', e => { if (!W.mouseMoved) doAction(); });
+canvas.addEventListener('pointerup', e => { if (!W.mouseMoved) doAction(e); });
 
 // Move click for move mode
 canvas.addEventListener('click', e => {
@@ -745,13 +742,6 @@ window.addEventListener('resize', resize); resize();
 function anim() {
   requestAnimationFrame(anim);
   W.controls.update();
-  // Ghost: place 3m in front of camera
-  if (ghostObj && W.sel && W.pMode === 'place' && !W.mouseMoved) {
-    const d = new THREE.Vector3(); W.camera.getWorldDirection(d); d.y = 0; d.normalize();
-    const pos = W.camera.position.clone().addScaledVector(d, 3);
-    pos.x = snap(pos.x); pos.z = snap(pos.z); pos.y = W.sel.wall ? 1.4 : 0.01;
-    updateGhost(pos, W.sel);
-  }
   updateHoverLabel();
   W.renderer.render(W.scene, W.camera);
 }
