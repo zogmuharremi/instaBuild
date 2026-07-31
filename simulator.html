@@ -6,24 +6,24 @@
   <title>instaBuilt — 3D Builder</title>
   <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
   <style>
-    :root{--g:#2ecc71;--gd:#27ae60;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4}
+    :root{--g:#1ea855;--gd:#178a44;--n:#0a0e14;--n2:#111620;--n3:#1a1f2e;--w:#fff;--b:#1e2533;--s:#8892a4}
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',sans-serif;background:var(--n);color:#c4ccd8;overflow:hidden;height:100vh}
     canvas{display:block;width:100%;height:100vh;cursor:crosshair}
     .top{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;gap:3px;flex-wrap:wrap}
     .top .logo{font-size:13px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:4px;text-decoration:none}.top .logo em{font-style:normal;color:var(--g)}
-    .top .logo-mark{width:20px;height:20px;background:var(--g);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--n);font-weight:800;font-size:10px}
-    .tb{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:4px 8px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}.tb:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.tb.on{background:var(--g);border-color:var(--g);color:var(--n)}.tb.red{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.25);color:#f85149}.tb.red:hover{background:rgba(248,81,73,.2)}
-    .side{position:fixed;left:4px;top:48px;bottom:4px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:10px;padding:6px;overflow-y:auto;width:220px;display:flex;flex-direction:column;gap:3px}
+    .top .logo-mark{width:20px;height:20px;background:var(--g);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px}
+    .tb{background:var(--n3);border:1px solid var(--b);color:var(--s);padding:4px 8px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}.tb:hover{color:var(--w);border-color:rgba(255,255,255,.2)}.tb.on{background:var(--g);border-color:var(--g);color:#fff}.tb.red{background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.25);color:#f85149}.tb.red:hover{background:rgba(248,81,73,.2)}
+    .side{position:fixed;left:4px;top:48px;bottom:4px;z-index:50;background:rgba(17,22,32,.97);border:1px solid var(--b);border-radius:10px;padding:6px;overflow-y:auto;width:220px}
     .side h3{font-size:9px;font-weight:700;color:var(--w)}
-    .tabs{display:flex;gap:1px}.tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:2px 1px;border-radius:3px;font-size:7px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}.tab:hover{color:var(--w)}.tab.on{background:var(--g);border-color:var(--g);color:var(--n)}
+    .tabs{display:flex;gap:1px}.tab{flex:1;background:var(--n3);border:1px solid var(--b);color:var(--s);padding:2px 1px;border-radius:3px;font-size:7px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}.tab:hover{color:var(--w)}.tab.on{background:var(--g);border-color:var(--g);color:#fff}
     .items{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-    .it{background:var(--n3);border:1.5px solid var(--b);border-radius:4px;padding:3px;cursor:pointer;text-align:center;transition:.15s}.it:hover{border-color:rgba(255,255,255,.2)}.it.s{border-color:var(--g);background:rgba(46,204,113,.06)}
-    .it .i{font-size:14px;line-height:18px}.it .n{font-size:7px;color:var(--s)}.it.s .n{color:var(--g)}.it .p{font-size:6px;color:rgba(46,204,113,.4)}
-    .swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:2px;vertical-align:middle;border:1px solid rgba(255,255,255,.1)}
+    .it{background:var(--n3);border:1.5px solid var(--b);border-radius:4px;padding:3px;cursor:pointer;text-align:center;transition:.15s}.it:hover{border-color:rgba(255,255,255,.2)}.it.s{border-color:var(--g);background:rgba(30,168,85,.06)}
+    .it .i{font-size:14px;line-height:18px}.it .n{font-size:7px;color:var(--s)}.it.s .n{color:var(--g)}.it .p{font-size:6px;color:rgba(30,168,85,.4)}
+    .swatch{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:2px;vertical-align:middle;border:1px solid rgba(255,255,255,.1)}
+    .pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:500px;width:90%}.pop.show{display:block}.pop h3{font-size:15px;color:var(--w);margin-bottom:6px}.pop p{font-size:11px;color:var(--s);margin-bottom:10px}
     .prebox{display:grid;grid-template-columns:1fr 1fr;gap:4px}
     .pr{background:var(--n3);border:1.5px solid var(--b);border-radius:6px;padding:8px;cursor:pointer;transition:.15s}.pr:hover{border-color:var(--g)}.pr .pi{font-size:18px}.pr .pn{font-size:9px;font-weight:600;color:var(--w)}.pr .ps{font-size:7px;color:var(--s)}
-    .pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:var(--n2);border:1px solid var(--b);border-radius:12px;padding:20px;text-align:center;display:none;max-width:500px;width:90%}.pop.show{display:block}.pop h3{font-size:15px;color:var(--w);margin-bottom:6px}.pop p{font-size:11px;color:var(--s);margin-bottom:10px}
     #hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.15);font-size:10px;pointer-events:none;z-index:40}
     .hl{position:fixed;pointer-events:none;z-index:45;background:rgba(10,14,20,.9);border:1px solid var(--g);border-radius:6px;padding:4px 10px;font-size:10px;font-family:Inter;color:var(--w);white-space:nowrap;display:none}.hl .hlp{color:var(--g);font-size:9px}
     @media(max-width:700px){.side{width:180px;left:2px}}@media(max-width:500px){.side{display:none}}
@@ -31,421 +31,285 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hint">Pick item from catalog → click ground to place · R to rotate · Scroll to zoom</div>
+<div id="hint">Pick item from catalog → click ground · R to rotate · Scroll to zoom</div>
 <div class="hl" id="hl"><span id="hln"></span><br><span class="hlp" id="hlp"></span></div>
 
 <div class="top">
-  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Build</em></a>
+  <a href="index.html" class="logo"><div class="logo-mark">iB</div>insta<em>Built</em></a>
   <button class="tb on" id="bP">🔨 Place</button>
   <button class="tb" id="bD">🗑️ Delete</button>
   <button class="tb" id="bR">↻ Rotate</button>
   <button class="tb" id="bM">✋ Move</button>
   <button class="tb" onclick="toggleGrid()">📐 Grid ON</button>
   <button class="tb" onclick="showPre()">🏘️ Prebuilds</button>
+  <button class="tb" onclick="showMap()">🌍 Map</button>
   <button class="tb" onclick="doUndo()">↩ Undo</button>
   <span style="color:var(--g);font-weight:700;font-size:12px" id="budget">💰 $100,000</span>
   <button class="tb" onclick="showSave()" style="color:#f59e0b;border-color:rgba(245,158,11,.3)">💾 Save</button>
-  <button class="tb" onclick="showLoad()" style="color:#60a5fa;border-color:rgba(96,165,250,.3)">📂 Load</button>
   <button class="tb red" onclick="doClear()">Clear</button>
 </div>
-<div class="side">
-  <h3>📦 Catalog</h3>
+<div class="side"><h3>📦 Catalog</h3>
   <div class="tabs" id="tabs">
-    <button class="tab on" data-cat="walls" onclick="window.switchTab('walls')">🧱</button>
-    <button class="tab" data-cat="windows" onclick="window.switchTab('windows')">🪟</button>
-    <button class="tab" data-cat="doors" onclick="window.switchTab('doors')">🚪</button>
-    <button class="tab" data-cat="floors" onclick="window.switchTab('floors')">🟫</button>
-    <button class="tab" data-cat="furniture" onclick="window.switchTab('furniture')">🛋️</button>
-    <button class="tab" data-cat="kitchen" onclick="window.switchTab('kitchen')">🍳</button>
-    <button class="tab" data-cat="outdoor" onclick="window.switchTab('outdoor')">🌳</button>
-    <button class="tab" data-cat="roofs" onclick="window.switchTab('roofs')">🏠</button>
+    <button class="tab on" data-cat="walls" onclick="window.switchTab('walls')">🧱</button><button class="tab" data-cat="windows" onclick="window.switchTab('windows')">🪟</button><button class="tab" data-cat="doors" onclick="window.switchTab('doors')">🚪</button><button class="tab" data-cat="floors" onclick="window.switchTab('floors')">🟫</button><button class="tab" data-cat="furniture" onclick="window.switchTab('furniture')">🛋️</button><button class="tab" data-cat="kitchen" onclick="window.switchTab('kitchen')">🍳</button><button class="tab" data-cat="outdoor" onclick="window.switchTab('outdoor')">🌳</button><button class="tab" data-cat="roofs" onclick="window.switchTab('roofs')">🏠</button>
   </div>
   <div class="items" id="items"></div>
 </div>
 <div class="pop" id="prePop"><h3>🏘️ Prebuilt Homes</h3><p>Click to load — fully furnished.</p><div class="prebox" id="preList"></div><div style="margin-top:10px"><button class="tb" onclick="document.getElementById('prePop').classList.remove('show')">Cancel</button></div></div>
-<div class="pop" id="savePop"><h3>💾 Save Project</h3><input id="pnInput" style="width:100%;padding:10px;background:var(--n3);border:1px solid var(--b);border-radius:6px;color:var(--w);font-size:13px;font-family:Inter;outline:none;margin-bottom:10px" placeholder="My Dream Home"><button class="tb" onclick="doSave()" style="background:var(--g);color:var(--n);width:100%">💾 Save to Cloud</button><div style="margin-top:6px"><button class="tb" onclick="document.getElementById('savePop').classList.remove('show')">Cancel</button></div></div>
+<div class="pop" id="savePop"><h3>💾 Save Project</h3><input id="pnInput" style="width:100%;padding:10px;background:var(--n3);border:1px solid var(--b);border-radius:6px;color:var(--w);font-size:13px;font-family:Inter;outline:none;margin-bottom:10px" placeholder="My Dream Home"><button class="tb" onclick="doSave()" style="background:var(--g);color:#fff;width:100%">💾 Save</button><div style="margin-top:6px"><button class="tb" onclick="document.getElementById('savePop').classList.remove('show')">Cancel</button></div></div>
 <div class="pop" id="loadPop"><h3>📂 Load Project</h3><div id="loadList" style="max-height:300px;overflow-y:auto"><div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading...</div></div><div style="margin-top:10px"><button class="tb" onclick="document.getElementById('loadPop').classList.remove('show')">Cancel</button></div></div>
+<div class="pop" id="mapPop" style="max-width:90vw"><h3>🌍 Global Projects</h3><div id="mapContainer" style="width:80vw;max-width:900px;height:500px;border-radius:8px;overflow:hidden;margin:0 auto"></div><div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap"><button class="tb on" data-mm="all">All</button><button class="tb" data-mm="active">Active</button><button class="tb" data-mm="density">Density</button><button class="tb" data-mm="relief">Relief</button></div><div style="margin-top:8px"><button class="tb" onclick="document.getElementById('mapPop').classList.remove('show')">Close</button></div></div>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+window.showMap=function(){
+  document.getElementById('mapPop').classList.add('show');
+  setTimeout(function(){
+    const mc=document.getElementById('mapContainer');if(!mc||mc._map)return;
+    const map=L.map(mc,{scrollWheelZoom:false,zoomControl:true,attributionControl:false}).setView([35,8],3);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+    const ac=[{n:'Kosovo',t:42.6,o:21,s:'active',c:104},{n:'USA',t:39.5,o:-98,s:'active',c:340},{n:'Austria',t:47.5,o:14.5,s:'active',c:70},{n:'Switzerland',t:46.8,o:8.2,s:'active',c:15},{n:'Germany',t:51,o:10.5,s:'expanding',c:0},{n:'UK',t:54.5,o:-3.5,s:'expanding',c:0},{n:'Netherlands',t:52.1,o:5.3,s:'expanding',c:0},{n:'France',t:46.6,o:2.2,s:'expanding',c:0},{n:'Italy',t:42,o:12.5,s:'expanding',c:0},{n:'Canada',t:56,o:-106,s:'expanding',c:0},{n:'UAE',t:24,o:54,s:'expanding',c:0}];
+    const relief=[{n:'Turkey',t:39,o:35,desc:'2023 Earthquake · 200 units'},{n:'Germany',t:51,o:10.5,desc:'2021 Floods · 150 homes'},{n:'Canada',t:56,o:-106,desc:'2024 Wildfires · 80 units'},{n:'Ukraine',t:49,o:31,desc:'2022-Present · 500+ UNHCR'},{n:'Greece',t:39,o:22,desc:'2023 Wildfires · 60 homes'}];
+    const cls={active:'#1ea855',expanding:'#f59e0b',unavailable:'#f85149',relief:'#ef4444'};const cv=new Set(ac.map(c=>c.n));
+    const wc=[{n:'Spain',t:40,o:-3},{n:'Portugal',t:39.5,o:-8},{n:'Norway',t:62,o:10},{n:'Sweden',t:62,o:15}];let mode='all';
+    function rM(m){mc._m&&mc._m.forEach(mk=>map.removeLayer(mk));const ms=[];mode=m;let maxC=0;ac.forEach(p=>{if(p.c>maxC)maxC=p.c});
+    if(m==='density'){ac.forEach(p=>{if(p.c===0)return;const r=6+(p.c/maxC)*22;const ic=L.divIcon({className:'',html:`<div style="width:${r}px;height:${r}px;background:rgba(30,168,85,${.3+(p.c/maxC)*.6});border-radius:50%;border:2px solid rgba(30,168,85,.8)"></div>`,iconSize:[r,r],iconAnchor:[r/2,r/2]});ms.push(L.marker([p.t,p.o],{icon:ic}).addTo(map).bindPopup(`<div style="color:#333;font-family:Inter;font-size:13px"><strong>${p.n}</strong><br><span style="color:#1ea855">${p.c} projects</span></div>`))})}
+    else if(m==='relief'){relief.forEach(p=>{const ic=L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${cls.relief};border:2px solid #fff;box-shadow:0 0 0 3px ${cls.relief}44;transform:rotate(45deg)"></div>`,iconSize:[13,13],iconAnchor:[7,7]});ms.push(L.marker([p.t,p.o],{icon:ic}).addTo(map).bindPopup(`<div style="color:#333;font-family:Inter;font-size:12px"><strong>🆘 ${p.n}</strong><br><span style="color:#ef4444">${p.desc}</span></div>`))})}
+    else{ac.forEach(p=>{if(m==='active'&&p.s!=='active')return;const ic=L.divIcon({className:'',html:`<div style="width:12px;height:12px;background:${cls[p.s]};border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 3px ${cls[p.s]}44"></div>`,iconSize:[12,12],iconAnchor:[6,6]});ms.push(L.marker([p.t,p.o],{icon:ic}).addTo(map).bindPopup(`<div style="color:#333;font-family:Inter;font-size:12px"><strong>${p.n}</strong><br><span style="color:${cls[p.s]}">${p.s==='active'?'✓ Active':'↗ Coming'}</span>${p.c?'<br>'+p.c+' projects':''}</div>`))})
+    if(m==='all'){wc.forEach(p=>{if(cv.has(p.n))return;const ic=L.divIcon({className:'',html:`<div style="width:7px;height:7px;background:${cls.unavailable};border-radius:50%;border:1.5px solid #fff;opacity:.5"></div>`,iconSize:[7,7],iconAnchor:[4,4]});ms.push(L.marker([p.t,p.o],{icon:ic}).addTo(map).bindPopup(`<div style="color:#333;font-family:Inter;font-size:13px"><strong>${p.n}</strong><br><span style="color:#f85149">✗ Not Available</span></div>`))})}}mc._m=ms}rM('all');
+    document.querySelectorAll('[data-mm]').forEach(b=>b.onclick=function(){document.querySelectorAll('[data-mm]').forEach(x=>x.classList.remove('on'));this.classList.add('on');rM(this.dataset.mm)});
+    mc._map=map;new ResizeObserver(()=>map.invalidateSize()).observe(mc);
+  },200);
+};
+</script>
 <script type="module">
-import*as THREE from'three';
-import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+import*as THREE from'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
 
-// ─── STATE ───
-const W=window._W={};
-W.scene=null;W.camera=null;W.controls=null;W.renderer=null;W.clock=null;
+const W=window._W={};W.scene=null;W.camera=null;W.controls=null;W.renderer=null;
 W.mode='place';W.gridOn=true;W.budget=100000;W.sel=null;W.catKey='walls';
 W.placeRot=0;W.placed=[];W.undoStack=[];W.allItems={};W.prebuilds=[];
-W.moveTarget=null;W.ghost=null;W.ghostTarget=new THREE.Vector3();
-
-// ─── THREE INIT ───
+W.moveTarget=null;W.ghost=null;
 const canvas=document.getElementById('c');
-W.renderer=new THREE.WebGLRenderer({canvas,antialias:true});W.renderer.setPixelRatio(Math.min(devicePixelRatio,2));W.renderer.shadowMap.enabled=true;W.renderer.toneMapping=THREE.ACESFilmicToneMapping;W.renderer.toneMappingExposure=1.1;
-W.scene=new THREE.Scene();W.scene.background=new THREE.Color('#0d1a2d');W.scene.fog=new THREE.Fog('#0d1a2d',25,60);
-W.camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,50);W.camera.position.set(8,6,10);
-W.controls=new OrbitControls(W.camera,W.renderer.domElement);W.controls.target.set(0,.5,0);W.controls.enableDamping=true;W.controls.dampingFactor=.08;W.controls.minDistance=2;W.controls.maxDistance=25;W.controls.maxPolarAngle=Math.PI*.52;W.controls.update();
-W.clock=new THREE.Clock();
-W.scene.add(new THREE.AmbientLight('#c8ddf8',.6));
-const sun=new THREE.DirectionalLight('#fffef5',3);sun.position.set(14,10,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-20;sun.shadow.camera.right=20;sun.shadow.camera.top=10;sun.shadow.camera.bottom=-10;W.scene.add(sun);
-W.scene.add(new THREE.HemisphereLight('#c8ddf8','#3a5030',.3));
-W.gridH=new THREE.GridHelper(40,40,'#2ecc71','#1a2a1e');W.gridH.position.set(0,.005,0);W.scene.add(W.gridH);
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:'#3a5a2a',roughness:.9}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;W.scene.add(ground);
+W.renderer=new THREE.WebGLRenderer({canvas,antialias:true});W.renderer.setPixelRatio(Math.min(devicePixelRatio,2));W.renderer.shadowMap.enabled=true;W.renderer.toneMapping=THREE.ACESFilmicToneMapping;W.renderer.toneMappingExposure=1.15;
+W.scene=new THREE.Scene();W.scene.background=new THREE.Color('#c8dff0');W.scene.fog=new THREE.Fog('#c8dff0',30,70);
+W.camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,60);W.camera.position.set(8,7,10);
+W.controls=new OrbitControls(W.camera,W.renderer.domElement);W.controls.target.set(0,.5,0);W.controls.enableDamping=true;W.controls.dampingFactor=.08;W.controls.minDistance=2;W.controls.maxDistance=30;W.controls.maxPolarAngle=Math.PI*.52;W.controls.update();
+W.scene.add(new THREE.AmbientLight('#e8f0f8',1.0));
+const sun=new THREE.DirectionalLight('#fffef8',2.5);sun.position.set(14,12,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-25;sun.shadow.camera.right=25;sun.shadow.camera.top=15;sun.shadow.camera.bottom=-15;W.scene.add(sun);
+W.scene.add(new THREE.HemisphereLight('#d8e8f8','#6a7a50',.4));
+W.gridH=new THREE.GridHelper(50,50,'#1ea855','#c0c8c0');W.gridH.position.set(0,.005,0);W.scene.add(W.gridH);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(50,50),new THREE.MeshStandardMaterial({color:'#4a6a3a',roughness:.85}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;W.scene.add(ground);
 
 // ─── MATERIALS ───
-const M={};
-const mm=(n,o)=>{M[n]=new THREE.MeshStandardMaterial(o)};
-mm('steel',{color:'#5a6878',roughness:.3,metalness:.85});mm('glass',{color:'#c8ddf8',roughness:.03,metalness:.05,transparent:true,opacity:.45});mm('wood',{color:'#c09870',roughness:.5});mm('brick',{color:'#b05040',roughness:.55});mm('white',{color:'#f0f3f7',roughness:.45});mm('beige',{color:'#e8dfd2',roughness:.45});mm('gray',{color:'#9ca8b4',roughness:.45});mm('navy',{color:'#2a3a55',roughness:.45});mm('metalW',{color:'#8899aa',roughness:.22,metalness:.55});mm('door',{color:'#2a3545',roughness:.2,metalness:.55});mm('silver',{color:'#c0c0c0',roughness:.2,metalness:.7});mm('black',{color:'#1a1a1a',roughness:.2});mm('oak',{color:'#c4a882',roughness:.5});mm('walnut',{color:'#5c3d2e',roughness:.45});mm('cherry',{color:'#8b3a3a',roughness:.4});mm('cabinet',{color:'#6b4a2e',roughness:.45});mm('sofaC',{color:'#e8e4dc',roughness:.45});mm('sofaT',{color:'#c4b8a8',roughness:.45});mm('mattress',{color:'#f5f0e8',roughness:.6});mm('bedFrame',{color:'#8b6f4a',roughness:.5});mm('leaf',{color:'#3d6b2e',roughness:.65});mm('bark',{color:'#6b4d3a',roughness:.8});mm('bush',{color:'#4a7a3a',roughness:.6});mm('pool',{color:'#4080c0',roughness:.15,metalness:.2});mm('fountain',{color:'#a0a0a0',roughness:.3});mm('path',{color:'#c0b8a8',roughness:.6});mm('lantern',{color:'#f0a030',roughness:.3,emissive:'#f0a030',emissiveIntensity:.3});mm('roof',{color:'#3d4855',roughness:.4});mm('roofTerra',{color:'#b55a3a',roughness:.4});mm('roofMetal',{color:'#8899aa',roughness:.22,metalness:.55});mm('roofGreen',{color:'#4a6e3e',roughness:.4});mm('conc',{color:'#c4c8ce',roughness:.7});mm('rug',{color:'#8b7355',roughness:.8});mm('tile',{color:'#d0d0d0',roughness:.3});mm('marble',{color:'#e8e0d8',roughness:.15});mm('darkW',{color:'#4a2a1a',roughness:.4});mm('grass',{color:'#4a7a3a',roughness:.8});
+const M={};const mm=(n,o)=>{M[n]=new THREE.MeshStandardMaterial(o)};
+mm('steel',{color:'#5a6878',roughness:.3,metalness:.85});mm('glass',{color:'#c8ddf8',roughness:.03,metalness:.05,transparent:true,opacity:.45});mm('wood',{color:'#c09870',roughness:.5});mm('brick',{color:'#b05040',roughness:.55});mm('white',{color:'#f5f5f0',roughness:.4});mm('beige',{color:'#e8dfd2',roughness:.45});mm('gray',{color:'#9ca8b4',roughness:.45});mm('navy',{color:'#2a3a55',roughness:.45});mm('metalW',{color:'#8899aa',roughness:.22,metalness:.55});mm('door',{color:'#2a3545',roughness:.2,metalness:.55});mm('silver',{color:'#d0d0d0',roughness:.15,metalness:.7});mm('oak',{color:'#c4a882',roughness:.5});mm('walnut',{color:'#5c3d2e',roughness:.45});mm('cherry',{color:'#8b3a3a',roughness:.4});mm('cabinet',{color:'#6b4a2e',roughness:.45});mm('sofaC',{color:'#e8e4dc',roughness:.45});mm('sofaT',{color:'#c4b8a8',roughness:.45});mm('mattress',{color:'#f8f4ec',roughness:.6});mm('bedFrame',{color:'#8b6f4a',roughness:.5});mm('leaf',{color:'#3d6b2e',roughness:.65});mm('bark',{color:'#6b4d3a',roughness:.8});mm('bush',{color:'#4a7a3a',roughness:.6});mm('pool',{color:'#4080c0',roughness:.15,metalness:.2});mm('fountain',{color:'#b0b0b0',roughness:.25});mm('path',{color:'#c8c0b8',roughness:.55});mm('lantern',{color:'#f0a030',roughness:.3,emissive:'#f0a030',emissiveIntensity:.3});mm('roof',{color:'#3d4855',roughness:.4});mm('roofMetal',{color:'#8899aa',roughness:.22,metalness:.55});mm('roofTerra',{color:'#b55a3a',roughness:.4});mm('conc',{color:'#c4c8ce',roughness:.7});mm('rug',{color:'#8b7355',roughness:.8});mm('tile',{color:'#d8d4d0',roughness:.3});mm('marble',{color:'#e8e0d8',roughness:.12});mm('darkW',{color:'#4a2a1a',roughness:.4});mm('grass',{color:'#5a8a3e',roughness:.8});
 
 // ─── HELPERS ───
 function b(w,h,d,m){const g=new THREE.BoxGeometry(w,h,d);const o=new THREE.Mesh(g,m);o.castShadow=true;o.receiveShadow=true;return o}
-function cyl(r,h,m,s=8){return new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,s),m)}
+function cyl(r,h,m,s=8){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,s),m);o.castShadow=true;return o}
 function sph(r,m,s=6){const o=new THREE.Mesh(new THREE.SphereGeometry(r,s,4),m);o.castShadow=true;return o}
 function G(...c){const g=new THREE.Group();c.forEach(x=>g.add(x));return g}
 function set(g,x,y,z,ry=0){g.position.set(x||0,y||0,z||0);g.rotation.y=ry;return g}
 
-// ─── FURNITURE FACTORIES (every model, no exceptions) ───
-function fSofa(){const g=G(b(1.9,.45,.65,M.sofaC),b(1.9,.55,.08,M.sofaC),b(.08,.32,.65,M.sofaC),b(.08,.32,.65,M.sofaC));g.children[1].position.set(0,.48,-.3);g.children[2].position.set(-.95,.16,0);g.children[3].position.set(.95,.16,0);return g}
-function fChair(){const g=G(b(.36,.12,.36,M.sofaT),b(.36,.52,.05,M.sofaT),cyl(.025,.38,M.oak),cyl(.025,.38,M.oak),cyl(.025,.38,M.oak),cyl(.025,.38,M.oak));g.children[1].position.set(0,.3,-.15);g.children[2].position.set(-.15,-.2,-.15);g.children[3].position.set(.15,-.2,-.15);g.children[4].position.set(-.15,-.2,.15);g.children[5].position.set(.15,-.2,.15);return g}
-function fTable(){const g=G(b(1.4,.04,.9,M.oak),cyl(.025,.7,M.oak),cyl(.025,.7,M.oak),cyl(.025,.7,M.oak),cyl(.025,.7,M.oak));g.children[1].position.set(-.65,-.36,-.42);g.children[2].position.set(.65,-.36,-.42);g.children[3].position.set(-.65,-.36,.42);g.children[4].position.set(.65,-.36,.42);return g}
-function fBed(){const g=G(b(1.6,.06,2.1,M.bedFrame),b(1.5,.22,2,M.mattress),b(1.6,.6,.06,M.bedFrame));g.children[1].position.set(0,.14,0);g.children[2].position.set(0,.34,-1.02);return g}
-function fTV(){const g=G(b(1.1,.28,.25,M.oak),b(1.05,.02,.65,M.black),b(.04,.02,.65,M.black));g.children[1].position.set(0,.14,.1);g.children[2].position.set(-.52,.14,.1);return g}
-function fShelf(){const g=G(b(.9,1.5,.3,M.cabinet));for(let i=0;i<4;i++){const s=b(.88,.02,.28,M.walnut);s.position.y=-.6+i*.45;g.add(s)}return g}
-function fDesk(){const g=G(b(1.2,.03,.6,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak));g.children[1].position.set(-.55,-.36,-.27);g.children[2].position.set(.55,-.36,-.27);g.children[3].position.set(-.55,-.36,.27);g.children[4].position.set(.55,-.36,.27);return g}
-function fLamp(){return G(cyl(.035,1.1,M.black),cyl(.03,.7,M.black),b(.18,.18,.18,M.lantern))}
-function fMirror(){return G(b(.6,.02,.9,M.silver),b(.64,.03,.03,M.oak),b(.64,.03,.03,M.oak))}
-function fCounter(){const g=G(b(1.8,.4,.6,M.white),b(1.84,.025,.62,M.oak),b(.03,.02,.45,M.silver));g.children[1].position.set(0,.2,0);g.children[2].position.set(0,.15,.29);return g}
-function fFridge(){const g=G(b(.65,1.7,.65,M.silver),b(.63,.02,.08,M.black),b(.63,.02,.08,M.black));g.children[1].position.set(0,.5,.32);g.children[2].position.set(0,-.3,.32);return g}
-function fSink(){return G(b(.75,.03,.45,M.silver),b(.65,.015,.35,M.black))}
-function fStove(){const g=G(b(.55,.03,.45,M.black));g.add(set(cyl(.05,.01,M.silver,6),.15,.02,-.18));g.add(set(cyl(.05,.01,M.silver,6),-.15,.02,-.18));g.add(set(cyl(.05,.01,M.silver,6),.15,.02,.18));g.add(set(cyl(.05,.01,M.silver,6),-.15,.02,.18));return g}
-function fIsland(){const g=G(b(1.4,.4,.8,M.white),b(1.44,.025,.82,M.oak),b(.05,.3,.03,M.oak),b(.05,.3,.03,M.oak));g.children[1].position.set(0,.2,0);g.children[2].position.set(-.65,.15,.39);g.children[3].position.set(.65,.15,.39);return g}
-function fCabinet(){return G(b(.85,.4,.45,M.cabinet),b(.83,.02,.43,M.walnut),b(.025,.02,.38,M.silver))}
+// ─── FURNITURE FACTORIES (all fixed, realistic sizes) ───
+function fSofa(){return set(G(b(1.8,.45,.7,M.sofaC),b(1.8,.55,.06,M.sofaC),b(.07,.3,.7,M.sofaC),b(.07,.3,.7,M.sofaC)),0,.01,0)}
+function fSofaSmall(){return set(G(b(1.2,.4,.6,M.sofaT),b(1.2,.5,.05,M.sofaT),b(.06,.25,.6,M.sofaT),b(.06,.25,.6,M.sofaT)),0,.01,0)}
+function fChair(){return set(G(b(.35,.1,.35,M.sofaT),b(.35,.45,.04,M.sofaT),cyl(.022,.35,M.oak),cyl(.022,.35,M.oak),cyl(.022,.35,M.oak),cyl(.022,.35,M.oak)),0,.01,0)}
+function fTable(){return set(G(b(1.3,.03,.85,M.oak),cyl(.025,.68,M.oak),cyl(.025,.68,M.oak),cyl(.025,.68,M.oak),cyl(.025,.68,M.oak)),0,.01,0)}
+function fBed(){return set(G(b(1.5,.05,2,M.bedFrame),b(1.4,.2,1.9,M.mattress),b(1.5,.55,.04,M.bedFrame)),0,.01,0)}
+function fTV(){return set(G(b(1.1,.25,.22,M.oak),b(1.05,.015,.6,M.silver),b(.03,.015,.6,M.silver)),0,.01,0)}
+function fShelf(){
+  const g=G(b(.85,1.6,.3,M.cabinet));
+  for(let i=0;i<5;i++){const s=b(.82,.02,.28,M.walnut);s.position.y=-.65+i*.38;g.add(s)}
+  // Add some book blocks on shelves
+  for(let i=0;i<3;i++){const bk=set(b(.12,.14+i*.02,.2,M.sofaC),-.2+i*.15,-.5+i*.38,.05);bk.castShadow=true;g.add(bk)}
+  return g
+}
+function fDesk(){return set(G(b(1.2,.03,.55,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak),cyl(.02,.7,M.oak)),0,.01,0)}
+function fLamp(){
+  const g=G(cyl(.03,1.2,M.silver),cyl(.025,.6,M.silver));
+  const shade=new THREE.Mesh(new THREE.CylinderGeometry(.15,.22,.3,12),M.lantern);
+  shade.position.y=1.0;shade.castShadow=true;g.add(shade);
+  return g
+}
+function fMirror(){
+  const g=G(b(.55,.02,.85,M.silver),b(.6,.03,.03,M.oak),b(.6,.03,.03,M.oak),b(.03,.03,.85,M.oak),b(.03,.03,.85,M.oak));
+  g.children[1].position.set(0,.42,0);g.children[2].position.set(0,-.42,0);
+  g.children[3].position.set(-.28,0,0);g.children[4].position.set(.28,0,0);
+  return g
+}
+function fCounter(){return set(G(b(1.7,.42,.58,M.white),b(1.74,.02,.6,M.oak),b(.025,.015,.42,M.silver)),0,.01,0)}
+function fFridge(){return set(G(b(.6,1.7,.6,M.silver),b(.58,.015,.06,M.silver),b(.58,.015,.06,M.silver)),0,.01,0)}
+function fSink(){return set(G(b(.75,.02,.45,M.silver),b(.65,.01,.35,M.silver)),0,.01,0)}
+function fStove(){
+  const g=G(b(.55,.03,.45,M.silver));
+  for(let x=-.14;x<=.14;x+=.14)for(let z=-.14;z<=.14;z+=.14){const bnr=new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,.01,8),M.silver);bnr.position.set(x,.02,z);g.add(bnr)}
+  return g
+}
+function fIsland(){return set(G(b(1.4,.42,.8,M.white),b(1.44,.02,.82,M.oak),b(.04,.28,.025,M.oak),b(.04,.28,.025,M.oak)),0,.01,0)}
+function fCabinet(){return set(G(b(.8,.4,.45,M.cabinet),b(.78,.02,.43,M.walnut),b(.02,.015,.38,M.silver)),0,.01,0)}
 function fRug(){const r=new THREE.Mesh(new THREE.BoxGeometry(2,.01,1.5),M.rug);r.castShadow=false;r.receiveShadow=true;return r}
-function fTree(s){const g=G(cyl(.06*s,.1*s,1.4*s,M.bark,8),new THREE.Mesh(new THREE.ConeGeometry(.65*s,.8*s,8),M.leaf));g.children[0].position.y=.7*s;g.children[1].position.y=1.3*s;g.children[1].castShadow=true;return g}
-function fPalm(){const g=G(cyl(.09,.16,2.3,M.bark,8));for(let f=0;f<7;f++){const fr=new THREE.Mesh(new THREE.BoxGeometry(.7,.015,.18),new THREE.MeshStandardMaterial({color:'#5a9a3e',roughness:.4,side:THREE.DoubleSide}));fr.position.set(0,2.4,0);fr.rotation.set(.2+Math.random()*.4,f/7*Math.PI*2,Math.random()*.3);fr.castShadow=true;g.add(fr)}return g}
-function fFountain(){return G(cyl(.45,.25,M.fountain,14),cyl(.2,.45,M.fountain,14),cyl(.08,1.1,M.fountain,8))}
+function fPlantS(){return set(G(cyl(.04,.3,M.oak,6),new THREE.Mesh(new THREE.ConeGeometry(.2,.3,8),M.leaf)),0,.005,0)}
+function fPlantM(){return set(G(cyl(.05,.5,M.oak,6),new THREE.Mesh(new THREE.ConeGeometry(.3,.4,8),M.leaf)),0,.005,0)}
+function fPlantTall(){return set(G(cyl(.04,.8,M.oak,6),new THREE.Mesh(new THREE.ConeGeometry(.25,.35,8),M.leaf)),0,.005,0)}
+function fFlowerPot(){return set(G(cyl(.1,.15,M.brick,8),sph(.12,M.leaf)),0,.005,0)}
+function fTree(s){
+  const g=G(cyl(.06*s,.1*s,1.5*s,M.bark,8));
+  for(let i=0;i<3;i++){const crown=new THREE.Mesh(new THREE.ConeGeometry(.7*s-i*.15,.8*s,8),M.leaf);crown.position.y=1.2*s+i*.55*s;crown.castShadow=true;g.add(crown)}
+  return g
+}
+function fPalm(){
+  const g=G(cyl(.08,.14,2.5,M.bark,8));
+  for(let f=0;f<8;f++){const fr=set(new THREE.Mesh(new THREE.BoxGeometry(.7,.012,.18),new THREE.MeshStandardMaterial({color:'#4a8a2e',roughness:.4,side:THREE.DoubleSide})),0,2.5,0);fr.rotation.set(.25+Math.random()*.35,f/8*Math.PI*2,Math.random()*.25);fr.castShadow=true;g.add(fr)}
+  return g
+}
+function fFountain(){
+  const g=G(cyl(.5,.2,M.fountain,16),cyl(.3,.35,M.fountain,12),cyl(.15,.5,M.fountain,8),cyl(.4,.06,M.fountain,16));
+  g.children[1].position.y=.25;g.children[2].position.y=.4;g.children[3].position.y=-.13;
+  return g
+}
 function fPool(){return b(1,.04,1,M.pool)}
-function fFence(){return G(b(.95,.65,.035,M.oak),b(1,.025,.05,M.oak))}
-function fPath(){return b(.5,.025,.7,M.path)}
-function fBench(){return G(b(1.4,.06,.3,M.oak),cyl(.02,.35,M.oak),cyl(.02,.35,M.oak))}
-function fLantern(){return G(cyl(.025,.9,M.black),cyl(.1,.35,M.lantern,8))}
-function fMailbox(){return G(cyl(.025,.7,M.black),b(.16,.3,.16,M.black))}
+function fFence(){return set(G(b(.95,.65,.03,M.oak),b(1,.02,.04,M.oak)),0,.01,0)}
+function fPath(){return b(.5,.02,.7,M.path)}
+function fBench(){return set(G(b(1.4,.05,.3,M.oak),cyl(.02,.35,M.oak),cyl(.02,.35,M.oak)),0,.01,0)}
+function fLantern(){return set(G(cyl(.02,.8,M.silver),new THREE.Mesh(new THREE.CylinderGeometry(.1,.14,.3,8),M.lantern)),0,.01,0)}
+function fMailbox(){
+  const g=G(cyl(.02,.7,M.silver),b(.15,.3,.15,M.silver));
+  g.children[1].position.y=.4;return g
+}
+function fStairs(){
+  const g=new THREE.Group();
+  for(let i=0;i<8;i++){const step=b(.8,.15,.3,M.oak);step.position.set(0,.075+i*.15,i*.3);step.castShadow=true;g.add(step)}
+  return g
+}
+function fSecondFloor(){const f=b(4,.08,4,M.conc);f.castShadow=true;return f}
 
 // Wall variants
-function fWallStd(m){const g=G(b(2,2.8,.1,m),b(2.02,.05,.12,M.cabinet),b(2.02,.04,.13,M.white));g.children[1].position.y=-1.37;g.children[2].position.y=1.38;return g}
-function fWallHalf(m){const g=G(b(2,1.4,.1,m),b(2.02,.04,.13,M.oak));g.children[1].position.y=.68;return g}
-function fWallGlass(t){const g=G(b(2,2.8,.055,M.steel),b(1.88,2.68,.02,t||M.glass));g.children[1].castShadow=false;for(let i of[-1,1]){const m1=b(.025,2.68,.07,M.steel);m1.position.x=i*.47;g.add(m1)}for(let i=-1;i<=1;i+=2){const m2=b(1.88,.025,.07,M.steel);m2.position.y=i*.85;g.add(m2)}return g}
-function fGarden(m){const g=G(b(2,1,.14,m),b(2.04,.05,.16,M.conc));g.children[1].position.y=.48;return g}
-function fColumn(m){return G(b(.14,2.9,.14,m),b(.2,.06,.2,M.conc),b(.2,.06,.2,M.conc))}
-function fFlatRoof(){return b(3,.07,3,M.roof)}
-function fPitchRoof(m){const g=G(b(3,.07,3,m),b(3,.07,3,m));g.children[0].position.set(0,.25,-.65);g.children[0].rotation.x=-.55;g.children[1].position.set(0,.25,.65);g.children[1].rotation.x=.55;return g}
+function fWallStd(m){return set(G(b(2,2.8,.1,m),b(2.02,.04,.12,M.cabinet),b(2.02,.035,.13,M.white)),0,1.4,0)}
+function fWallHalf(m){return set(G(b(2,1.4,.1,m),b(2.02,.035,.13,M.oak)),0,.7,0)}
+function fWallGlass(t){const g=G(b(2,2.8,.05,M.steel),b(1.88,2.68,.015,t||M.glass));g.children[1].castShadow=false;for(let i=-1;i<=1;i+=2){const m1=b(.02,2.68,.06,M.steel);m1.position.x=i*.47;g.add(m1);const m2=b(1.88,.02,.06,M.steel);m2.position.y=i*.85;g.add(m2)}return set(g,0,1.4,0)}
+function fGarden(m){return set(G(b(2,1,.14,m),b(2.04,.04,.16,M.conc)),0,.5,0)}
+function fColumn(m){return set(G(b(.14,2.9,.14,m),b(.2,.05,.2,M.conc),b(.2,.05,.2,M.conc)),0,1.45,0)}
+function fFlatRoof(){return b(3,.06,3,M.roof)}
+function fPitchRoof(m){const g=G(b(3,.06,3,m),b(3,.06,3,m));set(g.children[0],0,.22,-.6);g.children[0].rotation.x=-.5;set(g.children[1],0,.22,.6);g.children[1].rotation.x=.5;return g}
+function fDoor(){return set(G(b(1,2.2,.05,M.door),b(.7,.025,.4,M.silver),b(.15,.3,.01,M.glass)),0,1.15,0)}
+function fGarage(){return set(G(b(2.8,2.2,.05,M.silver),b(2.75,.02,.06,M.steel),b(2.75,.02,.06,M.steel)),0,1.15,0)}
+function fDouble(){return set(G(b(1.7,2.2,.05,M.door),b(.7,.025,.8,M.silver)),0,1.15,0)}
 
-// ─── CATALOG (every item uses f() — no simple boxes) ───
+// ─── CATALOG ───
 W.cat={
   walls:[
-    {id:'w_white',n:'White Wall',p:200,fn:'fWallStd',sw:'#f0f3f7',w:true,mArg:M.white},
-    {id:'w_brick',n:'Brick Wall',p:350,fn:'fWallStd',sw:'#b05040',w:true,mArg:M.brick},
-    {id:'w_timber',n:'Timber Wall',p:400,fn:'fWallStd',sw:'#c09870',w:true,mArg:M.wood},
-    {id:'w_beige',n:'Beige Wall',p:250,fn:'fWallStd',sw:'#e8dfd2',w:true,mArg:M.beige},
-    {id:'w_gray',n:'Gray Wall',p:220,fn:'fWallStd',sw:'#9ca8b4',w:true,mArg:M.gray},
-    {id:'w_navy',n:'Navy Wall',p:300,fn:'fWallStd',sw:'#2a3a55',w:true,mArg:M.navy},
-    {id:'w_metal',n:'Metal Wall',p:500,fn:'fWallStd',sw:'#8899aa',w:true,mArg:M.metalW},
-    {id:'w_half',n:'Half Wall 1.4m',p:150,fn:'fWallHalf',sw:'#f0f3f7',w:true,mArg:M.white},
-    {id:'w_glass',n:'Glass Panel',p:600,fn:'fWallGlass',sw:'#c8ddf8',w:true,mArg:M.glass},
-    {id:'w_frost',n:'Frosted Glass',p:650,fn:'fWallGlass',sw:'#d8e4f0',w:true,mArg:new THREE.MeshStandardMaterial({color:'#d8e4f0',roughness:.1,transparent:true,opacity:.55})},
-    {id:'w_garden',n:'Garden Wall 1m',p:120,fn:'fGarden',sw:'#b05040',w:true,mArg:M.brick},
-    {id:'col_steel',n:'Steel Column',p:300,fn:'fColumn',sw:'#5a6878',w:true,mArg:M.steel},
-    {id:'col_wood',n:'Wood Column',p:250,fn:'fColumn',sw:'#c09870',w:true,mArg:M.wood},
+    {id:'w_white',n:'White Wall',p:200,mk:()=>fWallStd(M.white),sw:'#f5f5f0',w:true},{id:'w_brick',n:'Brick Wall',p:350,mk:()=>fWallStd(M.brick),sw:'#b05040',w:true},{id:'w_timber',n:'Timber Wall',p:400,mk:()=>fWallStd(M.wood),sw:'#c09870',w:true},{id:'w_beige',n:'Beige Wall',p:250,mk:()=>fWallStd(M.beige),sw:'#e8dfd2',w:true},{id:'w_gray',n:'Gray Wall',p:220,mk:()=>fWallStd(M.gray),sw:'#9ca8b4',w:true},{id:'w_navy',n:'Navy Wall',p:300,mk:()=>fWallStd(M.navy),sw:'#2a3a55',w:true},{id:'w_metal',n:'Metal Wall',p:500,mk:()=>fWallStd(M.metalW),sw:'#8899aa',w:true},{id:'w_half',n:'Half Wall 1.4m',p:150,mk:()=>fWallHalf(M.white),sw:'#f5f5f0',w:true},{id:'w_glass',n:'Glass Panel',p:600,mk:()=>fWallGlass(M.glass),sw:'#c8ddf8',w:true},{id:'w_frost',n:'Frosted Glass',p:650,mk:()=>fWallGlass(new THREE.MeshStandardMaterial({color:'#d8e4f0',roughness:.08,transparent:true,opacity:.5})),sw:'#d8e4f0',w:true},{id:'w_garden',n:'Garden Wall 1m',p:120,mk:()=>fGarden(M.brick),sw:'#b05040',w:true},{id:'col_steel',n:'Steel Column',p:300,mk:()=>fColumn(M.steel),sw:'#5a6878',w:true},{id:'col_wood',n:'Wood Column',p:250,mk:()=>fColumn(M.wood),sw:'#c09870',w:true},
   ],
   windows:[
-    {id:'win_s',n:'Small Window',p:500,fn:'b',sw:'#c8ddf8',a:[1,.9,.05,M.glass]},
-    {id:'win_m',n:'Medium Window',p:700,fn:'b',sw:'#c8ddf8',a:[1.3,1.1,.05,M.glass]},
-    {id:'win_l',n:'Large Window',p:900,fn:'b',sw:'#c8ddf8',a:[1.5,1.4,.05,M.glass]},
-    {id:'win_xl',n:'Extra Large',p:1200,fn:'b',sw:'#c8ddf8',a:[2,1.6,.05,M.glass]},
-    {id:'win_r',n:'Round Window',p:600,fn:'cyl',sw:'#c8ddf8',a:[.4,.05,M.glass,16]},
+    {id:'win_s',n:'Small Window',p:500,mk:()=>b(1,.9,.03,M.glass),sw:'#c8ddf8'},{id:'win_m',n:'Medium',p:700,mk:()=>b(1.4,1.2,.03,M.glass),sw:'#c8ddf8'},{id:'win_l',n:'Large',p:900,mk:()=>b(1.6,1.5,.03,M.glass),sw:'#c8ddf8'},{id:'win_xl',n:'Wall-Sized',p:1500,mk:()=>b(2,2.5,.03,M.glass),sw:'#c8ddf8'},{id:'win_r',n:'Round',p:600,mk:()=>cyl(.45,.03,M.glass,16),sw:'#c8ddf8'},{id:'win_strip',n:'Horizontal Strip',p:800,mk:()=>b(2,.5,.03,M.glass),sw:'#c8ddf8'},
   ],
   doors:[
-    {id:'d_front',n:'Front Door',p:1200,fn:'fDoor',sw:'#2a3545'},
-    {id:'d_garage',n:'Garage Door',p:2500,fn:'fGarage',sw:'#c0c0c0'},
-    {id:'d_double',n:'Double Door',p:2000,fn:'fDouble',sw:'#2a3545'},
-    {id:'d_slide',n:'Sliding Door',p:2800,fn:'b',sw:'#c8ddf8',a:[2,2.2,.05,M.glass]},
+    {id:'d_front',n:'Front Door',p:1200,mk:fDoor,sw:'#2a3545'},{id:'d_garage',n:'Garage Door',p:2500,mk:fGarage,sw:'#d0d0d0'},{id:'d_double',n:'Double Door',p:2000,mk:fDouble,sw:'#2a3545'},{id:'d_slide',n:'Sliding Door',p:2800,mk:()=>b(2.2,2.3,.03,M.glass),sw:'#c8ddf8'},
   ],
   floors:[
-    {id:'f_wood',n:'Wood Floor',p:150,fn:'b',sw:'#c4a882',a:[2,.04,2,M.oak]},
-    {id:'f_tile',n:'Tile Floor',p:200,fn:'b',sw:'#d0d0d0',a:[2,.04,2,M.tile]},
-    {id:'f_conc',n:'Concrete',p:100,fn:'b',sw:'#c4c8ce',a:[2,.06,2,M.conc]},
-    {id:'f_marble',n:'Marble',p:500,fn:'b',sw:'#e8e0d8',a:[2,.04,2,M.marble]},
-    {id:'f_dark',n:'Dark Wood',p:200,fn:'b',sw:'#4a2a1a',a:[2,.04,2,M.darkW]},
-    {id:'f_grass',n:'Grass Tile',p:80,fn:'b',sw:'#4a7a3a',a:[2,.03,2,M.grass]},
+    {id:'f_wood',n:'Wood Floor',p:150,mk:()=>b(2,.03,2,M.oak),sw:'#c4a882'},{id:'f_tile',n:'Tile Floor',p:200,mk:()=>b(2,.03,2,M.tile),sw:'#d8d4d0'},{id:'f_conc',n:'Concrete',p:100,mk:()=>b(2,.05,2,M.conc),sw:'#c4c8ce'},{id:'f_marble',n:'Marble',p:500,mk:()=>b(2,.03,2,M.marble),sw:'#e8e0d8'},{id:'f_dark',n:'Dark Wood',p:200,mk:()=>b(2,.03,2,M.darkW),sw:'#4a2a1a'},{id:'f_grass',n:'Grass Tile',p:80,mk:()=>b(2,.02,2,M.grass),sw:'#5a8a3e'},
   ],
   furniture:[
-    {id:'fu_sofa',n:'Sofa',p:1500,fn:'fSofa',sw:'#e8e4dc'},
-    {id:'fu_chair',n:'Chair',p:300,fn:'fChair',sw:'#c4b8a8'},
-    {id:'fu_table',n:'Dining Table',p:800,fn:'fTable',sw:'#c4a882'},
-    {id:'fu_bed',n:'Bed',p:1200,fn:'fBed',sw:'#f5f0e8'},
-    {id:'fu_tv',n:'TV Unit',p:900,fn:'fTV',sw:'#1a1a1a'},
-    {id:'fu_shelf',n:'Bookshelf',p:600,fn:'fShelf',sw:'#6b4a2e'},
-    {id:'fu_desk',n:'Desk',p:700,fn:'fDesk',sw:'#c4a882'},
-    {id:'fu_lamp',n:'Floor Lamp',p:350,fn:'fLamp',sw:'#f0a030'},
-    {id:'fu_mirror',n:'Mirror',p:400,fn:'fMirror',sw:'#c0c0c0'},
-    {id:'fu_rug',n:'Area Rug',p:400,fn:'fRug',sw:'#8b7355'},
+    {id:'fu_sofa',n:'Sofa',p:1500,mk:fSofa,sw:'#e8e4dc'},{id:'fu_sofa_s',n:'Small Sofa',p:1000,mk:fSofaSmall,sw:'#c4b8a8'},{id:'fu_chair',n:'Chair',p:300,mk:fChair,sw:'#c4b8a8'},{id:'fu_table',n:'Dining Table',p:800,mk:fTable,sw:'#c4a882'},{id:'fu_bed',n:'Bed',p:1200,mk:fBed,sw:'#f8f4ec'},{id:'fu_tv',n:'TV Unit',p:900,mk:fTV,sw:'#d0d0d0'},{id:'fu_shelf',n:'Bookshelf',p:600,mk:fShelf,sw:'#6b4a2e'},{id:'fu_desk',n:'Desk',p:700,mk:fDesk,sw:'#c4a882'},{id:'fu_lamp',n:'Floor Lamp',p:350,mk:fLamp,sw:'#f0a030'},{id:'fu_mirror',n:'Mirror',p:400,mk:fMirror,sw:'#d0d0d0'},{id:'fu_rug',n:'Area Rug',p:400,mk:fRug,sw:'#8b7355'},
   ],
   kitchen:[
-    {id:'k_counter',n:'Counter',p:1000,fn:'fCounter',sw:'#f0f3f7'},
-    {id:'k_fridge',n:'Fridge',p:1800,fn:'fFridge',sw:'#c0c0c0'},
-    {id:'k_sink',n:'Sink',p:600,fn:'fSink',sw:'#c0c0c0'},
-    {id:'k_stove',n:'Stove',p:900,fn:'fStove',sw:'#1a1a1a'},
-    {id:'k_island',n:'Island',p:1500,fn:'fIsland',sw:'#f0f3f7'},
-    {id:'k_cabinet',n:'Cabinet',p:700,fn:'fCabinet',sw:'#6b4a2e'},
+    {id:'k_counter',n:'Counter',p:1000,mk:fCounter,sw:'#f5f5f0'},{id:'k_fridge',n:'Fridge',p:1800,mk:fFridge,sw:'#d0d0d0'},{id:'k_sink',n:'Sink',p:600,mk:fSink,sw:'#d0d0d0'},{id:'k_stove',n:'Stove',p:900,mk:fStove,sw:'#d0d0d0'},{id:'k_island',n:'Island',p:1500,mk:fIsland,sw:'#f5f5f0'},{id:'k_cabinet',n:'Cabinet',p:700,mk:fCabinet,sw:'#6b4a2e'},
   ],
   outdoor:[
-    {id:'o_tree_s',n:'Small Tree',p:300,fn:'fTree',sw:'#3d6b2e',a:[1]},
-    {id:'o_tree_m',n:'Medium Tree',p:500,fn:'fTree',sw:'#3d6b2e',a:[1.3]},
-    {id:'o_palm',n:'Palm Tree',p:600,fn:'fPalm',sw:'#5a9a3e'},
-    {id:'o_bush',n:'Bush',p:150,fn:'sph',sw:'#4a7a3a',a:[.35,M.bush]},
-    {id:'o_fountain',n:'Fountain',p:3000,fn:'fFountain',sw:'#a0a0a0'},
-    {id:'o_pool',n:'Pool Tile',p:500,fn:'fPool',sw:'#4080c0'},
-    {id:'o_fence',n:'Fence Panel',p:200,fn:'fFence',sw:'#c4a882'},
-    {id:'o_path',n:'Path Stone',p:100,fn:'fPath',sw:'#c0b8a8'},
-    {id:'o_bench',n:'Bench',p:400,fn:'fBench',sw:'#c4a882'},
-    {id:'o_lantern',n:'Lantern',p:250,fn:'fLantern',sw:'#f0a030'},
-    {id:'o_mailbox',n:'Mailbox',p:200,fn:'fMailbox',sw:'#1a1a1a'},
+    {id:'o_tree_s',n:'Small Tree',p:300,mk:()=>fTree(.8),sw:'#3d6b2e'},{id:'o_tree_m',n:'Medium Tree',p:500,mk:()=>fTree(1.1),sw:'#3d6b2e'},{id:'o_palm',n:'Palm Tree',p:600,mk:fPalm,sw:'#4a8a2e'},{id:'o_bush',n:'Bush',p:150,mk:()=>sph(.35,M.bush),sw:'#4a7a3a'},{id:'o_fountain',n:'Fountain',p:3000,mk:fFountain,sw:'#b0b0b0'},{id:'o_pool',n:'Pool Tile',p:500,mk:fPool,sw:'#4080c0'},{id:'o_fence',n:'Fence Panel',p:200,mk:fFence,sw:'#c4a882'},{id:'o_path',n:'Path Stone',p:100,mk:fPath,sw:'#c8c0b8'},{id:'o_bench',n:'Bench',p:400,mk:fBench,sw:'#c4a882'},{id:'o_lantern',n:'Lantern',p:250,mk:fLantern,sw:'#f0a030'},{id:'o_mailbox',n:'Mailbox',p:200,mk:fMailbox,sw:'#d0d0d0'},{id:'o_plant_s',n:'Small Plant',p:80,mk:fPlantS,sw:'#3d6b2e'},{id:'o_plant_m',n:'Medium Plant',p:120,mk:fPlantM,sw:'#3d6b2e'},{id:'o_plant_t',n:'Tall Plant',p:180,mk:fPlantTall,sw:'#3d6b2e'},{id:'o_flower',n:'Flower Pot',p:60,mk:fFlowerPot,sw:'#4a7a3a'},
   ],
   roofs:[
-    {id:'r_flat',n:'Flat Roof 3m',p:2000,fn:'fFlatRoof',sw:'#3d4855'},
-    {id:'r_pitch',n:'Pitched 3m',p:3500,fn:'fPitchRoof',sw:'#3d4855',a:[M.roof]},
-    {id:'r_metal',n:'Metal 3m',p:4000,fn:'fPitchRoof',sw:'#8899aa',a:[M.roofMetal]},
-    {id:'r_terra',n:'Terracotta 3m',p:3200,fn:'fPitchRoof',sw:'#b55a3a',a:[M.roofTerra]},
+    {id:'r_flat',n:'Flat Roof 3m',p:2000,mk:fFlatRoof,sw:'#3d4855'},{id:'r_pitch',n:'Pitched 3m',p:3500,mk:()=>fPitchRoof(M.roof),sw:'#3d4855'},{id:'r_metal',n:'Metal 3m',p:4000,mk:()=>fPitchRoof(M.roofMetal),sw:'#8899aa'},{id:'r_terra',n:'Terracotta 3m',p:3200,mk:()=>fPitchRoof(M.roofTerra),sw:'#b55a3a'},{id:'stairs',n:'Staircase',p:1500,mk:fStairs,sw:'#c4a882'},{id:'floor2',n:'Second Floor Slab',p:3000,mk:fSecondFloor,sw:'#c4c8ce'},
   ]
 };
-
-// Build index + add make function to each item
-for(const k in W.cat)W.cat[k].forEach(it=>{
-  W.allItems[it.id]=it;
-  // Add make function
-  if(it.fn==='fWallStd')it.mk=()=>fWallStd(it.mArg);
-  else if(it.fn==='fWallHalf')it.mk=()=>fWallHalf(it.mArg);
-  else if(it.fn==='fWallGlass')it.mk=()=>fWallGlass(it.mArg);
-  else if(it.fn==='fGarden')it.mk=()=>fGarden(it.mArg);
-  else if(it.fn==='fColumn')it.mk=()=>fColumn(it.mArg);
-  else if(it.fn==='fDoor')it.mk=()=>G(b(.9,2.2,.06,M.door),b(.65,.03,.45,M.silver));
-  else if(it.fn==='fGarage')it.mk=()=>G(b(2.5,2.2,.06,M.silver),b(2.45,.02,.07,M.steel));
-  else if(it.fn==='fDouble')it.mk=()=>G(b(1.6,2.2,.06,M.door),b(.6,.03,.8,M.silver));
-  else if(it.fn==='b')it.mk=()=>{const m=b(it.a[0],it.a[1],it.a[2],it.a[3]);m.castShadow=true;m.receiveShadow=true;return m};
-  else if(it.fn==='cyl')it.mk=()=>cyl(it.a[0],it.a[1],it.a[2],it.a[3]);
-  else if(it.fn==='sph')it.mk=()=>sph(it.a[0],it.a[1]);
-  else if(it.fn==='fTree')it.mk=()=>fTree(it.a[0]);
-  else if(typeof window[it.fn]==='function')it.mk=window[it.fn];
-  else it.mk=eval(it.fn);
-});
+for(const k in W.cat)W.cat[k].forEach(it=>W.allItems[it.id]=it);
 
 // ─── PREBUILDS ───
 W.prebuilds=[
   {n:'Starter Home',i:'🏠',s:'64m² · 2 bed · $98K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_white',x:-3,z:-2.5},{t:'w_white',x:3,z:-2.5},{t:'w_white',x:-3,z:2.5},{t:'w_white',x:3,z:2.5},
-    {t:'win_m',x:-1.5,z:-3.5},{t:'win_m',x:1.5,z:-3.5},{t:'d_front',x:0,z:3.5},{t:'r_pitch',x:0,z:0},
-    {t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},
-    {t:'fu_bed',x:-2,z:-1.5},{t:'fu_sofa',x:2,z:1},{t:'fu_tv',x:2,z:-2},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:2,z:1},
-    {t:'o_tree_s',x:-5,z:-5},{t:'o_fence',x:-3.5,z:4},{t:'o_fence',x:3.5,z:4},
+    {t:'w_white',x:0,z:0},{t:'w_white',x:-3,z:-2.5},{t:'w_white',x:3,z:-2.5},{t:'w_white',x:-3,z:2.5},{t:'w_white',x:3,z:2.5},{t:'win_m',x:-1.5,z:-3.5},{t:'win_m',x:1.5,z:-3.5},{t:'d_front',x:0,z:3.5},{t:'r_pitch',x:0,z:0},{t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},{t:'fu_bed',x:-2,z:-1.5},{t:'fu_sofa',x:2,z:1},{t:'fu_tv',x:2,z:-2},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:2,z:1},{t:'o_tree_s',x:-5,z:-5},{t:'o_fence',x:-3.5,z:4},{t:'o_fence',x:3.5,z:4},
   ]},
   {n:'Family Home',i:'🏡',s:'120m² · 3 bed · $168K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_brick',x:-3.5,z:-2.5},{t:'w_brick',x:3.5,z:-2.5},{t:'w_white',x:-3.5,z:0},{t:'w_white',x:3.5,z:0},{t:'w_white',x:-3.5,z:2.5},{t:'w_white',x:3.5,z:2.5},
-    {t:'win_l',x:-2,z:-3.5},{t:'win_l',x:2,z:-3.5},{t:'d_double',x:0,z:3.5},{t:'r_flat',x:0,z:0},
-    {t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},
-    {t:'fu_bed',x:-2,z:-2},{t:'fu_bed',x:2,z:-2},{t:'fu_sofa',x:-2,z:2},{t:'fu_tv',x:-2,z:-3},{t:'fu_table',x:0,z:.5},{t:'fu_rug',x:-2,z:2},
-    {t:'k_counter',x:2,z:1},{t:'k_fridge',x:2,z:2},
-    {t:'o_tree_m',x:-6,z:5},{t:'o_tree_m',x:6,z:5},{t:'o_fountain',x:0,z:-5},{t:'o_fence',x:-4,z:4},{t:'o_fence',x:4,z:4},{t:'o_path',x:0,z:4},
-  ]},
-  {n:'Modern Villa',i:'🏛️',s:'180m² · 4 bed · $245K',items:[
-    {t:'w_white',x:0,z:0},{t:'w_white',x:0,z:-3.5},{t:'w_navy',x:-4.5,z:-1.75},{t:'w_navy',x:4.5,z:-1.75},{t:'w_navy',x:-4.5,z:1.75},{t:'w_navy',x:4.5,z:1.75},{t:'w_glass',x:-4.5,z:0},{t:'w_glass',x:4.5,z:0},
-    {t:'win_xl',x:-3,z:-4.5},{t:'win_xl',x:3,z:-4.5},{t:'win_l',x:-3,z:4.5},{t:'win_l',x:3,z:4.5},{t:'d_double',x:0,z:4.5},{t:'r_metal',x:0,z:-1.75},
-    {t:'f_marble',x:-2,z:-2},{t:'f_marble',x:2,z:-2},{t:'f_marble',x:-2,z:2},{t:'f_marble',x:2,z:2},
-    {t:'fu_bed',x:-3,z:-2},{t:'fu_bed',x:3,z:-2},{t:'fu_sofa',x:0,z:2.5},{t:'fu_tv',x:0,z:-3},{t:'fu_table',x:2,z:-1},{t:'fu_rug',x:0,z:2.5},
-    {t:'k_counter',x:-2,z:-1},{t:'k_fridge',x:-3,z:-1},{t:'k_island',x:-2,z:1},{t:'fu_shelf',x:3,z:2},{t:'fu_desk',x:-3,z:2},{t:'fu_lamp',x:0,z:3},
-    {t:'o_fountain',x:0,z:-6},{t:'o_palm',x:-6,z:5.5},{t:'o_palm',x:6,z:5.5},{t:'o_pool',x:-6,z:0},{t:'o_pool',x:-6,z:1},{t:'o_pool',x:-6,z:2},{t:'o_bench',x:0,z:5},{t:'o_lantern',x:-5,z:5},{t:'o_lantern',x:5,z:5},
+    {t:'w_white',x:0,z:0},{t:'w_brick',x:-3.5,z:-2.5},{t:'w_brick',x:3.5,z:-2.5},{t:'w_white',x:-3.5,z:0},{t:'w_white',x:3.5,z:0},{t:'w_white',x:-3.5,z:2.5},{t:'w_white',x:3.5,z:2.5},{t:'win_l',x:-2,z:-3.5},{t:'win_l',x:2,z:-3.5},{t:'d_double',x:0,z:3.5},{t:'r_flat',x:0,z:0},{t:'f_wood',x:-1,z:-1},{t:'f_wood',x:1,z:-1},{t:'f_wood',x:-1,z:1},{t:'f_wood',x:1,z:1},{t:'fu_bed',x:-2,z:-2},{t:'fu_bed',x:2,z:-2},{t:'fu_sofa',x:-2,z:2},{t:'fu_tv',x:-2,z:-3},{t:'fu_table',x:0,z:.5},{t:'k_counter',x:2,z:1},{t:'k_fridge',x:2,z:2},{t:'o_tree_m',x:-6,z:5},{t:'o_tree_m',x:6,z:5},{t:'o_fountain',x:0,z:-5},{t:'o_fence',x:-4,z:4},{t:'o_fence',x:4,z:4},
   ]},
 ];
 
-// ─── FUNCTIONS ───
 function hint(t){document.getElementById('hint').textContent=t}
 function updB(){document.getElementById('budget').textContent='💰 $'+(W.budget-W.total).toLocaleString()}
 function snap(v){return W.gridOn?Math.round(v/.5)*.5:v}
+function makeObj(it){if(!it||!it.mk)return b(1,1,1,M.white);try{return it.mk()}catch(e){return b(1,1,1,M.white)}}
 
-// Get ground position from event (works with or without pointer lock)
 function groundPos(e){
-  const rc=new THREE.Raycaster();
-  const mx=document.pointerLockElement?0:(e.clientX/innerWidth)*2-1;
-  const my=document.pointerLockElement?0:-(e.clientY/innerHeight)*2+1;
-  rc.setFromCamera(new THREE.Vector2(mx,my),W.camera);
-  const pt=new THREE.Vector3();
-  const plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+  const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(((e.clientX/innerWidth)*2-1),(-(e.clientY/innerHeight)*2+1)),W.camera);
+  const pt=new THREE.Vector3();const plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
   if(!rc.ray.intersectPlane(plane,pt))return null;
-  if(Math.abs(pt.x)>19||Math.abs(pt.z)>19)return null;
+  if(Math.abs(pt.x)>24||Math.abs(pt.z)>24)return null;
   return new THREE.Vector3(snap(pt.x),.01,snap(pt.z));
 }
 
-function makeObj(item){
-  if(!item||!item.mk)return b(1,1,1,M.white);
-  try{return item.mk()}catch(e){console.error('Failed to make',item.id,e);return b(1,1,1,M.red)}
-}
-
-// Find placed object at center of screen
 function findTarget(){
   const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(0,0),W.camera);
-  const hits=rc.intersectObjects(W.placed,true);
-  if(!hits.length)return null;
-  let t=hits[0].object;
-  while(t.parent&&t.parent!==W.scene&&W.placed.includes(t.parent))t=t.parent;
+  const hits=rc.intersectObjects(W.placed,true);if(!hits.length)return null;
+  let t=hits[0].object;while(t.parent&&t.parent!==W.scene&&W.placed.includes(t.parent))t=t.parent;
   return W.placed.includes(t)?t:null;
 }
 
-// Place item at event position
 function place(e){
-  if(!W.sel||W.mode!=='place')return;
-  const pos=groundPos(e);if(!pos)return;
-  pos.y=W.sel.w?1.4:.01;
-  const obj=makeObj(W.sel);obj.position.copy(pos);
+  if(!W.sel||W.mode!=='place')return;const pos=groundPos(e);if(!pos)return;
+  pos.y=W.sel.w?1.4:.01;const obj=makeObj(W.sel);obj.position.copy(pos);
   if(W.placeRot!==0)obj.rotation.y=W.placeRot;
   else if(W.sel.w){const d=new THREE.Vector3().subVectors(pos,W.camera.position).setY(0).normalize();obj.rotation.y=Math.round(Math.atan2(d.x,d.z)/(Math.PI/2))*Math.PI/2}
-  obj.userData={id:W.sel.id,price:W.sel.p,name:W.sel.n,canRot:true};
-  W.scene.add(obj);W.placed.push(obj);W.undoStack.push(obj);
-  if(W.undoStack.length>50)W.undoStack.shift();
-  W.total+=W.sel.p;W.placeRot=0;updB();
-  hint('Placed: '+W.sel.n+' | Budget: $'+(W.budget-W.total).toLocaleString());
+  obj.userData={id:W.sel.id,price:W.sel.p,name:W.sel.n,canRot:true};W.scene.add(obj);W.placed.push(obj);W.undoStack.push(obj);
+  if(W.undoStack.length>50)W.undoStack.shift();W.total+=W.sel.p;W.placeRot=0;updB();hint('Placed: '+W.sel.n)
 }
 
-// Handle click for place/delete/rotate/move
 function handleClick(e){
   if(W.mode==='place'){place(e);return}
   const t=findTarget();if(!t)return;
   if(W.mode==='delete'){W.total-=(t.userData.price||0);W.scene.remove(t);W.placed.splice(W.placed.indexOf(t),1);updB();hint('Deleted')}
   else if(W.mode==='rotate'){t.rotation.y+=Math.PI/2;hint('Rotated 90°')}
-  else if(W.mode==='move'){
-    W.placed.forEach(o=>delete o.userData._moving);
-    if(W.moveTarget===t){const pos=groundPos(e);if(pos){pos.y=t.position.y;t.position.copy(pos);W.moveTarget=null;hint('Placed!')}return}
-    t.userData._moving=true;W.moveTarget=t;hint('Click ground to place')
-  }
+  else if(W.mode==='move'){W.placed.forEach(o=>delete o.userData._moving);if(W.moveTarget===t){const pos=groundPos(e);if(pos){pos.y=t.position.y;t.position.copy(pos);W.moveTarget=null;hint('Placed!')}return}t.userData._moving=true;W.moveTarget=t;hint('Click ground to place')}
 }
 
-// Ghost preview
 let ghost=null;
-function showGhost(item){
-  if(!item)return;
-  if(ghost){W.scene.remove(ghost);ghost=null}
-  ghost=makeObj(item);
-  ghost.traverse(c=>{if(c.material&&c.material.opacity!==undefined){c.material=c.material.clone();c.material.transparent=true;c.material.opacity=.35}});
-  W.scene.add(ghost);
-}
 canvas.addEventListener('pointermove',e=>{
-  if(W.mode!=='place'||!W.sel)return;
-  const pos=groundPos(e);if(!pos){if(ghost){W.scene.remove(ghost);ghost=null}return}
-  if(!ghost)showGhost(W.sel);
+  if(W.mode!=='place'||!W.sel)return;const pos=groundPos(e);if(!pos){if(ghost){W.scene.remove(ghost);ghost=null}return}
+  if(!ghost){ghost=makeObj(W.sel);ghost.traverse(c=>{if(c.material&&c.material.opacity!==undefined){c.material=c.material.clone();c.material.transparent=true;c.material.opacity=.3}});W.scene.add(ghost)}
   pos.y=W.sel.w?1.4:.01;ghost.position.copy(pos);
   if(W.placeRot!==0)ghost.rotation.y=W.placeRot;
   else if(W.sel.w){const d=new THREE.Vector3().subVectors(pos,W.camera.position).setY(0).normalize();ghost.rotation.y=Math.round(Math.atan2(d.x,d.z)/(Math.PI/2))*Math.PI/2}
 });
-
-// Hover label
 canvas.addEventListener('pointermove',e=>{
-  const hl=document.getElementById('hl'),hln=document.getElementById('hln'),hlp=document.getElementById('hlp');
-  const t=findTarget();
-  if(t&&t.userData&&t.userData.name){
-    const pos=new THREE.Vector3();t.getWorldPosition(pos);pos.project(W.camera);
-    hl.style.display='block';hl.style.left=((pos.x*.5+.5)*innerWidth)+'px';hl.style.top=((-pos.y*.5+.5)*innerHeight-40)+'px';
-    hln.textContent=t.userData.name;hlp.textContent='$'+(t.userData.price||0).toLocaleString();
-  }else{hl.style.display='none'}
+  const hl=document.getElementById('hl'),hln=document.getElementById('hln'),hlp=document.getElementById('hlp'),t=findTarget();
+  if(t&&t.userData&&t.userData.name){const pos=new THREE.Vector3();t.getWorldPosition(pos);pos.project(W.camera);hl.style.display='block';hl.style.left=((pos.x*.5+.5)*innerWidth)+'px';hl.style.top=((-pos.y*.5+.5)*innerHeight-40)+'px';hln.textContent=t.userData.name;hlp.textContent='$'+(t.userData.price||0).toLocaleString()}else{hl.style.display='none'}
 });
 
-// Click handling
-let mouseDown=false,mouseMoved=false,mdPos={x:0,y:0};
-canvas.addEventListener('pointerdown',e=>{mouseDown=true;mouseMoved=false;mdPos={x:e.clientX,y:e.clientY}});
-canvas.addEventListener('pointermove',e=>{if(mouseDown&&(Math.abs(e.clientX-mdPos.x)>2||Math.abs(e.clientY-mdPos.y)>2))mouseMoved=true});
-canvas.addEventListener('pointerup',e=>{if(!mouseMoved){handleClick(e)}mouseDown=false});
+let md=false,mm=false,mp={x:0,y:0};
+canvas.addEventListener('pointerdown',e=>{md=true;mm=false;mp={x:e.clientX,y:e.clientY}});
+canvas.addEventListener('pointermove',e=>{if(md&&(Math.abs(e.clientX-mp.x)>2||Math.abs(e.clientY-mp.y)>2))mm=true});
+canvas.addEventListener('pointerup',e=>{if(!mm)handleClick(e);md=false});
+document.addEventListener('keydown',e=>{if((e.key==='r'||e.key==='R')&&W.mode==='place'&&W.sel){e.preventDefault();W.placeRot=(W.placeRot+Math.PI/2)%(Math.PI*2);hint('↻ '+Math.round(W.placeRot*180/Math.PI)+'° — click to place '+W.sel.n)}});
 
-// R key
-document.addEventListener('keydown',e=>{
-  if((e.key==='r'||e.key==='R')&&W.mode==='place'&&W.sel){e.preventDefault();W.placeRot=(W.placeRot+Math.PI/2)%(Math.PI*2);hint('↻ '+Math.round(W.placeRot*180/Math.PI)+'° — click to place '+W.sel.n)}
-});
-
-// ─── GLOBAL FUNCTIONS ───
 window.switchTab=function(k){
   W.catKey=k;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.cat===k));
   const el=document.getElementById('items');el.innerHTML='';
-  W.cat[k].forEach(it=>{
-    const d=document.createElement('div');d.className='it'+(W.sel&&W.sel.id===it.id?' s':'');
-    d.innerHTML='<span class="swatch" style="background:'+it.sw+'"></span>'+it.i+'<div class="n">'+it.n+'</div><div class="p">$'+it.p+'</div>';
-    d.onclick=function(){document.querySelectorAll('.it').forEach(x=>x.classList.remove('s'));d.classList.add('s');W.sel=it;W.placeRot=0;if(ghost){W.scene.remove(ghost);ghost=null}hint('Selected: '+it.n+' — click ground to place, R to rotate')};
-    el.appendChild(d);
-  });
+  W.cat[k].forEach(it=>{const d=document.createElement('div');d.className='it'+(W.sel&&W.sel.id===it.id?' s':'');d.innerHTML='<span class="swatch" style="background:'+it.sw+'"></span>'+it.i+'<div class="n">'+it.n+'</div><div class="p">$'+it.p+'</div>';d.onclick=function(){document.querySelectorAll('.it').forEach(x=>x.classList.remove('s'));d.classList.add('s');W.sel=it;W.placeRot=0;if(ghost){W.scene.remove(ghost);ghost=null}hint('Selected: '+it.n+' — click ground, R to rotate')};el.appendChild(d)})
 };
-window.setMode=function(m){
-  W.mode=m;['P','D','R','M'].forEach((l,i)=>document.getElementById('b'+l).classList.toggle('on',['place','delete','rotate','move'][i]===m));
-  W.placeRot=0;W.moveTarget=null;if(ghost){W.scene.remove(ghost);ghost=null}
-  hint({place:W.sel?'Place: click ground | R=rotate '+W.sel.n:'Place: select item first',delete:'Delete: click object',rotate:'Rotate: click object to spin 90°',move:'Move: click object, then click ground'}[m]);
-};
+window.setMode=function(m){W.mode=m;['P','D','R','M'].forEach((l,i)=>document.getElementById('b'+l).classList.toggle('on',['place','delete','rotate','move'][i]===m));W.placeRot=0;W.moveTarget=null;if(ghost){W.scene.remove(ghost);ghost=null}hint({place:W.sel?'Place: click ground | R=rotate '+W.sel.n:'Place: select item first',delete:'Delete: click object',rotate:'Rotate: click object to spin 90°',move:'Move: click object, then click ground'}[m])};
 window.toggleGrid=function(){W.gridOn=!W.gridOn;W.gridH.visible=W.gridOn;const b=document.querySelector('[onclick*="toggleGrid"]');if(b){b.textContent='📐 Grid '+(W.gridOn?'ON':'OFF');b.classList.toggle('on',!W.gridOn)}};
 window.doUndo=function(){const obj=W.undoStack.pop();if(obj){W.total-=(obj.userData.price||0);W.scene.remove(obj);W.placed.splice(W.placed.indexOf(obj),1);updB();hint('Undone')}};
-window.doClear=function(){if(!confirm('Clear all?'))return;W.placed.forEach(o=>W.scene.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;updB();hint('Cleared · $100K available')};
-
-window.showPre=function(){
-  const el=document.getElementById('preList');el.innerHTML='';
-  W.prebuilds.forEach(pb=>{
-    const d=document.createElement('div');d.className='pr';
-    d.innerHTML='<div class="pi">'+pb.i+'</div><div class="pn">'+pb.n+'</div><div class="ps">'+pb.s+'</div>';
-    d.onclick=function(){
-      W.placed.forEach(o=>W.scene.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;
-      let c=0;pb.items.forEach(it=>{const f=W.allItems[it.t];if(!f)return;const obj=makeObj(f);set(obj,it.x||0,f.w?1.4:.01,it.z||0);obj.userData={id:f.id,price:f.p,name:f.n,canRot:true};W.scene.add(obj);W.placed.push(obj);W.total+=f.p;c++});
-      updB();hint('Loaded: '+pb.n+' ('+c+' items)');document.getElementById('prePop').classList.remove('show');
-    };
-    el.appendChild(d);
-  });
-  document.getElementById('prePop').classList.add('show');
-};
-
-// Save/Load
+window.doClear=function(){if(!confirm('Clear all?'))return;W.placed.forEach(o=>W.scene.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;updB();hint('Cleared')};
+window.showPre=function(){const el=document.getElementById('preList');el.innerHTML='';W.prebuilds.forEach(pb=>{const d=document.createElement('div');d.className='pr';d.innerHTML='<div class="pi">'+pb.i+'</div><div class="pn">'+pb.n+'</div><div class="ps">'+pb.s+'</div>';d.onclick=function(){W.placed.forEach(o=>W.scene.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;let c=0;pb.items.forEach(it=>{const f=W.allItems[it.t];if(!f)return;const obj=makeObj(f);set(obj,it.x||0,f.w?1.4:.01,it.z||0);obj.userData={id:f.id,price:f.p,name:f.n,canRot:true};W.scene.add(obj);W.placed.push(obj);W.total+=f.p;c++});updB();hint('Loaded: '+pb.n+' ('+c+' items)');document.getElementById('prePop').classList.remove('show')};el.appendChild(d)});document.getElementById('prePop').classList.add('show')};
 window.showSave=function(){document.getElementById('savePop').classList.add('show');document.getElementById('pnInput').focus()};
-window.doSave=async function(){
-  const name=document.getElementById('pnInput').value.trim()||'Untitled';
-  const items=W.placed.map(o=>({id:o.userData.id,x:Math.round(o.position.x*100)/100,y:Math.round(o.position.y*100)/100,z:Math.round(o.position.z*100)/100,ry:Math.round(o.rotation.y*100)/100,price:o.userData.price}));
-  try{
-    const r=await fetch(origin+'/api/projects',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,items,total_cost:W.total,budget:W.budget-W.total})});
-    const j=await r.json();hint(j.success?'✅ Saved!':'❌ '+(j.error||'Failed'));document.getElementById('savePop').classList.remove('show');
-  }catch(e){hint('❌ Network error')}
-};
-window.showLoad=async function(){
-  document.getElementById('loadPop').classList.add('show');
-  const list=document.getElementById('loadList');list.innerHTML='<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">Loading...</div>';
-  try{
-    const r=await fetch(origin+'/api/projects');const j=await r.json();
-    if(!j.success||!j.projects.length){list.innerHTML='<div style="color:var(--s);font-size:12px;text-align:center;padding:20px">No saved projects</div>';return}
-    list.innerHTML='';j.projects.forEach(p=>{
-      const d=document.createElement('div');d.style.cssText='background:var(--n3);border:1px solid var(--b);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center';
-      d.innerHTML='<div><div style="font-weight:600;color:var(--w);font-size:12px">'+p.name+'</div><div style="font-size:10px;color:var(--s)">$'+(p.total_cost||0).toLocaleString()+'</div></div>';
-      const btns=document.createElement('div');btns.style.cssText='display:flex;gap:4px';
-      const lb=document.createElement('button');lb.className='tb';lb.style.background='var(--g)';lb.style.borderColor='var(--g)';lb.style.color='var(--n)';lb.textContent='Load';
-      lb.onclick=async function(){
-        const lr=await fetch(origin+'/api/projects/'+p.id);const lj=await lr.json();
-        if(!lj.success)return hint('❌ Load failed');
-        W.placed.forEach(o=>W.scene.remove(o));W.placed.length=0;W.undoStack.length=0;W.total=0;
-        let c=0;lj.project.items.forEach(it=>{const f=W.allItems[it.id];if(!f)return;const obj=makeObj(f);set(obj,it.x||0,it.y||.01,it.z||0,it.ry||0);obj.userData={id:f.id,price:f.p,name:f.n,canRot:true};W.scene.add(obj);W.placed.push(obj);W.total+=f.p;c++});
-        updB();hint('✅ Loaded: '+lj.project.name+' ('+c+' items)');document.getElementById('loadPop').classList.remove('show');
-      };
-      const db=document.createElement('button');db.className='tb red';db.textContent='✕';
-      db.onclick=async function(){if(!confirm('Delete?'))return;await fetch(origin+'/api/projects/'+p.id,{method:'DELETE'});d.remove()};
-      btns.appendChild(lb);btns.appendChild(db);d.appendChild(btns);list.appendChild(d);
-    });
-  }catch(e){list.innerHTML='<div style="color:#f85149;font-size:12px;text-align:center;padding:20px">❌ Network error</div>'}
-};
+window.doSave=async function(){const name=document.getElementById('pnInput').value.trim()||'Untitled';const items=W.placed.map(o=>({id:o.userData.id,x:Math.round(o.position.x*100)/100,y:Math.round(o.position.y*100)/100,z:Math.round(o.position.z*100)/100,ry:Math.round(o.rotation.y*100)/100,price:o.userData.price}));try{const r=await fetch('/api/projects',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,items,total_cost:W.total,budget:W.budget-W.total})});const j=await r.json();hint(j.success?'✅ Saved!':'❌ '+(j.error||'Failed'));document.getElementById('savePop').classList.remove('show')}catch(e){hint('❌ Network error')}};
 
-// Toolbar hooks
 document.getElementById('bP').onclick=()=>window.setMode('place');
 document.getElementById('bD').onclick=()=>window.setMode('delete');
 document.getElementById('bR').onclick=()=>window.setMode('rotate');
 document.getElementById('bM').onclick=()=>window.setMode('move');
+window.switchTab('walls');window.setMode('place');
 
-// Init
-window.switchTab('walls');
-window.setMode('place');
-
-// Resize + animate
 function resize(){const w=innerWidth,h=innerHeight;W.renderer.setSize(w,h);W.camera.aspect=w/h;W.camera.updateProjectionMatrix()}window.addEventListener('resize',resize);resize();
 function anim(){requestAnimationFrame(anim);W.controls.update();W.renderer.render(W.scene,W.camera)}anim();
 </script>
