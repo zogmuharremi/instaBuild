@@ -84,6 +84,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const W = window._W = {};
 W.renderer = null; W.scene = null; W.camera = null; W.controls = null; W.clock = null;
 W.pMode = 'place'; W.gridOn = true; W.total = 0; W.budget = 100000; W.sel = null; W.catKey = 'walls';
+W.placeRotation = 0; // Rotation applied when placing (R key cycles 90°)
 W.placed = []; W.undoStack = []; W.allItems = {}; W.prebuilds = [];
 W.gridH = null; W.moveTarget = null; W.ghost = null; W.ghostTarget = new THREE.Vector3(); W.mouseMoved = false; W.mouseDown = new THREE.Vector2();
 
@@ -938,8 +939,10 @@ class GridPlacer {
     tgt.y = wallItem ? 1.4 : 0.01;
     this.currentPos.lerp(tgt, this._smoothFactor);
     this._ghost.position.copy(this.currentPos);
-    // Auto-rotate walls to face camera
-    if (wallItem) {
+    // Use manual R-key rotation if set, otherwise auto-face camera for walls
+    if (W.placeRotation !== 0) {
+      this._ghost.rotation.y = W.placeRotation;
+    } else if (wallItem) {
       const dir = new THREE.Vector3().subVectors(tgt, this.camera.position).setY(0).normalize();
       const angle = Math.atan2(dir.x, dir.z);
       this._ghost.rotation.y = Math.round(angle / (Math.PI / 2)) * (Math.PI / 2);
@@ -951,7 +954,10 @@ class GridPlacer {
     const obj = makeObj(item);
     pos.y = item.wall ? 1.4 : 0.01;
     obj.position.copy(pos);
-    if (item.wall) {
+    // Use manual R-key rotation if set, otherwise auto-face camera for walls
+    if (W.placeRotation !== 0) {
+      obj.rotation.y = W.placeRotation;
+    } else if (item.wall) {
       const dir = new THREE.Vector3().subVectors(pos, this.camera.position).setY(0).normalize();
       obj.rotation.y = Math.round(Math.atan2(dir.x, dir.z) / (Math.PI / 2)) * (Math.PI / 2);
     }
@@ -1072,6 +1078,7 @@ function handleClick(e) {
     W.undoStack.push(obj);
     if (W.undoStack.length > 50) W.undoStack.shift();
     W.total += W.sel.p;
+    W.placeRotation = 0; // Reset rotation for next placement
     hint('Placed: ' + W.sel.n + '  |  Budget: $' + budget.balance.toLocaleString());
     return;
   }
@@ -1153,6 +1160,22 @@ canvas.addEventListener('pointerup', (e) => {
 canvas.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   if (W.moveTarget) { W.moveTarget = null; hint('Move cancelled'); }
+});
+
+// ══════════════════════════════════════
+// KEYBOARD SHORTCUTS — R to rotate while placing
+// ══════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'r' || e.key === 'R') {
+    // Only in Place mode with an item selected
+    if (W.pMode === 'place' && W.sel) {
+      W.placeRotation = (W.placeRotation + Math.PI / 2) % (Math.PI * 2);
+      const deg = Math.round(W.placeRotation * (180 / Math.PI));
+      hint('↻ Rotated ' + deg + '° — click to place ' + W.sel.n);
+      // Update ghost rotation immediately if ghost exists
+      if (W.ghost) placer.updateGhost(W.ghostTarget, W.sel.wall);
+    }
+  }
 });
 
 // ══════════════════════════════════════
@@ -1302,6 +1325,7 @@ function renderCategoryItems(k, panel) {
       d.classList.add('selected');
       W.sel = item;
       W.catKey = k;
+      W.placeRotation = 0; // Reset manual rotation when picking new item
       if (W.ghost) { placer.destroyGhost(); W.ghost = null; }
       hint('Selected: ' + item.n + ' ($' + item.p.toLocaleString() + ')  |  Budget: $' + budget.balance.toLocaleString() + ' — move mouse to preview');
     };
