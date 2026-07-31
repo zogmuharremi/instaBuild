@@ -962,10 +962,10 @@ class GridPlacer {
 
   /** Raycast to find a placed object under the mouse */
   findPlacedAtEvent(e, placedList, sceneRef) {
-    const mouse = new THREE.Vector2(
-      (e.clientX / innerWidth) * 2 - 1,
-      -(e.clientY / innerHeight) * 2 + 1
-    );
+    // Use center of screen when pointer is locked
+    const x = document.pointerLockElement ? 0 : (e.clientX / innerWidth) * 2 - 1;
+    const y = document.pointerLockElement ? 0 : -(e.clientY / innerHeight) * 2 + 1;
+    const mouse = new THREE.Vector2(x, y);
     this._rc.setFromCamera(mouse, this.camera);
     const hits = this._rc.intersectObjects(placedList, true);
     if (hits.length === 0) return null;
