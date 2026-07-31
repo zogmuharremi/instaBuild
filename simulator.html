@@ -245,8 +245,10 @@ function groundPos(e){
   return new THREE.Vector3(snap(pt.x),0.01,snap(pt.z));
 }
 
-function findTarget(){
-  var rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(0,0),W.camera);
+function findTarget(e){
+  var x=e?(e.clientX/innerWidth)*2-1:0;
+  var y=e?-(e.clientY/innerHeight)*2+1:0;
+  var rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2(x,y),W.camera);
   var hits=rc.intersectObjects(W.placed,true);if(!hits.length)return null;
   var t=hits[0].object;
   while(t.parent&&t.parent!==W.scene&&W.placed.includes(t.parent))t=t.parent;
@@ -268,7 +270,7 @@ function place(e){
 
 function handleClick(e){
   if(W.mode==='place'){place(e);return}
-  var t=findTarget();if(!t)return;
+  var t=findTarget(e);if(!t)return;
   if(W.mode==='delete'){W.total-=(t.userData.price||0);W.scene.remove(t);W.placed.splice(W.placed.indexOf(t),1);updB();hint('Deleted')}
   else if(W.mode==='rotate'){t.rotation.y+=Math.PI/2;hint('Rotated 90°')}
   else if(W.mode==='move'){W.placed.forEach(function(o){delete o.userData._moving});if(W.moveTarget===t){var pos=groundPos(e);if(pos){pos.y=t.position.y;t.position.copy(pos);W.moveTarget=null;hint('Placed!')}return}t.userData._moving=true;W.moveTarget=t;hint('Click ground to place')}
