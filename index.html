@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>instaBuild — Modular Construction</title>
+  <title>instaBuilt — Modular Construction</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
@@ -61,7 +61,7 @@
   <div class="container" style="position:relative;z-index:2"><div class="hero-c">
     <div class="hero-tag"><span class="dot"></span> Now Delivering in 30 Days — Worldwide</div>
     <h1>The future of<br>construction <em>is here.</em></h1>
-    <p>instaBuild is rewriting the rules of how the world builds. Modular. Precision-engineered. Sustainable. Entire communities in weeks, not years.</p>
+    <p>instaBuilt is rewriting the rules of how the world builds. Modular. Precision-engineered. Sustainable. Entire communities in weeks, not years.</p>
     <div class="hero-btns"><a href="simulator.html" class="btn btn-w btn-lg">🏗️ Launch 3D Builder</a><a href="#about" class="btn btn-ghost btn-lg">Discover How →</a></div>
     <div class="hero-stats"><div class="hero-stat"><div class="val">30</div><div class="lbl">Days POP-UP</div></div><div class="hero-stat"><div class="val">500+</div><div class="lbl">Projects</div></div><div class="hero-stat"><div class="val">90</div><div class="lbl">Days Custom</div></div><div class="hero-stat"><div class="val">98%</div><div class="lbl">Satisfaction</div></div></div>
   </div></div>
@@ -101,14 +101,14 @@
 
 <div class="cta-section"><div class="container fade-in"><h2>The future of construction<br><span class="gradient-text">is already here.</span></h2><p>POP-UP in 30 days. Custom homes in 90. Turnkey.</p><div style="display:flex;gap:16px;justify-content:center"><a href="simulator.html" class="btn btn-w btn-lg">Design Your Home</a></div></div></div>
 
-<footer><div class="container"><div class="ft-grid"><div><h4>instaBuild</h4><p style="font-size:13px;line-height:1.7">Global leader in modular and offsite construction.</p></div><div><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a></div><div><h4>Company</h4><a href="#about">About</a><a href="simulator.html">3D Builder</a><a href="#map">Global</a></div><div><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="font-size:12px;margin-top:6px">Prishtina, Kosovo · Dover, DE</p></div></div><div class="ft-bottom"><span>© 2026 instaBuild</span><span>Building the future, faster.</span></div></div></footer>
+<footer><div class="container"><div class="ft-grid"><div><h4>instaBuilt</h4><p style="font-size:13px;line-height:1.7">Global leader in modular and offsite construction.</p></div><div><h4>Solutions</h4><a href="#services">POP-UP</a><a href="#services">Multi-Family</a><a href="#services">Commercial</a></div><div><h4>Company</h4><a href="#about">About</a><a href="simulator.html">3D Builder</a><a href="#map">Global</a></div><div><h4>Contact</h4><a href="mailto:contact@instabuild.com">contact@instabuild.com</a><p style="font-size:12px;margin-top:6px">Prishtina, Kosovo · Dover, DE</p></div></div><div class="ft-bottom"><span>© 2026 instaBuilt</span><span>Building the future, faster.</span></div></div></footer>
 
 <!-- AI Chat -->
 <button class="chat-btn" id="chatBtn">💬</button>
 <div class="chat-window" id="chatWindow">
-  <div class="chat-header"><h3>🤖 instaBuild Assistant</h3><button class="chat-close" id="chatClose">✕</button></div>
+  <div class="chat-header"><h3>🤖 instaBuilt Assistant</h3><button class="chat-close" id="chatClose">✕</button></div>
   <div class="chat-messages" id="chatMessages">
-    <div class="chat-msg bot">👋 Hi! I'm the instaBuild assistant. Ask me anything about our modular homes, pricing, timelines, or the 3D builder!</div>
+    <div class="chat-msg bot">👋 Hi! I'm the instaBuilt assistant. Ask me anything about our modular homes, pricing, timelines, or the 3D builder!</div>
   </div>
   <div class="chat-suggestions" id="chatSuggestions">
     <button onclick="askAI('How fast can you build a house?')">⚡ Build speed?</button>
@@ -118,7 +118,7 @@
     <button onclick="askAI('What is a POP-UP community?')">🏠 POP-UP?</button>
     <button onclick="askAI('Is modular construction durable?')">🛡️ Durability?</button>
   </div>
-  <div class="chat-input"><input type="text" id="chatInput" placeholder="Ask anything about instaBuild..." onkeypress="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">Send</button></div>
+  <div class="chat-input"><input type="text" id="chatInput" placeholder="Ask anything about instaBuilt..." onkeypress="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">Send</button></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -132,10 +132,10 @@ const io=new IntersectionObserver(e=>e.forEach(e=>{if(e.isIntersecting)e.target.
 document.getElementById('contactForm').addEventListener('submit',async function(e){e.preventDefault();const s=document.getElementById('formStatus'),b=this.querySelector('button');s.style.display='block';b.disabled=true;b.textContent='Sending…';try{const r=await fetch('/api/contact',{method:'POST',body:new FormData(this)});const d=await r.json();if(d.success){s.style.background='rgba(46,204,113,.06)';s.style.color='#2ecc71';s.style.border='1px solid rgba(46,204,113,.18)';s.textContent='✓ '+d.message;this.reset()}else{s.style.background='rgba(248,81,73,.04)';s.style.color='#f85149';s.textContent='✗ '+d.error}}catch(err){s.style.background='rgba(248,81,73,.04)';s.style.color='#f85149';s.textContent='✗ Network error'}b.disabled=false;b.textContent='Send Inquiry'});
 
 // AI Chat
-const aiKB={speed:'instaBuild delivers POP-UP communities in just 30 days and custom homes in 90 days — 3–4× faster than traditional construction. Our offsite manufacturing eliminates weather delays.',
+const aiKB={speed:'instaBuilt delivers POP-UP communities in just 30 days and custom homes in 90 days — 3–4× faster than traditional construction. Our offsite manufacturing eliminates weather delays.',
   pricing:'POP-UP units start at $45,000 for 28m². Custom homes range from $98K (starter) to $520K+ (luxury mansion). All pricing is fixed — no surprise change orders. Visit our 3D Builder for real-time estimates!',
   builder:'Our 3D Builder lets you place walls, windows, doors, furniture, and landscaping in a virtual world. Click "🏗️ 3D Builder" in the nav or hero button. Use WASD to walk, click the catalog to select items, then click the ground to place them!',
-  locations:'instaBuild operates in Kosovo (HQ), USA (Delaware), Austria, Switzerland, with expansions in Germany, UK, Netherlands, France, Italy, Canada, and UAE. We serve all of Europe and North America.',
+  locations:'instaBuilt operates in Kosovo (HQ), USA (Delaware), Austria, Switzerland, with expansions in Germany, UK, Netherlands, France, Italy, Canada, and UAE. We serve all of Europe and North America.',
   popup:'POP-UP communities are fully functional neighborhoods deployed in 30 days. Available in 28m², 52m², and 104m² sizes. Perfect for workforce housing, resorts, student housing, and crisis response.',
   durability:'Modular construction is MORE durable than traditional building. Every component is precision-built indoors in climate-controlled factories with tighter tolerances. Our buildings exceed all EU and US building codes. 10-year structural warranty included.',
   default:'Great question! I recommend checking out our 3D Builder for a hands-on experience, or contact us for a personalized consultation. You can also ask me about speed, pricing, locations, POP-UP communities, or durability!'};
